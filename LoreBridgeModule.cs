@@ -32,7 +32,7 @@ namespace LoreBridge
 
         private SettingsModel _settings;
         private TranslationListModel _translationList;
-        private TranslatorCornerIcon _cornerIcon;
+        private LoreBridgeCornerIcon _cornerIcon;
         private TranslationWindow _translationWindow;
         private ScreenCapturer _screenCapturer;
         private BitmapFont _font;
@@ -60,7 +60,7 @@ namespace LoreBridge
             _translationList = new TranslationListModel();
             _translationWindow = new TranslationWindow(_settings, _translationList, _font);
 
-            _cornerIcon = new TranslatorCornerIcon(ContentsManager);
+            _cornerIcon = new LoreBridgeCornerIcon(ContentsManager);
             _cornerIcon.Click += (o, e) => { _translationWindow.ToggleWindow(); };
 
             TranslatorConfig translatorConfig = new()
@@ -76,7 +76,9 @@ namespace LoreBridge
             {
                 Bitmap bitmap = Utils.Screen.GetScreen(e);
                 var result = _ocrEngine.GetTextLines(bitmap);
-                _ = TranslateTextAsync(string.Join(" ", result));
+                if (result.Length > 0) {
+                    _ = TranslateTextAsync(string.Join(" ", result));
+                }
             };
         }
 

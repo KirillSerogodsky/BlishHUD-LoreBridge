@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace LoreBridge.Components
 {
-    public sealed class TranslatorCornerIcon : CornerIcon
+    public sealed class LoreBridgeCornerIcon : CornerIcon
     {
         private readonly Texture2D _icon;
         private readonly Texture2D _iconHover;
 
-        public TranslatorCornerIcon(ContentsManager contentsManager)
+        public LoreBridgeCornerIcon(ContentsManager contentsManager)
         {
             _icon = contentsManager.GetTexture("icon.png");
             _iconHover = contentsManager.GetTexture("icon-big.png");

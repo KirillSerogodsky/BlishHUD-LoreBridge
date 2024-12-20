@@ -55,14 +55,11 @@ namespace LoreBridge.Translation.DeepL
                     {
                         var beam = deserializedBody.Result?.Translations[0].Beams.First();
                         result = beam.PostProcessedSentence;
-
-                        return result;
                     }
                 } else
                 {
                     DeepLResponseErrorBody deserializedBody = JsonSerializer.Deserialize<DeepLResponseErrorBody>(responseBody);
-                    
-                    return $"Error: {deserializedBody.Error.Message}";
+                    result =  $"Error: {deserializedBody.Error.Message}";
                 }
             } catch (Exception e)
             {
