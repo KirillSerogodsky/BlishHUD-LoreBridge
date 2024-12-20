@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "run": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Users\\Kirill\\Downloads\\Blish.HUD.1.2.0\\Blish HUD.exe",
-      "commandLineArgs": "--debug --module \\\"$(ProjectDir)\\\\$(BaseOutputPath)\\\\$(Configuration)/$(TargetFramework)\\\\$(TargetName).bhm\\\" --settings \\\"..\\\\Settings_$(TargetName)\\\""
-    }
-  }
-}
