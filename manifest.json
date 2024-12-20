@@ -1,0 +1,19 @@
+{
+  "name": "LoreBridge",
+  "version": "0.1.0",
+  "namespace": "bh.example.LoreBridge",
+  "package": "LoreBridge.dll",
+  "manifest_version": 1,
+
+  "description": "",
+  "dependencies": {
+    "bh.blishhud": ">=1.2.0"
+  },
+  "url": "",
+  "contributors": [],
+
+  "directories": [ "example-module-data" ],
+  "enabled_without_gw2": false,
+
+  "api_permissions": {}
+}
