@@ -58,10 +58,15 @@ namespace LoreBridge.Translation.DeepL
 
                         return result;
                     }
+                } else
+                {
+                    DeepLResponseErrorBody deserializedBody = JsonSerializer.Deserialize<DeepLResponseErrorBody>(responseBody);
+                    
+                    return $"Error: {deserializedBody.Error.Message}";
                 }
             } catch (Exception e)
             {
-                result = e.Message;
+                result = $"Error: {e.Message}";
             }
 
             Id++;
