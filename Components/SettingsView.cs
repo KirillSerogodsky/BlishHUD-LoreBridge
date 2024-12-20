@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
@@ -61,13 +60,17 @@ namespace LoreBridge.Components
             var languageDropdown = new Dropdown()
             {
                 Parent = languagePanel,
-                Enabled = false,
                 Width = 120,
+                SelectedItem = Enum.GetName(typeof(Languages), _settings.TranslationLanguage.Value),
             };
-            foreach (var item in Enum.GetValues(typeof(Languages)).Cast<Languages>())
+            foreach (var item in Enum.GetNames(typeof(Languages)))
             {
-                languageDropdown.Items.Add(item.ToString());
+                languageDropdown.Items.Add(item);
             }
+            languageDropdown.ValueChanged += (o, e) =>
+            {
+                _settings.TranslationLanguage.Value = (int)Enum.Parse(typeof(Languages), e.CurrentValue);
+            };
 
             var translatorPanel = new FlowPanel()
             {
@@ -90,13 +93,17 @@ namespace LoreBridge.Components
             var translatorDropdown = new Dropdown()
             {
                 Parent = translatorPanel,
-                Enabled = false,
                 Width = 120,
+                SelectedItem = Enum.GetName(typeof(Translators), _settings.TranslationTranslator.Value),
             };
-            foreach (var item in Enum.GetValues(typeof(Translators)).Cast<Translators>())
+            foreach (var item in Enum.GetNames(typeof(Translators)))
             {
-                translatorDropdown.Items.Add(item.ToString());
+                translatorDropdown.Items.Add(item);
             }
+            translatorDropdown.ValueChanged += (o, e) =>
+            {
+                _settings.TranslationLanguage.Value = (int)Enum.Parse(typeof(Translators), e.CurrentValue);
+            };
 
             var keyBindPanel = new FlowPanel()
             {

@@ -1,5 +1,6 @@
 ﻿using Blish_HUD.Input;
 using Blish_HUD.Settings;
+using LoreBridge.Enums;
 
 namespace LoreBridge.Models
 {
@@ -13,6 +14,9 @@ namespace LoreBridge.Models
         public readonly SettingEntry<int> WindowLocationY;
         public readonly SettingEntry<int> WindowWidth;
         public readonly SettingEntry<int> WindowHeight;
+
+        public readonly SettingEntry<int> TranslationLanguage;
+        public readonly SettingEntry<int> TranslationTranslator;
 
         public SettingsModel(SettingCollection settings)
         {
@@ -31,6 +35,10 @@ namespace LoreBridge.Models
             WindowLocationY = settings.DefineSetting("Window.Location.Y", 200);
             WindowWidth = settings.DefineSetting("Window.Width", 480);
             WindowHeight = settings.DefineSetting("Window.Height", 240);
+
+            // Translation
+            TranslationLanguage = settings.DefineSetting("Translation.Language", (int)Languages.Russian);
+            TranslationTranslator = settings.DefineSetting("Translation.Translator", (int)Translators.DeepL);
         }
     }
 }
