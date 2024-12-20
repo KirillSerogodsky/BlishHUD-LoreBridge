@@ -8,10 +8,6 @@ namespace LoreBridge.Translation.DeepL
         [JsonPropertyName("result")]
         public ResponseResult Result { get; set; }
 
-        public DeepLResponseBody()
-        { 
-        }
-
         public sealed class ResponseResult
         {
             [JsonPropertyName("translations")]

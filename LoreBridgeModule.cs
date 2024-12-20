@@ -76,7 +76,7 @@ namespace LoreBridge
             {
                 Bitmap bitmap = Utils.Screen.GetScreen(e);
                 var result = _ocrEngine.GetTextLines(bitmap);
-                TranslateTextAsync(string.Join(" ", result));
+                _ = TranslateTextAsync(string.Join(" ", result));
             };
         }
 
@@ -98,6 +98,7 @@ namespace LoreBridge
             _translationWindow.Dispose();
             _cornerIcon.Dispose();
             _screenCapturer.Dispose();
+            _translator.Dispose();
         }
     }
 }

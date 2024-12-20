@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace LoreBridge.Translation
 {
-    public interface ITranslator
+    public interface ITranslator : IDisposable
     {
         Task<string> TranslateAsync(string text);
     }
