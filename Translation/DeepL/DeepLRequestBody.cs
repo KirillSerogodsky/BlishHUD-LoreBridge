@@ -52,7 +52,7 @@ namespace LoreBridge.Translation.DeepL
 
             public Parameters(List<Job> jobs, Lang lang)
             {
-                Priority = -1L;
+                Priority = 1L;
                 // CommonJobParams = new CommonJobParams();
 
                 long num = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;

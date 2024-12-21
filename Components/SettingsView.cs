@@ -60,7 +60,7 @@ namespace LoreBridge.Components
             var languageDropdown = new Dropdown()
             {
                 Parent = languagePanel,
-                Width = 120,
+                Width = 170,
                 SelectedItem = Enum.GetName(typeof(Languages), _settings.TranslationLanguage.Value),
             };
             foreach (var item in Enum.GetNames(typeof(Languages)))
