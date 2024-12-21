@@ -19,14 +19,5 @@ namespace LoreBridge.Translation
                 _targetLang = value;
             }
         }
-
-        public Translators Translator
-        {
-            get => _translator;
-            set
-            {
-                _translator = value;
-            }
-        }
     }
 }

@@ -15,7 +15,7 @@
         Latvian = 11,
         Lithuanian = 12,
         Dutch = 13,
-        NorwegianBokmal = 14,
+        Norwegian = 14,
         Polish = 15,
         Portuguese = 16,
         // PortugueseBrazilian = 17,

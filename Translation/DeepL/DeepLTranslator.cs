@@ -41,7 +41,7 @@ namespace LoreBridge.Translation.DeepL
             string body = requestBody.ToJsonString();
             StringContent content = new(body, Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-            content.Headers.TryAddWithoutValidation("DNT", "1");
+            content.Headers.TryAddWithoutValidation("Dnt", "1");
 
             string result = "";
 

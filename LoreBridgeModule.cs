@@ -17,6 +17,7 @@ using LoreBridge.OCR;
 using LoreBridge.Translation;
 using LoreBridge.Translation.DeepL;
 using LoreBridge.Enums;
+using LoreBridge.Translation.Google;
 
 namespace LoreBridge
 {
@@ -66,12 +67,15 @@ namespace LoreBridge
             TranslatorConfig translatorConfig = new()
             {
                 TargetLang = (Languages)_settings.TranslationLanguage.Value,
-                Translator = (Translators)_settings.TranslationTranslator.Value,
             };
+            CreateTranslator((Translators)_settings.TranslationTranslator.Value, translatorConfig);
+
             _settings.TranslationLanguage.SettingChanged += (o, e) => {
                 translatorConfig.TargetLang = (Languages)e.NewValue;
             };
-            _translator = new DeepLTranslator(translatorConfig);
+            _settings.TranslationTranslator.SettingChanged += (o, e) => {
+                CreateTranslator((Translators)e.NewValue, translatorConfig);
+            };
 
             _ocrEngine = new WindowsOCR();
             _screenCapturer = new ScreenCapturer(_settings);
@@ -91,6 +95,20 @@ namespace LoreBridge
             if (!string.IsNullOrWhiteSpace(translation))
             {
                 _translationList.Add(translation);
+            }
+        }
+
+        private void CreateTranslator(Translators translator, TranslatorConfig config)
+        {
+            _translator?.Dispose();
+            switch (translator)
+            {
+                case Translators.DeepL:
+                    _translator = new DeepLTranslator(config);
+                    break;
+                case Translators.Google:
+                    _translator = new GoogleTranslator(config);
+                    break;
             }
         }
 

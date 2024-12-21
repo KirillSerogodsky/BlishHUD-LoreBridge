@@ -102,7 +102,7 @@ namespace LoreBridge.Components
             }
             translatorDropdown.ValueChanged += (o, e) =>
             {
-                _settings.TranslationLanguage.Value = (int)Enum.Parse(typeof(Translators), e.CurrentValue);
+                _settings.TranslationTranslator.Value = (int)Enum.Parse(typeof(Translators), e.CurrentValue);
             };
 
             var keyBindPanel = new FlowPanel()
