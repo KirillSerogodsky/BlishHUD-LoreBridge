@@ -1,19 +1,21 @@
 {
   "name": "LoreBridge",
   "version": "0.1.0",
-  "namespace": "bh.example.LoreBridge",
+  "namespace": "LoreBridge",
   "package": "LoreBridge.dll",
   "manifest_version": 1,
-
-  "description": "",
+  "description": "Translating text from the screen. Supports Windows 10 and above.",
   "dependencies": {
     "bh.blishhud": ">=1.2.0"
   },
-  "url": "",
-  "contributors": [],
-
-  "directories": [ "example-module-data" ],
+  "url": "https://github.com/KirillSerogodsky/BlishHUD-LoreBridge",
+  "contributors": [
+    {
+      "name": "HolyShock",
+      "username": "Kirill.2147"
+    }
+  ],
+  "directories": [ "lorebridge" ],
   "enabled_without_gw2": false,
-
   "api_permissions": {}
 }
