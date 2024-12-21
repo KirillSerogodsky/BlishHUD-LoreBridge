@@ -65,8 +65,11 @@ namespace LoreBridge
 
             TranslatorConfig translatorConfig = new()
             {
-                TargetLang = Languages.Russian,
-                Translator = Translators.DeepL,
+                TargetLang = (Languages)_settings.TranslationLanguage.Value,
+                Translator = (Translators)_settings.TranslationTranslator.Value,
+            };
+            _settings.TranslationLanguage.SettingChanged += (o, e) => {
+                translatorConfig.TargetLang = (Languages)e.NewValue;
             };
             _translator = new DeepLTranslator(translatorConfig);
 

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LoreBridge.Enums;
 
 namespace LoreBridge.Translation.DeepL
 {
@@ -35,7 +36,8 @@ namespace LoreBridge.Translation.DeepL
 
         public async Task<string> TranslateAsync(string text)
         {
-            DeepLRequestBody requestBody = new(Id, text, "EN", "RU");
+            var targetLang = Enum.GetName(typeof(LanguageCodes), _config.TargetLang);
+            DeepLRequestBody requestBody = new(Id, text, "EN", targetLang);
             string body = requestBody.ToJsonString();
             StringContent content = new(body, Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
