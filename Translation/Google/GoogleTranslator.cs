@@ -30,8 +30,8 @@ namespace LoreBridge.Translation.Google
 
         public async Task<string> TranslateAsync(string text)
         {
-            var targetLang = Enum.GetName(typeof(LanguageCodes), _config.TargetLang);
-            var url = string.Format(BASE_URL, "EN", targetLang, HttpUtility.UrlEncode(text));
+            var targetLang = Enum.GetName(typeof(LanguageCodes), _config.TargetLang).ToLower();
+            var url = string.Format(BASE_URL, "en", targetLang, HttpUtility.UrlEncode(text));
 
             string result = "";
             try
