@@ -7,117 +7,111 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
 using LoreBridge.Models;
 
-namespace LoreBridge.Components
-{
-    public sealed class TranslationWindow : StandardWindow
-    {
-        private readonly TranslationScrollPanel _panel;
-        private readonly SettingsModel _settings;
-        private bool _preventSaveVisible = false;
-        private StandardButton _clearButton;
+namespace LoreBridge.Components;
 
-        public TranslationWindow(SettingsModel settings,
-                                 TranslationListModel translationList,
-                                 BitmapFont font)
+public sealed class TranslationWindow : StandardWindow
+{
+    private readonly TranslationScrollPanel _panel;
+    private readonly SettingsModel _settings;
+    private bool _preventSaveVisible = false;
+    private StandardButton _clearButton;
+
+    public TranslationWindow(SettingsModel settings,
+        TranslationListModel translationList,
+        BitmapFont font)
         : base(
             AsyncTexture2D.FromAssetId(155997),
             new Rectangle(25, 26, 560, 640),
             new Rectangle(25, 14, 560, 640)
         )
+    {
+        Parent = GameService.Graphics.SpriteScreen;
+        Location = new Point(settings.WindowLocationX.Value, settings.WindowLocationY.Value);
+        Height = settings.WindowHeight.Value;
+        Width = settings.WindowWidth.Value;
+        CanClose = true;
+        CanCloseWithEscape = false;
+        CanResize = true;
+        Title = "Translation";
+
+        _settings = settings;
+        _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
+
+        if (settings.WindowVisible.Value)
         {
-            Parent = GameService.Graphics.SpriteScreen;
-            Location = new Point(settings.WindowLocationX.Value, settings.WindowLocationY.Value);
-            Height = settings.WindowHeight.Value;
-            Width = settings.WindowWidth.Value;
-            CanClose = true;
-            CanCloseWithEscape = false;
-            CanResize = true;
-            Title = "Translation";
+            Show();
+        }
 
-            _settings = settings;
-            _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
-
-            if (settings.WindowVisible.Value)
+        GameService.Gw2Mumble.UI.IsMapOpenChanged += (o, e) =>
+        {
+            if (e.Value)
             {
+                _preventSaveVisible = true;
+                Hide();
+            }
+
+            if (!e.Value && _settings != null && _settings.WindowVisible.Value)
+            {
+                _preventSaveVisible = false;
                 Show();
             }
+        };
 
-            GameService.Gw2Mumble.UI.IsMapOpenChanged += (o, e) =>
-            {
-                if (e.Value)
-                {
-                    _preventSaveVisible = true;
-                    Hide();
-                }
-
-                if (!e.Value && _settings != null && _settings.WindowVisible.Value)
-                {
-                    _preventSaveVisible = false;
-                    Show();
-                }
-            };
-
-            GameService.GameIntegration.Gw2Instance.IsInGameChanged += (o, e) =>
-            {
-                Debug.WriteLine($"IsInGameChanged: {e.Value}");
-            };
-
-            _clearButton = new()
-            {
-                Parent = this,
-                Text = "Clear",
-                Width = 42,
-                Right = Width - 15,
-                Top = -2,
-                Height = 20,
-            };
-            _clearButton.Click += delegate { translationList.ClearAll(); };
-        }
-
-        protected override void OnShown(EventArgs e)
+        _clearButton = new()
         {
-            if (_settings != null) _settings.WindowVisible.Value = true;
+            Parent = this,
+            Text = "Clear",
+            Width = 42,
+            Right = Width - 15,
+            Top = -2,
+            Height = 20,
+        };
+        _clearButton.Click += delegate { translationList.ClearAll(); };
+    }
 
-            base.OnShown(e);
-        }
+    protected override void OnShown(EventArgs e)
+    {
+        if (_settings != null) _settings.WindowVisible.Value = true;
 
-        protected override void OnHidden(EventArgs e)
+        base.OnShown(e);
+    }
+
+    protected override void OnHidden(EventArgs e)
+    {
+        if (_settings != null && !_preventSaveVisible) _settings.WindowVisible.Value = false;
+
+        base.OnHidden(e);
+    }
+
+    protected override void OnMoved(MovedEventArgs e)
+    {
+        if (_settings != null)
         {
-            if (_settings != null && !_preventSaveVisible) _settings.WindowVisible.Value = false;
-
-            base.OnHidden(e);
+            _settings.WindowLocationX.Value = e.CurrentLocation.X;
+            _settings.WindowLocationY.Value = e.CurrentLocation.Y;
         }
-
-        protected override void OnMoved(MovedEventArgs e)
-        {
-            if (_settings != null)
-            {
-                _settings.WindowLocationX.Value = e.CurrentLocation.X;
-                _settings.WindowLocationY.Value = e.CurrentLocation.Y;
-            }
             
-            base.OnMoved(e);
+        base.OnMoved(e);
+    }
+
+    protected override void OnResized(ResizedEventArgs e)
+    {
+        _panel?.SaveScroll();
+            
+        if (_clearButton != null)
+        {
+            _clearButton.Right = e.CurrentSize.X -15;
         }
 
-        protected override void OnResized(ResizedEventArgs e)
+        if (_settings == null)
         {
-            _panel?.SaveScroll();
-            
-            if (_clearButton != null)
-            {
-                _clearButton.Right = e.CurrentSize.X -15;
-            }
-
-            if (_settings == null)
-            {
-                base.OnResized(e);
-                return;
-            }
-
-            _settings.WindowWidth.Value = e.CurrentSize.X;
-            _settings.WindowHeight.Value = e.CurrentSize.Y;
-
             base.OnResized(e);
+            return;
         }
+
+        _settings.WindowWidth.Value = e.CurrentSize.X;
+        _settings.WindowHeight.Value = e.CurrentSize.Y;
+
+        base.OnResized(e);
     }
 }
