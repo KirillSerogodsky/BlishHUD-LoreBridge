@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-// using System.Threading.Tasks;
 using Blish_HUD;
 using LoreBridge.Models;
 

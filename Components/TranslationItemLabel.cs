@@ -27,11 +27,11 @@ public class TranslationItemLabel : Label
 
     private string WrapTextSegment(string text, float maxLineWidth)
     {
-        string[] array = text.Split(' ');
+        var array = text.Split(' ');
         StringBuilder stringBuilder = new();
-        float num = 0f;
-        float width = 11f; // font.MeasureString(" ").Width;
-        string[] array2 = array;
+        var num = 0f;
+        var width = 11f; // font.MeasureString(" ").Width;
+        var array2 = array;
         foreach (string text2 in array2)
         {
             Vector2 vector = new(text2.Length * 11f, 0); ; // font.MeasureString(text2);
