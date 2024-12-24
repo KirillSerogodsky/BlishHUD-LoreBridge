@@ -114,8 +114,8 @@ public class LoreBridgeModule : Module
             Translators.DeepL => new DeepLTranslator(config),
             Translators.Google => new GoogleTranslator(config),
             Translators.Google2 => new GoogleTranslator2(config),
-            Translators.Yandex => new GoogleTranslator2(config),
-            _ => _translator
+            Translators.Yandex => new YandexTranslator(config),
+            _ => null 
         };
     }
 

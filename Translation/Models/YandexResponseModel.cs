@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace LoreBridge.Translation.Models;
 
 public class YandexResponseModel
 {
-    [JsonPropertyName("text")] public string Text { get; set; }
+    [JsonPropertyName("code")] public HttpStatusCode Code { get; set; }
+    [JsonPropertyName("text")] public List<string> Text { get; set; }
+    [JsonPropertyName("message")] public string Message { get; set; }
 }
