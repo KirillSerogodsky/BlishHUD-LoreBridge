@@ -1,23 +1,8 @@
 ﻿using LoreBridge.Enums;
 
-namespace LoreBridge.Translation
+namespace LoreBridge.Translation;
+
+public class TranslatorConfig
 {
-    public class TranslatorConfig
-    {
-        private Languages _targetLang;
-        private Translators _translator;
-
-        public TranslatorConfig()
-        {
-        }
-
-        public Languages TargetLang
-        {
-            get => _targetLang;
-            set
-            {
-                _targetLang = value;
-            }
-        }
-    }
+    public Languages TargetLang { get; set; }
 }
