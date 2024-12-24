@@ -109,18 +109,14 @@ public class LoreBridgeModule : Module
     private void CreateTranslator(Translators translator, TranslatorConfig config)
     {
         _translator?.Dispose();
-        switch (translator)
+        _translator = translator switch
         {
-            case Translators.DeepL:
-                _translator = new DeepLTranslator(config);
-                break;
-            case Translators.Google:
-                _translator = new GoogleTranslator(config);
-                break;
-            case Translators.Google2:
-                _translator = new GoogleTranslator2(config);
-                break;
-        }
+            Translators.DeepL => new DeepLTranslator(config),
+            Translators.Google => new GoogleTranslator(config),
+            Translators.Google2 => new GoogleTranslator2(config),
+            Translators.Yandex => new GoogleTranslator2(config),
+            _ => _translator
+        };
     }
 
     protected override void Update(GameTime gameTime)

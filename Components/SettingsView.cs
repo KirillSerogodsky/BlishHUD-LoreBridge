@@ -88,12 +88,13 @@ public class SettingsView(SettingsModel settings) : View
         {
             "DeepL",
             "Google (Simple)",
-            "Google (Advanced)"
+            "Google (Advanced)",
+            "Yandex",
         };
         var translatorDropdown = new Dropdown
         {
             Parent = translatorPanel,
-            Width = 140,
+            Width = 160,
             SelectedItem = translatorDropdownItems[settings.TranslationTranslator.Value]
         };
         foreach (var item in translatorDropdownItems) translatorDropdown.Items.Add(item);
