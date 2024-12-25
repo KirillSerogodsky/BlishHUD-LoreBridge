@@ -7,6 +7,7 @@ public enum Languages
     Hungarian = 3,
     // Greek = 4,
     Danish = 5,
+    German = 29,
     Indonesian = 6,
     Italian = 7,
     // ChineseTraditional = 8,

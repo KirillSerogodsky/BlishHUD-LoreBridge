@@ -7,6 +7,7 @@ public enum LanguageCodes
     HU = 3, // Hungarian
     EL = 4, // Greek
     DA = 5, // Danish
+    DE = 29, // German
     ID = 6, // Indonesian
     IT = 7, // Italian
     ZH_TW = 8, // Chinese (Traditional)

@@ -12,8 +12,18 @@ namespace LoreBridge.OCR;
 
 public class WindowsOCR
 {
+    private readonly OcrEngine? _engine;
+
+    public WindowsOCR()
+    {
+        _engine = OcrEngine.TryCreateFromLanguage(new Language("en-US"));
+    }
+
     public string[] GetTextLines(Bitmap bitmap)
     {
+        if (_engine is null)
+            throw new Exception("The English (USA) Language Pack must be installed for Windows OCR to work properly.");
+
         SoftwareBitmap softwareBitmap;
         using (var randStream = new InMemoryRandomAccessStream())
         {
@@ -22,8 +32,7 @@ public class WindowsOCR
             softwareBitmap = decoder.GetSoftwareBitmapAsync().AsTask().Result;
         }
 
-        var engine = OcrEngine.TryCreateFromLanguage(new Language("en-US"));
-        var result = engine.RecognizeAsync(softwareBitmap).AsTask().Result;
+        var result = _engine.RecognizeAsync(softwareBitmap).AsTask().Result;
 
         return result.Lines.Select(line => line.Text).ToArray();
     }

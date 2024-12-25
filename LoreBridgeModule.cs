@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Drawing;
@@ -80,8 +81,18 @@ public class LoreBridgeModule : Module
         _screenCapturer = new ScreenCapturer(_settings);
         _screenCapturer.ScreenCaptured += (o, e) =>
         {
-            Bitmap bitmap = Utils.Screen.GetScreen(e);
-            var result = _ocrEngine.GetTextLines(bitmap);
+            var bitmap = Utils.Screen.GetScreen(e);
+            string[] result = [];
+            
+            try
+            {
+                result = _ocrEngine.GetTextLines(bitmap);
+            }
+            catch (Exception exception)
+            {
+                _translationList.Add(exception.Message);
+            }
+            
             if (result.Length > 0)
             {
                 _ = TranslateTextAsync(string.Join(" ", result));
@@ -102,7 +113,6 @@ public class LoreBridgeModule : Module
         catch (Exception e)
         {
             _translationList.Add(e.Message);
-            throw;
         }
     }
 
