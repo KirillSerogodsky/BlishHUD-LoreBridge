@@ -63,7 +63,7 @@ public class LoreBridgeModule : Module
     protected override async Task LoadAsync()
     {
         _font = ContentsManager.GetBitmapFont(FontPath, _settings.WindowFontSize.Value);
-        _translationList = new TranslationListModel();
+        _translationList = new TranslationListModel(_settings);
         _translationWindow = new TranslationWindow(_settings, _translationList, _font);
         _cornerIcon = new LoreBridgeCornerIcon(ContentsManager);
         _ocrEngine = new WindowsOCR();

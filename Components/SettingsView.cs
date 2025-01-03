@@ -12,7 +12,7 @@ namespace LoreBridge.Components;
 public class SettingsView(SettingsModel settings) : View
 {
     private Panel _settingsPanel;
-    
+
     protected override void Build(Container buildPanel)
     {
         _settingsPanel = new FlowPanel
@@ -24,7 +24,7 @@ public class SettingsView(SettingsModel settings) : View
             FlowDirection = ControlFlowDirection.SingleTopToBottom,
             OuterControlPadding = new Vector2(22, 6),
             ControlPadding = new Vector2(6, 6),
-            HorizontalScrollOffset = 16,
+            HorizontalScrollOffset = 16
         };
 
         var generalPanel = new FlowPanel
@@ -135,7 +135,7 @@ public class SettingsView(SettingsModel settings) : View
         };
         autoTranslateNpcDialoguesCheckbox.CheckedChanged += (o, e) =>
             settings.TranslationAutoTranslateNpcDialogues.Value = e.Checked;
-        
+
         var translationWindowPanel = new FlowPanel
         {
             Parent = _settingsPanel,
@@ -148,7 +148,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 6),
             ShowBorder = true
         };
-        
+
         var fontSizePanel = new FlowPanel
         {
             Parent = translationWindowPanel,
@@ -167,23 +167,23 @@ public class SettingsView(SettingsModel settings) : View
             Width = 180
         };
 
-        var fontSizeTrackBar = new TrackBar ()
+        var fontSizeTrackBar = new TrackBar
         {
             Parent = fontSizePanel,
             MinValue = 16,
             MaxValue = 32,
             Width = 160,
-            Value = settings.WindowFontSize.Value,
+            Value = settings.WindowFontSize.Value
         };
 
-        var fontSizeLabel = new Label()
+        var fontSizeLabel = new Label
         {
             Parent = fontSizePanel,
             Text = settings.WindowFontSize.Value.ToString(),
             ShowShadow = true,
             Height = 16,
             AutoSizeWidth = true,
-            TextColor = Color.Gray,
+            TextColor = Color.Gray
         };
 
         fontSizeTrackBar.ValueChanged += (o, e) =>
@@ -191,6 +191,33 @@ public class SettingsView(SettingsModel settings) : View
             settings.WindowFontSize.Value = (int)e.Value;
             fontSizeLabel.Text = settings.WindowFontSize.Value.ToString();
         };
+
+        var coloredNamesPanel = new FlowPanel
+        {
+            Parent = translationWindowPanel,
+            FlowDirection = ControlFlowDirection.LeftToRight,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            ControlPadding = new Vector2(6, 0)
+        };
+
+        new Label
+        {
+            Parent = coloredNamesPanel,
+            Text = "Colored names",
+            ShowShadow = true,
+            Height = 16,
+            Width = 180
+        };
+
+        var coloredNamesCheckbox = new Checkbox
+        {
+            Parent = coloredNamesPanel,
+            Checked = settings.WindowColoredNames.Value,
+            Height = 16
+        };
+        coloredNamesCheckbox.CheckedChanged += (o, e) =>
+            settings.WindowColoredNames.Value = e.Checked;
 
         var keyBindPanel = new FlowPanel
         {

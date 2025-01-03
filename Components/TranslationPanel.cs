@@ -11,7 +11,7 @@ public sealed class TranslationPanel : FlowPanel
 {
     private const int OuterPadding = 6;
     private const int InnerPadding = 6;
-    
+
     private readonly List<TranslationItemPanel> _entries = [];
     private readonly BitmapFont _font;
 

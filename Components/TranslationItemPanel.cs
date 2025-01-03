@@ -1,6 +1,5 @@
 ﻿using Blish_HUD.Controls;
 using LoreBridge.Models;
-using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
@@ -21,9 +20,10 @@ public sealed class TranslationItemPanel : FlowPanel
             {
                 Parent = this,
                 Text = listItem.Name,
-                TextColor = Color.Gray,
+                TextColor = listItem.NameColor,
                 Font = font,
-                AutoSizeWidth = true
+                AutoSizeWidth = true,
+                ShowShadow = true
             };
 
         _translationItemLabel = new TranslationItemLabel(listItem.Text, font) { Parent = this, Width = _size.X };
