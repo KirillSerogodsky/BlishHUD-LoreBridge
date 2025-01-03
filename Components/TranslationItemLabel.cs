@@ -10,7 +10,8 @@ public class TranslationItemLabel : Label
 {
     private readonly string _originalText;
 
-    public TranslationItemLabel(string text, BitmapFont font) {
+    public TranslationItemLabel(string text, BitmapFont font)
+    {
         Text = WrapTextCustom(font, text, Width);
         AutoSizeHeight = true;
         Font = font;
@@ -32,9 +33,10 @@ public class TranslationItemLabel : Label
         var num = 0f;
         var width = 11f; // font.MeasureString(" ").Width;
         var array2 = array;
-        foreach (string text2 in array2)
+        foreach (var text2 in array2)
         {
-            Vector2 vector = new(text2.Length * 11f, 0); ; // font.MeasureString(text2);
+            Vector2 vector = new(text2.Length * 11f, 0);
+            ; // font.MeasureString(text2);
             if (num + vector.X < maxLineWidth)
             {
                 stringBuilder.Append(text2 + " ");
@@ -52,10 +54,7 @@ public class TranslationItemLabel : Label
 
     private string WrapTextCustom(BitmapFont spriteFont, string text, float maxLineWidth)
     {
-        if (string.IsNullOrEmpty(text))
-        {
-            return "";
-        }
+        if (string.IsNullOrEmpty(text)) return "";
 
         return string.Join(
             "\n",

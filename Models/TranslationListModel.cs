@@ -1,38 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blish_HUD;
 
 namespace LoreBridge.Models;
 
-public class TranslationListModel
+public sealed class TranslationListModel
 {
-    private List<string> Value { get; } = [];
+    private List<TranslationListItemModel> Value { get; } = [];
 
-    public event EventHandler<ValueChangedEventArgs<List<string>>> Added;
-    public event EventHandler<ValueChangedEventArgs<List<string>>> Updated;
+    public event EventHandler<TranslationListItemModel> Added;
     public event EventHandler Cleared;
 
-    private void OnAdd(ValueChangedEventArgs<List<string>> e)
+    public void Add(string text, string name = "")
     {
-        Added?.Invoke(this, e);
+        var item = new TranslationListItemModel()
+        {
+            Name = name,
+            Text = text,
+        };
+        Value.Add(item);
+        Added?.Invoke(this, item);
     }
 
-    private void OnListUpdated(ValueChangedEventArgs<List<string>> e)
-    {
-        Updated?.Invoke(this, e);
-    }
-
-    public void Add(string text)
-    {
-        var value2 = Value;
-        Value.Add(text);
-        OnAdd(new ValueChangedEventArgs<List<string>>(value2, Value));
-        OnListUpdated(new ValueChangedEventArgs<List<string>>(value2, Value));
-    }
-
-    public void ClearAll()
+    public void Clear()
     {
         Value.Clear();
-        Cleared.Invoke(this, null);
+        Cleared?.Invoke(this, null);
     }
 }

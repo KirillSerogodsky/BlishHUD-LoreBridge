@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Diagnostics;
 using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
+using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
-using LoreBridge.Models;
 
 namespace LoreBridge.Components;
 
 public sealed class TranslationWindow : StandardWindow
 {
+    private readonly StandardButton _clearButton;
     private readonly TranslationScrollPanel _panel;
     private readonly SettingsModel _settings;
-    private bool _preventSaveVisible = false;
-    private StandardButton _clearButton;
+    private bool _preventSaveVisible;
 
     public TranslationWindow(SettingsModel settings,
         TranslationListModel translationList,
         BitmapFont font)
         : base(
-            AsyncTexture2D.FromAssetId(155997),
-            new Rectangle(25, 26, 560, 640),
-            new Rectangle(25, 14, 560, 640)
+            AsyncTexture2D.FromAssetId(155139),
+            new Rectangle(0, 0, 514, 532),
+            new Rectangle(0, 12, 514, 520)
         )
     {
         Parent = GameService.Graphics.SpriteScreen;
@@ -37,10 +36,7 @@ public sealed class TranslationWindow : StandardWindow
         _settings = settings;
         _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
 
-        if (settings.WindowVisible.Value)
-        {
-            Show();
-        }
+        if (settings.WindowVisible.Value) Show();
 
         GameService.Gw2Mumble.UI.IsMapOpenChanged += (o, e) =>
         {
@@ -57,16 +53,16 @@ public sealed class TranslationWindow : StandardWindow
             }
         };
 
-        _clearButton = new()
+        _clearButton = new StandardButton
         {
             Parent = this,
             Text = "Clear",
             Width = 42,
             Right = Width - 15,
             Top = -2,
-            Height = 20,
+            Height = 20
         };
-        _clearButton.Click += delegate { translationList.ClearAll(); };
+        _clearButton.Click += delegate { translationList.Clear(); };
     }
 
     protected override void OnShown(EventArgs e)
@@ -90,18 +86,15 @@ public sealed class TranslationWindow : StandardWindow
             _settings.WindowLocationX.Value = e.CurrentLocation.X;
             _settings.WindowLocationY.Value = e.CurrentLocation.Y;
         }
-            
+
         base.OnMoved(e);
     }
 
     protected override void OnResized(ResizedEventArgs e)
     {
         _panel?.SaveScroll();
-            
-        if (_clearButton != null)
-        {
-            _clearButton.Right = e.CurrentSize.X -15;
-        }
+
+        if (_clearButton != null) _clearButton.Right = e.CurrentSize.X - 15;
 
         if (_settings == null)
         {

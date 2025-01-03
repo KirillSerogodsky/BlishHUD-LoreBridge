@@ -15,6 +15,8 @@
       "username": "Kirill.2147"
     }
   ],
-  "directories": [ "lorebridge" ],
+  "directories": [
+    "lorebridge"
+  ],
   "enabled_without_gw2": false
 }

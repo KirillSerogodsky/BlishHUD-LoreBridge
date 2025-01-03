@@ -7,10 +7,8 @@ namespace LoreBridge.Components;
 
 internal class ScreenCapturer : IDisposable
 {
-    private readonly SettingsModel _settings;
     private readonly OverlayForm _overlay;
-
-    public event EventHandler<Rectangle> ScreenCaptured;
+    private readonly SettingsModel _settings;
 
     public ScreenCapturer(SettingsModel settings)
     {
@@ -29,12 +27,23 @@ internal class ScreenCapturer : IDisposable
                 GameService.GameIntegration.Gw2Instance.FocusGw2();
             });
         }; */
-        _overlay.AreaSelected += (o, e) => {
+        _overlay.AreaSelected += (o, e) =>
+        {
             _overlay.Hide();
             ScreenCaptured.Invoke(this, e);
             GameService.GameIntegration.Gw2Instance.FocusGw2();
         };
     }
+
+    public void Dispose()
+    {
+        _overlay.Dispose();
+        _settings.ToggleCapturerHotkey.Value.Enabled = false;
+        _settings.ToggleCapturerHotkey.Value.Activated -= CaptureScreen;
+        GameService.GameIntegration.Gw2Instance.Gw2LostFocus -= LostFocus;
+    }
+
+    public event EventHandler<Rectangle> ScreenCaptured;
 
     private void LostFocus(object o, EventArgs e)
     {
@@ -45,13 +54,5 @@ internal class ScreenCapturer : IDisposable
     {
         _overlay.Show();
         // _overlay.Focus();
-    }
-
-    public void Dispose()
-    {
-        _overlay.Dispose();
-        _settings.ToggleCapturerHotkey.Value.Enabled = false;
-        _settings.ToggleCapturerHotkey.Value.Activated -= CaptureScreen;
-        GameService.GameIntegration.Gw2Instance.Gw2LostFocus -= LostFocus;
     }
 }

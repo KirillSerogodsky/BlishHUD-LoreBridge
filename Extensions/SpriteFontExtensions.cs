@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.TextureAtlases;
-using System;
-using System.Collections.Generic;
 using BitmapFont = LoreBridge.Utils.BitmapFont;
 
 namespace LoreBridge;
@@ -11,10 +11,7 @@ internal static class SpriteFontExtensions
 {
     public static BitmapFont ToBitmapFont(this SpriteFont font, int lineHeight = 0)
     {
-        if (lineHeight < 0)
-        {
-            throw new ArgumentException("Line height cannot be negative.", nameof(lineHeight));
-        }
+        if (lineHeight < 0) throw new ArgumentException("Line height cannot be negative.", nameof(lineHeight));
 
         var regions = new List<BitmapFontRegion>();
         var glyphs = font.GetGlyphs();

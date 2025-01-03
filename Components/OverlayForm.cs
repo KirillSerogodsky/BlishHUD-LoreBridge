@@ -4,13 +4,12 @@ using System.Windows.Forms;
 
 namespace LoreBridge.Components;
 
-public class OverlayForm : Form
+public sealed class OverlayForm : Form
 {
     private readonly Pen _pen = new(Color.White, 2f);
-    private Point _startMousePos;
     private Rectangle? _rectangle;
 
-    public event EventHandler<Rectangle> AreaSelected;
+    private Point _startMousePos;
     // public event EventHandler<bool> OnCanceled;
 
     public OverlayForm()
@@ -29,6 +28,8 @@ public class OverlayForm : Form
         // KeyDown += OnKeyDown;
     }
 
+    public event EventHandler<Rectangle> AreaSelected;
+
     /* private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Escape)
@@ -40,9 +41,8 @@ public class OverlayForm : Form
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        if (_rectangle != null) {
-            e.Graphics.DrawRectangle(_pen, (Rectangle)_rectangle);
-        };
+        if (_rectangle != null) e.Graphics.DrawRectangle(_pen, (Rectangle)_rectangle);
+        ;
 
         base.OnPaint(e);
     }
@@ -63,14 +63,9 @@ public class OverlayForm : Form
     private void OnMouseUp(object sender, MouseEventArgs e)
     {
         Reset();
-        Rectangle rectangle = GetRectangle(_startMousePos, e.Location);
-        if (rectangle.Width > 10 && rectangle.Height > 10)
-        {
-            AreaSelected.Invoke(this, rectangle);
-        } else
-        {
-            // OnCanceled.Invoke(this, true);
-        }
+        var rectangle = GetRectangle(_startMousePos, e.Location);
+        if (rectangle.Width > 10 && rectangle.Height > 10) AreaSelected.Invoke(this, rectangle);
+        // OnCanceled.Invoke(this, true);
     }
 
     private void Reset()

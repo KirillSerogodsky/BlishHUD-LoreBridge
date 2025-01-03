@@ -8,7 +8,8 @@ namespace LoreBridge;
 
 internal static class ContentsManagerExtensions
 {
-    public static SpriteFont GetSpriteFont(this ContentsManager manager, string fontPath, int fontSize, int textureSize = 1392)
+    public static SpriteFont GetSpriteFont(this ContentsManager manager, string fontPath, int fontSize,
+        int textureSize = 1392)
     {
         using var fontStream = manager.GetFileStream(fontPath);
         var fontData = new byte[fontStream.Length];
@@ -17,7 +18,8 @@ internal static class ContentsManagerExtensions
         if (fontDataLength > 0)
         {
             using var ctx = GameService.Graphics.LendGraphicsDeviceContext();
-            var bakeResult = TtfFontBaker.Bake(fontData, fontSize, textureSize, textureSize, new[] {
+            var bakeResult = TtfFontBaker.Bake(fontData, fontSize, textureSize, textureSize, new[]
+            {
                 CharacterRange.BasicLatin,
                 CharacterRange.Latin1Supplement,
                 CharacterRange.LatinExtendedA,
@@ -31,7 +33,8 @@ internal static class ContentsManagerExtensions
         return null;
     }
 
-    public static BitmapFont GetBitmapFont(this ContentsManager manager, string fontPath, int fontSize, int lineHeight = 0)
+    public static BitmapFont GetBitmapFont(this ContentsManager manager, string fontPath, int fontSize,
+        int lineHeight = 0)
     {
         return manager.GetSpriteFont(fontPath, fontSize)?.ToBitmapFont(lineHeight);
     }

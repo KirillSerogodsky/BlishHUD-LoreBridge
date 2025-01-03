@@ -1,4 +1,6 @@
 ﻿using Blish_HUD.Controls;
+using LoreBridge.Models;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
@@ -7,14 +9,24 @@ public sealed class TranslationItemPanel : FlowPanel
 {
     private readonly TranslationItemLabel _translationItemLabel;
 
-    public TranslationItemPanel(string text, BitmapFont font)
+    public TranslationItemPanel(TranslationListItemModel listItem, BitmapFont font)
     {
         WidthSizingMode = SizingMode.Fill;
         ShowBorder = true;
         HeightSizingMode = SizingMode.AutoSize;
-        FlowDirection = ControlFlowDirection.SingleLeftToRight;
+        FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
-        _translationItemLabel = new TranslationItemLabel(text, font) { Parent = this, Width = _size.X };
+        if (!string.IsNullOrWhiteSpace(listItem.Name))
+            new Label
+            {
+                Parent = this,
+                Text = listItem.Name,
+                TextColor = Color.Gray,
+                Font = font,
+                AutoSizeWidth = true
+            };
+
+        _translationItemLabel = new TranslationItemLabel(listItem.Text, font) { Parent = this, Width = _size.X };
     }
 
     protected override void OnResized(ResizedEventArgs e)
