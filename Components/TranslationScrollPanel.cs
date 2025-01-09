@@ -9,7 +9,9 @@ namespace LoreBridge.Components;
 
 public sealed class TranslationScrollPanel : FlowPanel
 {
-    private const int ScrollBarWidth = 15;
+    private const int ScrollBarWidth = 12;
+    private const int ScrollBarOffsetX = 4;
+    private const int ScrollBarOffsetY = 10;
     private readonly Scrollbar _scrollBar;
 
     private readonly TranslationPanel _scrollPanel;
@@ -21,8 +23,16 @@ public sealed class TranslationScrollPanel : FlowPanel
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.Fill;
 
-        _scrollPanel = new TranslationPanel(translationList, font) { Parent = this };
-        _scrollBar = new Scrollbar(_scrollPanel) { Parent = this };
+        _scrollPanel = new TranslationPanel(translationList, font)
+        {
+            Parent = this,
+            Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0),
+        };
+        _scrollBar = new Scrollbar(_scrollPanel)
+        {
+            Parent = this,
+            Location = new Point(ScrollBarOffsetX, ScrollBarOffsetY)
+        };
 
         translationList.Added += (o, e) =>
         {
@@ -43,6 +53,7 @@ public sealed class TranslationScrollPanel : FlowPanel
             _scrollBar.ScrollDistance = factor != 0 ? _scrollTarget.Value / factor : 0;
             _scrollTarget = null;
         }
+        _scrollPanel.Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0);
     }
 
     public void SaveScroll()
@@ -55,15 +66,15 @@ public sealed class TranslationScrollPanel : FlowPanel
     {
         if (_scrollBar != null)
         {
-            _scrollBar.Height = Height;
-            _scrollBar.Location = new Point(Width - ScrollBarWidth, 0);
+            _scrollBar.Height = Height - ScrollBarOffsetY * 2;
+            _scrollBar.Location = new Point(ScrollBarOffsetX, ScrollBarOffsetY);
         }
 
         if (_scrollPanel != null)
         {
             _scrollPanel.Height = Height;
-            _scrollPanel.Width = Width - ScrollBarWidth;
-            _scrollPanel.Location = new Point(0, 0);
+            _scrollPanel.Width = Width - ScrollBarOffsetX * 2 - ScrollBarWidth;
+            _scrollPanel.Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0);
         }
     }
 

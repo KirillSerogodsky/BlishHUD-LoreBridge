@@ -44,7 +44,7 @@ public sealed class TranslationListModel
 
         if (_colorPairs.TryGetValue(name, out var pair)) return pair;
 
-        var color = new Color(_random.Next(255), _random.Next(255), _random.Next(255));
+        var color = new Color(_random.Next(1, 255), _random.Next(1, 255), _random.Next(1, 255));
         _colorPairs.Add(name, color);
 
         return color;

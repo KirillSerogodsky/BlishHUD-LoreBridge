@@ -73,7 +73,7 @@ public class LoreBridgeModule : Module
             TargetLang = (Languages)_settings.TranslationLanguage.Value
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
-
+        
         _cornerIcon.Click += OnCornerIconClick;
         _screenCapturer.ScreenCaptured += OnScreenCaptured;
         _settings.WindowFontSize.SettingChanged += OnFontSizeChanged;
@@ -159,17 +159,17 @@ public class LoreBridgeModule : Module
         {
             var text = await TranslateTextAsync(chatMessage.Text);
             if (text is not null)
-                _translationList.Add(text, chatMessage.AccountName);
+                _translationList.Add(text, chatMessage.CharacterName);
         }
     }
 
     private async void OnScreenCaptured(object o, Rectangle rectangle)
     {
-        var bitmap = Screen.GetScreen(rectangle);
         string[] result = [];
 
         try
         {
+            var bitmap = Screen.GetScreen(rectangle);
             result = _ocrEngine.GetTextLines(bitmap);
         }
         catch (Exception exception)

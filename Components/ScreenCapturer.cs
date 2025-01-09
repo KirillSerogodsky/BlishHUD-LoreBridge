@@ -30,7 +30,7 @@ internal class ScreenCapturer : IDisposable
         _overlay.AreaSelected += (o, e) =>
         {
             _overlay.Hide();
-            ScreenCaptured.Invoke(this, e);
+            ScreenCaptured?.Invoke(this, e);
             GameService.GameIntegration.Gw2Instance.FocusGw2();
         };
     }
@@ -44,7 +44,7 @@ internal class ScreenCapturer : IDisposable
     }
 
     public event EventHandler<Rectangle> ScreenCaptured;
-
+    
     private void LostFocus(object o, EventArgs e)
     {
         _overlay?.Hide();

@@ -49,7 +49,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 0)
         };
 
-        new Label
+        var languageLabel = new Label
         {
             Parent = languagePanel,
             Text = "Translation language",
@@ -79,7 +79,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 0)
         };
 
-        new Label
+        var translatorLabel = new Label
         {
             Parent = translatorPanel,
             Text = "Translator",
@@ -117,7 +117,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 0)
         };
 
-        new Label
+        var autoTranslateNpcDialoguesLabel = new Label
         {
             Parent = autoTranslateNpcDialoguesPanel,
             Text = "Auto translate NPC dialogues",
@@ -158,7 +158,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 0)
         };
 
-        new Label
+        var fontSizeLabel = new Label
         {
             Parent = fontSizePanel,
             Text = "Font size",
@@ -176,7 +176,7 @@ public class SettingsView(SettingsModel settings) : View
             Value = settings.WindowFontSize.Value
         };
 
-        var fontSizeLabel = new Label
+        var fontSizeCurrentLabel = new Label
         {
             Parent = fontSizePanel,
             Text = settings.WindowFontSize.Value.ToString(),
@@ -189,7 +189,7 @@ public class SettingsView(SettingsModel settings) : View
         fontSizeTrackBar.ValueChanged += (o, e) =>
         {
             settings.WindowFontSize.Value = (int)e.Value;
-            fontSizeLabel.Text = settings.WindowFontSize.Value.ToString();
+            fontSizeCurrentLabel.Text = settings.WindowFontSize.Value.ToString();
         };
 
         var coloredNamesPanel = new FlowPanel
@@ -201,7 +201,7 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 0)
         };
 
-        new Label
+        var coloredNamesLabel = new Label
         {
             Parent = coloredNamesPanel,
             Text = "Colored names",
@@ -232,14 +232,14 @@ public class SettingsView(SettingsModel settings) : View
             ShowBorder = true
         };
 
-        new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
+        var toggleCapturerHotKeybindingAssigner = new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
         {
             Parent = keyBindPanel,
             KeyBindingName = settings.ToggleCapturerHotkey.DisplayName,
             BasicTooltipText = settings.ToggleCapturerHotkey.Description
         };
 
-        new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
+        var toggleTranslationWindowKeybindingAssigner = new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
         {
             Parent = keyBindPanel,
             KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,

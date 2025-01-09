@@ -20,8 +20,8 @@ public sealed class TranslationPanel : FlowPanel
     public TranslationPanel(TranslationListModel translationList, BitmapFont font)
     {
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
-        OuterControlPadding = new Vector2(OuterPadding, OuterPadding);
-        ControlPadding = new Vector2(InnerPadding, InnerPadding);
+        OuterControlPadding = new Vector2(0, OuterPadding);
+        ControlPadding = new Vector2(0, InnerPadding);
 
         _font = font;
         _translationList = translationList;

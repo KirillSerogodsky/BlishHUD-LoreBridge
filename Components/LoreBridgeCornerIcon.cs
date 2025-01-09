@@ -24,6 +24,7 @@ public sealed class LoreBridgeCornerIcon : CornerIcon
     {
         _icon.Dispose();
         _iconHover.Dispose();
+        
         base.DisposeControl();
     }
 }
