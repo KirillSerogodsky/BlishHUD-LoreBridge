@@ -263,7 +263,18 @@ public abstract class ChatWindow : Container, IWindow
             destinationRect,
             sourceRect
         );
-
+        
+        // Draw right corner
+        spriteBatch.DrawOnCtrl(
+            this,
+            _textureTitleBarRight,
+            _rightTitleBarDrawBounds,
+            null,
+            Color.Black,
+            MathHelper.ToRadians(270),
+            new Vector2(_textureTitleBarRight.Height, 0)
+        );
+        
         // Draw divider
         var dividerScaledWidth = (int)(_textureTitleBarDivider.Width * 1.11);
         var dividerScaledHeight = (int)(_textureTitleBarDivider.Height * 1.4);
