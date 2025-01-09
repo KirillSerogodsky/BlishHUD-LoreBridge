@@ -14,7 +14,7 @@ namespace LoreBridge.Components;
 public abstract class ChatWindow : Container, IWindow
 {
     private const int TitlebarHeight = 26;
-    private const int TitlebarVerticalOffset = 24;
+    private const int TitlebarVerticalOffset = 23;
     private const int CornerOffset = 3;
     private const int TitleOffset = 44;
     private const int ContentTopOffset = 2;
@@ -199,66 +199,96 @@ public abstract class ChatWindow : Container, IWindow
         );
     }
 
+    private Rectangle CalculateIntersection(Rectangle rect1, Rectangle rect2)
+    {
+        var x1 = Math.Max(rect1.X, rect2.X);
+        var y1 = Math.Max(rect1.Y, rect2.Y);
+        var x2 = Math.Min(rect1.X + rect1.Width, rect2.X + rect2.Width);
+        var y2 = Math.Min(rect1.Y + rect1.Height, rect2.Y + rect2.Height);
+
+        if (x2 > x1 && y2 > y1) return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+
+        return Rectangle.Empty;
+    }
+
     private void PaintTitleBar(SpriteBatch spriteBatch)
     {
-        if (MouseOver && MouseOverTitleBar) {
+        if (MouseOver && MouseOverTitleBar)
+        {
             // TODO
         }
         
-        /* spriteBatch.DrawOnCtrl(
-            this,
-            _textureTitleBarLeft,
-            new Rectangle(
+        // Draw left texture
+        var maxOffset = 52;
+        
+        var leftTextureOffset = Math.Max(0, maxOffset - (MaxWindowWidth - TitleBarBounds.Width));
+        if (leftTextureOffset > 0)
+        {
+            var destinationRectFirst = new Rectangle(
                 _leftTitleBarDrawBounds.X,
                 _leftTitleBarDrawBounds.Y,
-                _textureTitleBarLeft.Width - 200,
+                leftTextureOffset,
                 _textureTitleBarLeft.Height
-            )
-        ); */
+            );
+            var sourceRectFirst = new Rectangle(
+                0,
+                0,
+                leftTextureOffset,
+                _textureTitleBarLeft.Height
+            );
+            spriteBatch.DrawOnCtrl(
+                this,
+                _textureTitleBarLeft,
+                destinationRectFirst,
+                sourceRectFirst
+            );
+        }
         
-        // Draw left texture
+        var rightTextureOffset = Math.Max(0, maxOffset - (TitleBarBounds.Width - _textureTitleBarLeft.Width));
+        var destinationRect = new Rectangle(
+            TitleBarBounds.X + leftTextureOffset,
+            _leftTitleBarDrawBounds.Y,
+            Math.Min(_textureTitleBarLeft.Width - rightTextureOffset, TitleBarBounds.Width),
+            _textureTitleBarLeft.Height
+        );
+        var sourceRect = new Rectangle(
+            rightTextureOffset,
+            0,
+            destinationRect.Width,
+            _textureTitleBarLeft.Height
+        );
         spriteBatch.DrawOnCtrl(
             this,
             _textureTitleBarLeft,
-            new Rectangle(
-                _leftTitleBarDrawBounds.X + 52,
-                _leftTitleBarDrawBounds.Y,
-                _textureTitleBarLeft.Width,
-                _textureTitleBarLeft.Height
-            ),
-            new Rectangle(
-                0,
-                0,
-                _textureTitleBarLeft.Width,
-                _textureTitleBarLeft.Height
-            )
-        );
-        
-        // Draw right corner
-        spriteBatch.DrawOnCtrl(
-            this,
-            _textureTitleBarRight,
-            _rightTitleBarDrawBounds,
-            null,
-            Color.Black,
-            MathHelper.ToRadians(270),
-            new Vector2(_textureTitleBarRight.Width, 0)
+            destinationRect,
+            sourceRect
         );
 
         // Draw divider
         var dividerScaledWidth = (int)(_textureTitleBarDivider.Width * 1.11);
-        var dividerScaledHeight = (int)(_textureTitleBarDivider.Height * 1.1);
-        var a = Math.Min(_textureTitleBarDivider.Width, TitleBarBounds.Width);
-        var b = Math.Min(dividerScaledWidth, TitleBarBounds.Width);
+        var dividerScaledHeight = (int)(_textureTitleBarDivider.Height * 1.4);
+        var targetRect = new Rectangle(
+            0,
+            TitleBarBounds.Bottom - dividerScaledHeight + 10,
+            dividerScaledWidth,
+            dividerScaledHeight
+        );
+        var clipRect = new Rectangle(0, 0, TitleBarBounds.Width, TitleBarBounds.Height);
+        var visibleRect = CalculateIntersection(targetRect, clipRect);
+        var scaleX = _textureTitleBarDivider.Width / (float)targetRect.Width;
+        var scaleY = _textureTitleBarDivider.Height / (float)targetRect.Height;
+        var dividerSourceRect = new Rectangle(
+            (int)((visibleRect.X - targetRect.X) * scaleX),
+            (int)((visibleRect.Y - targetRect.Y) * scaleY),
+            (int)(visibleRect.Width * scaleX),
+            (int)(visibleRect.Height * scaleY)
+        );
         spriteBatch.DrawOnCtrl(
             this,
             _textureTitleBarDivider,
-            new Rectangle(
-                0,
-                _leftTitleBarDrawBounds.Bottom - 22,
-                dividerScaledWidth,
-                dividerScaledHeight
-            )
+            visibleRect,
+            dividerSourceRect,
+            new Color(220, 220, 220)
         );
     }
 
@@ -560,8 +590,8 @@ public abstract class ChatWindow : Container, IWindow
             TitlebarHeight + ContentTopOffset,
             Width,
             Height - TitlebarHeight - ContentTopOffset);
-        
-        TitleBarBounds = new Rectangle(0, 0, Size.X, TitlebarHeight);
+
+        TitleBarBounds = new Rectangle(0, 0, Size.X, TitlebarHeight + 2);
 
         var drawWidth = ContentRegion.Width + ContentRegion.X;
         var drawHeight = ContentRegion.Height + ContentRegion.Y - TitlebarHeight;
