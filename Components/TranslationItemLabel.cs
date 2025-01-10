@@ -12,7 +12,7 @@ public class TranslationItemLabel : Label
 
     public TranslationItemLabel(string text, BitmapFont font)
     {
-        Text = WrapTextCustom(font, text, Width);
+        Text = WrapText(font, text, Width);
         AutoSizeHeight = true;
         Font = font;
         ShowShadow = true;
@@ -23,42 +23,39 @@ public class TranslationItemLabel : Label
     public void RerenderText(int width)
     {
         Width = width;
-        Text = WrapTextCustom(Font, _originalText, width);
+        Text = WrapText(Font, _originalText, width);
     }
 
-    private string WrapTextSegment(string text, float maxLineWidth)
+    private static string WrapTextSegment(BitmapFont spriteFont, string text, float maxLineWidth)
     {
-        var array = text.Split(' ');
-        StringBuilder stringBuilder = new();
-        var num = 0f;
-        var width = 11f; // font.MeasureString(" ").Width;
-        var array2 = array;
-        foreach (var text2 in array2)
+        var words = text.Split(' ');
+        var sb = new StringBuilder();
+        var lineWidth = 0f;
+        var spaceWidth = spriteFont.MeasureString("_").Width;
+
+        foreach (var word in words)
         {
-            Vector2 vector = new(text2.Length * 11f, 0);
-            ; // font.MeasureString(text2);
-            if (num + vector.X < maxLineWidth)
+            Vector2 size = spriteFont.MeasureString(word);
+
+            if (lineWidth + size.X < maxLineWidth)
             {
-                stringBuilder.Append(text2 + " ");
-                num += vector.X + width;
+                sb.Append(word + " ");
+                lineWidth += size.X + spaceWidth;
             }
             else
             {
-                stringBuilder.Append("\n" + text2 + " ");
-                num = vector.X + width;
+                sb.Append("\n" + word + " ");
+                lineWidth = size.X + spaceWidth;
             }
         }
 
-        return stringBuilder.ToString();
+        return sb.ToString();
     }
 
-    private string WrapTextCustom(BitmapFont spriteFont, string text, float maxLineWidth)
+    private new static string WrapText(BitmapFont spriteFont, string text, float maxLineWidth)
     {
-        if (string.IsNullOrEmpty(text)) return "";
-
-        return string.Join(
-            "\n",
-            from s in text.Split('\n') select WrapTextSegment(s, maxLineWidth)
-        );
+        return string.IsNullOrEmpty(text)
+            ? ""
+            : string.Join("\n", text.Split('\n').Select(s => WrapTextSegment(spriteFont, s, maxLineWidth)));
     }
 }

@@ -15,22 +15,18 @@ internal static class ContentsManagerExtensions
         var fontData = new byte[fontStream.Length];
         var fontDataLength = fontStream.Read(fontData, 0, fontData.Length);
 
-        if (fontDataLength > 0)
-        {
-            using var ctx = GameService.Graphics.LendGraphicsDeviceContext();
-            var bakeResult = TtfFontBaker.Bake(fontData, fontSize, textureSize, textureSize, new[]
-            {
-                CharacterRange.BasicLatin,
-                CharacterRange.Latin1Supplement,
-                CharacterRange.LatinExtendedA,
-                CharacterRange.Cyrillic,
-                CharacterRange.CyrillicSupplement
-            });
+        if (fontDataLength <= 0) return null;
+        
+        using var ctx = GameService.Graphics.LendGraphicsDeviceContext();
+        var bakeResult = TtfFontBaker.Bake(fontData, fontSize, textureSize, textureSize, [
+            CharacterRange.BasicLatin,
+            CharacterRange.Latin1Supplement,
+            CharacterRange.LatinExtendedA,
+            CharacterRange.Cyrillic,
+            CharacterRange.CyrillicSupplement
+        ]);
 
-            return bakeResult.CreateSpriteFont(ctx.GraphicsDevice);
-        }
-
-        return null;
+        return bakeResult.CreateSpriteFont(ctx.GraphicsDevice);
     }
 
     public static BitmapFont GetBitmapFont(this ContentsManager manager, string fontPath, int fontSize,
