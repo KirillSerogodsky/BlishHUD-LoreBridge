@@ -23,9 +23,7 @@ public class YandexTranslator : ITranslator
     public YandexTranslator(TranslatorConfig config)
     {
         _config = config;
-
-        if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
-            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
+        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
     }
 
     public async Task<string> TranslateAsync(string text)

@@ -11,7 +11,8 @@ namespace LoreBridge.Translation.Translators;
 public class GoogleTranslator(TranslatorConfig config) : ITranslator
 {
     private const string BaseUrl = "https://translate.google.com/m?&sl={0}&tl={1}&hl={1}&q={2}";
-    private static readonly Regex RegexResult = new Regex(
+
+    private static readonly Regex RegexResult = new(
         "(?<=(<div(.*)class=\"result-container\"(.*)>))[\\s\\S]*?(?=(<\\/div>))",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
