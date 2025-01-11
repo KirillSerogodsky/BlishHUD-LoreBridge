@@ -152,7 +152,7 @@ public class LoreBridgeModule : Module
 
     private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
     {
-        if (!_settings.TranslationAutoTranslateNpcDialogues.Value) return;
+        if (!_settings.TranslationAutoTranslateNpcDialogs.Value) return;
 
         if (chatMessage.ChannelId == 9999)
         {

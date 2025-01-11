@@ -14,6 +14,7 @@ internal class ScreenCapturer : IDisposable
     {
         _settings = settings;
         _settings.ToggleCapturerHotkey.Value.Enabled = true;
+
         _settings.ToggleCapturerHotkey.Value.Activated += CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus += LostFocus;
 

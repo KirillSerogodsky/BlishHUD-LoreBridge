@@ -129,7 +129,7 @@ public class SettingsView(SettingsModel settings) : View
         var autoTranslateNpcDialoguesLabel = new Label
         {
             Parent = autoTranslateNpcDialoguesPanel,
-            Text = "Auto translate NPC dialogues",
+            Text = "Auto translate NPC dialogs",
             BasicTooltipText = "ArcDPS, ArcDPS Unofficial Extras, ArcDPS Blish HUD plugin must be installed",
             ShowShadow = true,
             Height = 16,
@@ -139,11 +139,11 @@ public class SettingsView(SettingsModel settings) : View
         var autoTranslateNpcDialoguesCheckbox = new Checkbox
         {
             Parent = autoTranslateNpcDialoguesPanel,
-            Checked = settings.TranslationAutoTranslateNpcDialogues.Value,
+            Checked = settings.TranslationAutoTranslateNpcDialogs.Value,
             Height = 16
         };
         autoTranslateNpcDialoguesCheckbox.CheckedChanged += (o, e) =>
-            settings.TranslationAutoTranslateNpcDialogues.Value = e.Checked;
+            settings.TranslationAutoTranslateNpcDialogs.Value = e.Checked;
 
         var translationWindowPanel = new FlowPanel
         {
@@ -253,8 +253,7 @@ public class SettingsView(SettingsModel settings) : View
             {
                 Parent = keyBindPanel,
                 KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
-                BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description,
-                Enabled = false
+                BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description
             };
 
         base.Build(buildPanel);

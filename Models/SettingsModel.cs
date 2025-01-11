@@ -14,16 +14,17 @@ public class SettingsModel(SettingCollection settings)
     public readonly SettingEntry<KeyBinding> ToggleTranslationWindowHotKey = settings.DefineSetting(
         "Hotkeys.ToggleTranslationWindow",
         new KeyBinding(),
-        () => "Toggle translation window",
-        () => "Not implemented");
+        () => "Toggle translation window");
 
-    public readonly SettingEntry<bool> TranslationAutoTranslateNpcDialogues =
-        settings.DefineSetting("Translation.AutoTranslateNpcDialogues", true);
+    public readonly SettingEntry<bool> TranslationAutoTranslateNpcDialogs =
+        settings.DefineSetting("Translation.AutoTranslateNpcDialogs", true);
+
     public readonly SettingEntry<int> TranslationLanguage =
         settings.DefineSetting("Translation.Language", (int)Languages.Russian);
+
     public readonly SettingEntry<int> TranslationTranslator =
         settings.DefineSetting("Translation.Translator", (int)Translators.Google2);
-        
+
     public readonly SettingEntry<int> WindowHeight = settings.DefineSetting("Window.Height", 240);
     public readonly SettingEntry<int> WindowWidth = settings.DefineSetting("Window.Width", 480);
     public readonly SettingEntry<int> WindowLocationX = settings.DefineSetting("Window.Location.X", 200);

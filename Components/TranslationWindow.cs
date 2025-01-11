@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Blish_HUD;
 using Blish_HUD.Controls;
 using LoreBridge.Models;
@@ -30,8 +31,10 @@ public sealed class TranslationWindow : ChatWindow
         _settings = settings;
         _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
 
+        _settings.ToggleTranslationWindowHotKey.Value.Enabled = true;
+        _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
-        
+
         if (settings.WindowVisible.Value) Show();
 
         /* _clearButton = new StandardButton
@@ -82,7 +85,7 @@ public sealed class TranslationWindow : ChatWindow
             _settings.WindowWidth.Value = e.CurrentSize.X;
             _settings.WindowHeight.Value = e.CurrentSize.Y;
         }
-        
+
         base.OnResized(e);
     }
 
@@ -99,5 +102,19 @@ public sealed class TranslationWindow : ChatWindow
                 Show();
                 break;
         }
+    }
+
+    private void OnToggleHotKey(object o, EventArgs e)
+    {
+        ToggleWindow();
+    }
+
+    protected override void DisposeControl()
+    {
+        _settings.ToggleTranslationWindowHotKey.Value.Enabled = false;
+        _settings.ToggleTranslationWindowHotKey.Value.Activated -= OnToggleHotKey;
+        GameService.Gw2Mumble.UI.IsMapOpenChanged -= OnIsMapOpenChanged;
+        
+        base.DisposeControl();
     }
 }
