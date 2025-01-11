@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using LoreBridge.Enums;
 
 namespace LoreBridge.Translation.Translators;
 
@@ -20,7 +18,7 @@ public class GoogleTranslator(TranslatorConfig config) : ITranslator
 
     public async Task<string> TranslateAsync(string text)
     {
-        var targetLang = Enum.GetName(typeof(LanguageCodes), config.TargetLang).ToLower();
+        var targetLang = config.TargetLang.IsoCode;
         var url = string.Format(BaseUrl, "en", targetLang, HttpUtility.UrlEncode(text));
         using var response = await _httpClient.GetAsync(url).ConfigureAwait(false);
 

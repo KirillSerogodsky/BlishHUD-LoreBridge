@@ -1,21 +1,24 @@
-﻿namespace LoreBridge.Enums;
+﻿namespace LoreBridge.Language;
 
 public enum Languages
 {
     // Arabic = 1,
     Bulgarian = 2,
-    Hungarian = 3,
-    // Greek = 4,
+    // ChineseSimplified = 9,
+    // ChineseTraditional = 8,
+    Czech = 25,
     Danish = 5,
+    Dutch = 13,
+    Estonian = 27,
+    Finnish = 24,
+    // Greek = 4,
     German = 29,
+    Hungarian = 3,
     Indonesian = 6,
     Italian = 7,
-    // ChineseTraditional = 8,
-    // ChineseSimplified = 9,
-    // Korean = 10,
+    // Japanese = 28,
     Latvian = 11,
     Lithuanian = 12,
-    Dutch = 13,
     Norwegian = 14,
     Polish = 15,
     Portuguese = 16,
@@ -24,11 +27,8 @@ public enum Languages
     Russian = 19,
     Slovak = 20,
     Slovenian = 21,
-    Turkish = 22,
-    Ukrainian = 23,
-    Finnish = 24,
-    Czech = 25,
     Swedish = 26,
-    Estonian = 27
-    // Japanese = 28
+    // Korean = 10,
+    Turkish = 22,
+    Ukrainian = 23
 }

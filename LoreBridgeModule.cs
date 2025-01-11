@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Drawing;
-using System.Drawing.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Blish_HUD;
@@ -14,6 +12,7 @@ using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
 using LoreBridge.Components;
 using LoreBridge.Enums;
+using LoreBridge.Language;
 using LoreBridge.Models;
 using LoreBridge.OCR;
 using LoreBridge.Translation;
@@ -30,11 +29,9 @@ public class LoreBridgeModule : Module
 {
     private const string FontPath = "fonts/FiraSansCondensed-Medium.ttf";
 
-    private static readonly Logger Logger = Logger.GetLogger<LoreBridgeModule>();
-
     private LoreBridgeCornerIcon _cornerIcon;
     private BitmapFont _font;
-    private WindowsOCR _ocrEngine;
+    private WindowsOcr _ocrEngine;
     private ScreenCapturer _screenCapturer;
     private SettingsModel _settings;
     private TranslationListModel _translationList;
@@ -68,11 +65,11 @@ public class LoreBridgeModule : Module
         _translationList = new TranslationListModel(_settings);
         _translationWindow = new TranslationWindow(_settings, _translationList, _font);
         _cornerIcon = new LoreBridgeCornerIcon(ContentsManager);
-        _ocrEngine = new WindowsOCR();
+        _ocrEngine = new WindowsOcr();
         _screenCapturer = new ScreenCapturer(_settings);
         _translatorConfig = new TranslatorConfig
         {
-            TargetLang = (Languages)_settings.TranslationLanguage.Value
+            TargetLang = LanguageDetails.GetByLanguage(_settings.TranslationLanguage.Value)
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
 
@@ -81,7 +78,7 @@ public class LoreBridgeModule : Module
         _settings.WindowFontSize.SettingChanged += OnFontSizeChanged;
         _settings.TranslationLanguage.SettingChanged += OnTranslationLanguageChanged;
         _settings.TranslationTranslator.SettingChanged += OnTranslationTranslatorChanged;
-        
+
         try
         {
             if (GameService.ArcDpsV2.Loaded)
@@ -145,7 +142,7 @@ public class LoreBridgeModule : Module
 
     private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)
     {
-        _translatorConfig.TargetLang = (Languages)e.NewValue;
+        _translatorConfig.TargetLang = LanguageDetails.GetByLanguage(e.NewValue);
     }
 
     private void OnTranslationTranslatorChanged(object sender, ValueChangedEventArgs<int> e)

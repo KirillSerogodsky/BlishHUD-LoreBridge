@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LoreBridge.Enums;
 using LoreBridge.Translation.Models;
 using LoreBridge.Translation.Utils;
 using HttpClient = System.Net.Http.HttpClient;
@@ -28,7 +27,7 @@ public class YandexTranslator : ITranslator
 
     public async Task<string> TranslateAsync(string text)
     {
-        var targetLang = Enum.GetName(typeof(LanguageCodes), _config.TargetLang).ToLower();
+        var targetLang = _config.TargetLang.IsoCode;
         var query = $"?ucid={_ucid.Get():N}&srv=android&format=text";
         var data = new Dictionary<string, string>
         {

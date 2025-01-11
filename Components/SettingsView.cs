@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using LoreBridge.Enums;
+using LoreBridge.Language;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 using Panel = Blish_HUD.Controls.Panel;
@@ -62,12 +64,19 @@ public class SettingsView(SettingsModel settings) : View
         {
             Parent = languagePanel,
             Width = 160,
-            SelectedItem = Enum.GetName(typeof(Languages), settings.TranslationLanguage.Value)
+            SelectedItem = LanguageDetails.GetByLanguage(settings.TranslationLanguage.Value)?.Name
         };
-        foreach (var item in Enum.GetNames(typeof(Languages))) languageDropdown.Items.Add(item);
+        foreach (var languageDetail in LanguageDetails.List.OrderBy(ld => ld.Name))
+            languageDropdown.Items.Add(languageDetail.Name);
+
         languageDropdown.ValueChanged += (o, e) =>
         {
             settings.TranslationLanguage.Value = (int)Enum.Parse(typeof(Languages), e.CurrentValue);
+
+            var selectedLanguage = LanguageDetails.List
+                .FirstOrDefault(ld => ld.Name == e.CurrentValue);
+            if (selectedLanguage?.Language != null)
+                settings.TranslationLanguage.Value = (int)selectedLanguage.Language;
         };
 
         var translatorPanel = new FlowPanel
@@ -239,13 +248,14 @@ public class SettingsView(SettingsModel settings) : View
             BasicTooltipText = settings.ToggleCapturerHotkey.Description
         };
 
-        var toggleTranslationWindowKeybindingAssigner = new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
-        {
-            Parent = keyBindPanel,
-            KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
-            BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description,
-            Enabled = false
-        };
+        var toggleTranslationWindowKeybindingAssigner =
+            new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
+            {
+                Parent = keyBindPanel,
+                KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
+                BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description,
+                Enabled = false
+            };
 
         base.Build(buildPanel);
     }

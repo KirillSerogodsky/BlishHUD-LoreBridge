@@ -1,8 +1,8 @@
-﻿using LoreBridge.Enums;
+﻿using LoreBridge.Language;
 
 namespace LoreBridge.Translation;
 
 public class TranslatorConfig
 {
-    public Languages TargetLang { get; set; }
+    public LanguageDetail TargetLang { get; set; }
 }

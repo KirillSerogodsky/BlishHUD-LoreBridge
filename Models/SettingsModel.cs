@@ -1,6 +1,7 @@
 ﻿using Blish_HUD.Input;
 using Blish_HUD.Settings;
 using LoreBridge.Enums;
+using LoreBridge.Language;
 
 namespace LoreBridge.Models;
 

@@ -1,23 +1,18 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using Windows.Globalization;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
 using Windows.Storage.Streams;
 
 namespace LoreBridge.OCR;
 
-public class WindowsOCR
+public class WindowsOcr
 {
-    private readonly OcrEngine? _engine;
-
-    public WindowsOCR()
-    {
-        _engine = OcrEngine.TryCreateFromLanguage(new Language("en-US"));
-    }
+    private readonly OcrEngine? _engine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("en-US"));
 
     public string[] GetTextLines(Bitmap bitmap)
     {

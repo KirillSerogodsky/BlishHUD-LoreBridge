@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LoreBridge.Enums;
 using LoreBridge.Translation.Models;
 
 namespace LoreBridge.Translation.Translators;
@@ -39,7 +38,7 @@ public class DeepLTranslator : ITranslator
     {
         throw new Exception("DeepL translator not implemented");
 
-        var targetLang = Enum.GetName(typeof(LanguageCodes), _config.TargetLang);
+        var targetLang = _config.TargetLang.IsoCode;
         DeepLRequestModel requestModel = new(Id, text, "EN", targetLang);
         var body = requestModel.ToJsonString();
         StringContent content = new(body, Encoding.UTF8, "application/json");
