@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using Blish_HUD.Controls;
-using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
@@ -31,24 +31,26 @@ public class TranslationItemLabel : Label
         var words = text.Split(' ');
         var sb = new StringBuilder();
         var lineWidth = 0f;
-        var spaceWidth = spriteFont.MeasureString("_").Width;
+        var spaceWidth = spriteFont.MeasureString("  ").Width - spriteFont.MeasureString(" ").Width;
+        var aWidth = spriteFont.MeasureString("a").Width;
 
         foreach (var word in words)
         {
-            Vector2 size = spriteFont.MeasureString(word);
-
-            if (lineWidth + size.X < maxLineWidth)
+            var wordWidth = spriteFont.MeasureString("a" + word).Width - aWidth;
+            wordWidth = Math.Max(wordWidth, spriteFont.MeasureString(word + "a").Width - aWidth);
+           
+            if (lineWidth + wordWidth < maxLineWidth)
             {
                 sb.Append(word + " ");
-                lineWidth += size.X + spaceWidth;
+                lineWidth += wordWidth + spaceWidth;
             }
             else
             {
                 sb.Append("\n" + word + " ");
-                lineWidth = size.X + spaceWidth;
+                lineWidth = wordWidth + spaceWidth;
             }
         }
-
+        
         return sb.ToString();
     }
 

@@ -11,12 +11,12 @@ public sealed class TranslationItemPanel : FlowPanel
     public TranslationItemPanel(TranslationListItemModel listItem, BitmapFont font)
     {
         WidthSizingMode = SizingMode.Fill;
-        ShowBorder = true;
         HeightSizingMode = SizingMode.AutoSize;
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
         if (!string.IsNullOrWhiteSpace(listItem.Name))
-            new Label
+        {
+            var label = new Label
             {
                 Parent = this,
                 Text = listItem.Name,
@@ -25,13 +25,14 @@ public sealed class TranslationItemPanel : FlowPanel
                 AutoSizeWidth = true,
                 ShowShadow = true
             };
+        }
 
         _translationItemLabel = new TranslationItemLabel(listItem.Text, font) { Parent = this, Width = _size.X };
     }
 
     protected override void OnResized(ResizedEventArgs e)
     {
-        _translationItemLabel.RerenderText(e.CurrentSize.X);
+        _translationItemLabel.RerenderText(e.CurrentSize.X - 8);
         base.OnResized(e);
     }
 }
