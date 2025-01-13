@@ -15,6 +15,7 @@ public sealed class OverlayForm : Form
     public OverlayForm()
     {
         BackColor = Color.Black;
+        TransparencyKey = Color.Black;
         Opacity = 0.5;
         FormBorderStyle = FormBorderStyle.None;
         Bounds = Screen.PrimaryScreen.Bounds;
@@ -38,6 +39,12 @@ public sealed class OverlayForm : Form
             OnCanceled.Invoke(this, true);
         }
     } */
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        TransparencyKey = Color.Red;
+    }
 
     protected override void OnPaint(PaintEventArgs e)
     {
@@ -64,7 +71,7 @@ public sealed class OverlayForm : Form
     {
         Reset();
         var rectangle = GetRectangle(_startMousePos, e.Location);
-        if (rectangle.Width > 10 && rectangle.Height > 10) AreaSelected.Invoke(this, rectangle);
+        if (rectangle.Width > 10 && rectangle.Height > 10) AreaSelected?.Invoke(this, rectangle);
         // OnCanceled.Invoke(this, true);
     }
 
@@ -78,7 +85,7 @@ public sealed class OverlayForm : Form
         MouseUp -= OnMouseUp;
     }
 
-    private Rectangle GetRectangle(Point point1, Point point2)
+    private static Rectangle GetRectangle(Point point1, Point point2)
     {
         return new Rectangle(
             Math.Min(point1.X, point2.X),
