@@ -102,20 +102,18 @@ public class LoreBridgeModule : Module
         _translator.Dispose();
     }
 
-    private async Task<string> TranslateTextAsync(string text)
+    private async Task TranslateTextAsync(string text, string name = null)
     {
         try
         {
             var translation = await _translator.TranslateAsync(text);
             if (!string.IsNullOrWhiteSpace(translation))
-                return translation;
+                _translationList.Add(translation, name);
         }
         catch (Exception e)
         {
             _translationList.Add(e.Message);
         }
-
-        return null;
     }
 
     private void CreateTranslator(Translators translator, TranslatorConfig config)
@@ -152,17 +150,13 @@ public class LoreBridgeModule : Module
 
     private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
     {
-        if (!_settings.TranslationAutoTranslateNpcDialogs.Value) return;
-
-        if (chatMessage.ChannelId == 9999)
+        if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId == 9999)
         {
-            var text = await TranslateTextAsync(chatMessage.Text);
-            if (text is not null)
-                _translationList.Add(text, chatMessage.CharacterName);
+            await TranslateTextAsync(chatMessage.Text, chatMessage.CharacterName);
         }
     }
 
-    private async void OnScreenCaptured(object o, Rectangle rectangle)
+    private void OnScreenCaptured(object o, Rectangle rectangle)
     {
         string[] result = [];
 
@@ -178,8 +172,6 @@ public class LoreBridgeModule : Module
 
         if (result.Length <= 0) return;
 
-        var text = await TranslateTextAsync(string.Join(" ", result));
-        if (text is not null)
-            _translationList.Add(text);
+        _ = TranslateTextAsync(string.Join(" ", result));
     }
 }

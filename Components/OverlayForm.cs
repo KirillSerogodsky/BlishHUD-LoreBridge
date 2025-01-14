@@ -8,9 +8,7 @@ public sealed class OverlayForm : Form
 {
     private readonly Pen _pen = new(Color.White, 2f);
     private Rectangle? _rectangle;
-
     private Point _startMousePos;
-    // public event EventHandler<bool> OnCanceled;
 
     public OverlayForm()
     {
@@ -26,19 +24,19 @@ public sealed class OverlayForm : Form
         DoubleBuffered = true;
 
         MouseDown += OnMouseDown;
-        // KeyDown += OnKeyDown;
+    }
+
+    protected override CreateParams CreateParams
+    {
+        get
+        {
+            var cp = base.CreateParams;
+            cp.ExStyle |= 0x08000000;
+            return cp;
+        }
     }
 
     public event EventHandler<Rectangle> AreaSelected;
-
-    /* private void OnKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.Escape)
-        {
-            Reset();
-            OnCanceled.Invoke(this, true);
-        }
-    } */
 
     protected override void OnLoad(EventArgs e)
     {
@@ -46,19 +44,32 @@ public sealed class OverlayForm : Form
         TransparencyKey = Color.Red;
     }
 
+    public new void Hide()
+    {
+        Reset();
+        base.Hide();
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         if (_rectangle != null) e.Graphics.DrawRectangle(_pen, (Rectangle)_rectangle);
-        ;
 
         base.OnPaint(e);
     }
 
     private void OnMouseDown(object sender, MouseEventArgs e)
     {
-        _startMousePos = e.Location;
-        MouseMove += OnMouseMove;
-        MouseUp += OnMouseUp;
+        switch (e.Button)
+        {
+            case MouseButtons.Left:
+                _startMousePos = e.Location;
+                MouseMove += OnMouseMove;
+                MouseUp += OnMouseUp;
+                break;
+            case MouseButtons.Right:
+                Hide();
+                break;
+        }
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
@@ -69,10 +80,12 @@ public sealed class OverlayForm : Form
 
     private void OnMouseUp(object sender, MouseEventArgs e)
     {
-        Reset();
+        Hide();
+        
+        if (e.Button != MouseButtons.Left) return;
+        
         var rectangle = GetRectangle(_startMousePos, e.Location);
-        if (rectangle.Width > 10 && rectangle.Height > 10) AreaSelected?.Invoke(this, rectangle);
-        // OnCanceled.Invoke(this, true);
+        if (rectangle is { Width: > 10, Height: > 10 }) AreaSelected?.Invoke(this, rectangle);
     }
 
     private void Reset()

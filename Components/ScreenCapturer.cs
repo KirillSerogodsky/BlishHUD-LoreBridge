@@ -9,9 +9,7 @@ internal class ScreenCapturer : IDisposable
 {
     private readonly OverlayForm _overlay = new();
     private readonly SettingsModel _settings;
-    
-    public event EventHandler<Rectangle> ScreenCaptured;
-    
+
     public ScreenCapturer(SettingsModel settings)
     {
         _settings = settings;
@@ -19,23 +17,7 @@ internal class ScreenCapturer : IDisposable
 
         _settings.ToggleCapturerHotkey.Value.Activated += CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus += LostFocus;
-
-        _overlay.AreaSelected += (o, e) =>
-        {
-            _overlay.Hide();
-            ScreenCaptured?.Invoke(this, e);
-            GameService.GameIntegration.Gw2Instance.FocusGw2();
-        };
-
-        /* _overlay.OnCanceled += (o, e) =>
-        {
-            _overlay.Hide();
-            Task.Run(async () =>
-            {
-                await Task.Delay(50);
-                GameService.GameIntegration.Gw2Instance.FocusGw2();
-            });
-        }; */
+        _overlay.AreaSelected += OnAreaSelected;
     }
 
     public void Dispose()
@@ -44,6 +26,14 @@ internal class ScreenCapturer : IDisposable
         _settings.ToggleCapturerHotkey.Value.Enabled = false;
         _settings.ToggleCapturerHotkey.Value.Activated -= CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus -= LostFocus;
+    }
+
+    public event EventHandler<Rectangle> ScreenCaptured;
+
+    private void OnAreaSelected(object o, Rectangle e)
+    {
+        _overlay.Hide();
+        ScreenCaptured?.Invoke(this, e);
     }
 
     private void LostFocus(object o, EventArgs e)
