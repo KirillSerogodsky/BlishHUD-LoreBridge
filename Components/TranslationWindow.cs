@@ -116,7 +116,7 @@ public sealed class TranslationWindow : ChatWindow
     {
         if (_clearButton != null) _clearButton.Visible = false;
        
-        base.OnMouseEntered(e);
+        base.OnMouseLeft(e);
     }
 
     private void OnIsMapOpenChanged(object o, ValueEventArgs<bool> e)
