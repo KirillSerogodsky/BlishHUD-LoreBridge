@@ -182,7 +182,8 @@ public class SettingsView(SettingsModel settings) : View
             MinValue = 16,
             MaxValue = 32,
             Width = 160,
-            Value = settings.WindowFontSize.Value
+            Value = settings.WindowFontSize.Value,
+            BasicTooltipText = "You need to restart the module to accept the changes"
         };
 
         var fontSizeCurrentLabel = new Label
@@ -200,6 +201,34 @@ public class SettingsView(SettingsModel settings) : View
             settings.WindowFontSize.Value = (int)e.Value;
             fontSizeCurrentLabel.Text = settings.WindowFontSize.Value.ToString();
         };
+        
+        var fixedWindowPanel = new FlowPanel
+        {
+            Parent = translationWindowPanel,
+            FlowDirection = ControlFlowDirection.LeftToRight,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            ControlPadding = new Vector2(6, 0)
+        };
+
+        var fixedWindowLabel = new Label
+        {
+            Parent = fixedWindowPanel,
+            Text = "Fixed",
+            ShowShadow = true,
+            Height = 16,
+            Width = 180,
+            BasicTooltipText = "Prevents the window from resizing and moving"
+        };
+
+        var fixedWindowCheckbox = new Checkbox
+        {
+            Parent = fixedWindowPanel,
+            Checked = settings.WindowFixed.Value,
+            Height = 16
+        };
+        fixedWindowCheckbox.CheckedChanged += (o, e) =>
+            settings.WindowFixed.Value = e.Checked;
 
         var coloredNamesPanel = new FlowPanel
         {

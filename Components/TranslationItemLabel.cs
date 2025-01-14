@@ -9,6 +9,7 @@ namespace LoreBridge.Components;
 public class TranslationItemLabel : Label
 {
     private readonly string _originalText;
+    private readonly BitmapFont _customFont;
 
     public TranslationItemLabel(string text, BitmapFont font)
     {
@@ -18,12 +19,13 @@ public class TranslationItemLabel : Label
         ShowShadow = true;
 
         _originalText = text;
+        _customFont = font;
     }
 
     public void RerenderText(int width)
     {
         Width = width;
-        Text = WrapText(Font, _originalText, width);
+        Text = WrapText(_customFont, _originalText, width);
     }
 
     private static string WrapTextSegment(BitmapFont spriteFont, string text, float maxLineWidth)

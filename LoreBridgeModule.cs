@@ -136,6 +136,7 @@ public class LoreBridgeModule : Module
 
     private void OnFontSizeChanged(object sender, ValueChangedEventArgs<int> e)
     {
+        // TODO
     }
 
     private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)

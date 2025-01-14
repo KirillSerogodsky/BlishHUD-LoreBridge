@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Blish_HUD;
 using Blish_HUD.Controls;
 using LoreBridge.Models;
@@ -25,7 +24,7 @@ public sealed class TranslationWindow : ChatWindow
         Width = settings.WindowWidth.Value;
         CanClose = true;
         CanCloseWithEscape = false;
-        CanResize = true;
+        CanResize = !settings.WindowFixed.Value;
         Title = "Translation";
 
         _settings = settings;
@@ -33,6 +32,7 @@ public sealed class TranslationWindow : ChatWindow
 
         _settings.ToggleTranslationWindowHotKey.Value.Enabled = true;
         _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
+        _settings.WindowFixed.SettingChanged += OnFixedChanged;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
 
         if (settings.WindowVisible.Value) Show();
@@ -47,6 +47,11 @@ public sealed class TranslationWindow : ChatWindow
             Height = 20
         };
         _clearButton.Click += delegate { translationList.Clear(); }; */
+    }
+
+    private void OnFixedChanged(object sender, ValueChangedEventArgs<bool> e)
+    {
+        CanResize = !e.NewValue;
     }
 
     protected override void OnShown(EventArgs e)
@@ -67,6 +72,12 @@ public sealed class TranslationWindow : ChatWindow
     {
         if (_settings != null)
         {
+            if (_settings.WindowFixed.Value)
+            {
+                Location = new Point(_settings.WindowLocationX.Value, _settings.WindowLocationY.Value);
+                return;
+            }
+            
             _settings.WindowLocationX.Value = e.CurrentLocation.X;
             _settings.WindowLocationY.Value = e.CurrentLocation.Y;
         }

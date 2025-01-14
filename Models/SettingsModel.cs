@@ -30,6 +30,7 @@ public class SettingsModel(SettingCollection settings)
     public readonly SettingEntry<int> WindowLocationX = settings.DefineSetting("Window.Location.X", 200);
     public readonly SettingEntry<int> WindowLocationY = settings.DefineSetting("Window.Location.Y", 200);
     public readonly SettingEntry<bool> WindowVisible = settings.DefineSetting("Window.Visible", false);
+    public readonly SettingEntry<bool> WindowFixed = settings.DefineSetting("Window.Fixed", false);
     public readonly SettingEntry<int> WindowFontSize = settings.DefineSetting("Window.FontSize", 20);
     public readonly SettingEntry<bool> WindowColoredNames = settings.DefineSetting("Window.ColoredNames", true);
 }
