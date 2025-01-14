@@ -1,6 +1,7 @@
 ﻿using System;
 using Blish_HUD;
 using Blish_HUD.Controls;
+using Blish_HUD.Input;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.BitmapFonts;
@@ -34,19 +35,23 @@ public sealed class TranslationWindow : ChatWindow
         _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
         _settings.WindowFixed.SettingChanged += OnFixedChanged;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
-
-        if (settings.WindowVisible.Value) Show();
-
-        /* _clearButton = new StandardButton
+        
+        _clearButton = new StandardButton
         {
             Parent = this,
             Text = "Clear",
             Width = 42,
-            Right = Width - 15,
-            Top = -2,
-            Height = 20
+            Height = 20,
+            Top = 0,
+            Right = settings.WindowWidth.Value,
+            Visible = false,
         };
-        _clearButton.Click += delegate { translationList.Clear(); }; */
+        _clearButton.Click += delegate
+        {
+            translationList.Clear();
+        };
+        
+        if (settings.WindowVisible.Value) Show();
     }
 
     private void OnFixedChanged(object sender, ValueChangedEventArgs<bool> e)
@@ -89,7 +94,7 @@ public sealed class TranslationWindow : ChatWindow
     {
         _panel?.SaveScroll();
 
-        if (_clearButton != null) _clearButton.Right = e.CurrentSize.X - 15;
+        if (_clearButton != null) _clearButton.Right = e.CurrentSize.X;
 
         if (_settings != null)
         {
@@ -98,6 +103,20 @@ public sealed class TranslationWindow : ChatWindow
         }
 
         base.OnResized(e);
+    }
+
+    protected override void OnMouseEntered(MouseEventArgs e)
+    {
+        if (_clearButton != null) _clearButton.Visible = true;
+       
+        base.OnMouseEntered(e);
+    }
+    
+    protected override void OnMouseLeft(MouseEventArgs e)
+    {
+        if (_clearButton != null) _clearButton.Visible = false;
+       
+        base.OnMouseEntered(e);
     }
 
     private void OnIsMapOpenChanged(object o, ValueEventArgs<bool> e)
@@ -124,6 +143,7 @@ public sealed class TranslationWindow : ChatWindow
     {
         _settings.ToggleTranslationWindowHotKey.Value.Enabled = false;
         _settings.ToggleTranslationWindowHotKey.Value.Activated -= OnToggleHotKey;
+        _settings.WindowFixed.SettingChanged -= OnFixedChanged;
         GameService.Gw2Mumble.UI.IsMapOpenChanged -= OnIsMapOpenChanged;
         
         base.DisposeControl();

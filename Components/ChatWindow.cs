@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
