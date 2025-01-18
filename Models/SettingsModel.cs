@@ -17,7 +17,7 @@ public class SettingsModel(SettingCollection settings)
         () => "Toggle translation window");
 
     public readonly SettingEntry<bool> TranslationAutoTranslateNpcDialogs =
-        settings.DefineSetting("Translation.AutoTranslateNpcDialogs", true);
+        settings.DefineSetting("Translation.AutoTranslateNpcDialogs", false);
 
     public readonly SettingEntry<int> TranslationLanguage =
         settings.DefineSetting("Translation.Language", (int)Languages.Russian);
@@ -31,6 +31,7 @@ public class SettingsModel(SettingCollection settings)
     public readonly SettingEntry<int> WindowLocationY = settings.DefineSetting("Window.Location.Y", 200);
     public readonly SettingEntry<bool> WindowVisible = settings.DefineSetting("Window.Visible", false);
     public readonly SettingEntry<bool> WindowFixed = settings.DefineSetting("Window.Fixed", false);
+    public readonly SettingEntry<bool> WindowTransparent = settings.DefineSetting("Window.Transparent", false);
     public readonly SettingEntry<int> WindowFontSize = settings.DefineSetting("Window.FontSize", 20);
     public readonly SettingEntry<bool> WindowColoredNames = settings.DefineSetting("Window.ColoredNames", true);
 }

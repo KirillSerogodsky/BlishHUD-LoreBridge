@@ -33,6 +33,7 @@ public abstract class ChatWindow : Container, IWindow
     private bool _resizing;
     private string _title = "No Title";
     private bool _topMost;
+    private bool _transparent;
 
     protected ChatWindow()
     {
@@ -130,6 +131,12 @@ public abstract class ChatWindow : Container, IWindow
         set => SetProperty(ref _topMost, value);
     }
 
+    public bool Transparent
+    {
+        get => _transparent;
+        set => SetProperty(ref _transparent, value);
+    }
+
     public override void UpdateContainer(GameTime gameTime)
     {
         if (Dragging)
@@ -157,12 +164,16 @@ public abstract class ChatWindow : Container, IWindow
 
     public override void PaintBeforeChildren(SpriteBatch spriteBatch, Rectangle bounds)
     {
+        if (_transparent) return;
+        
         PaintWindowBackground(spriteBatch);
         PaintTitleBar(spriteBatch);
     }
 
     public override void PaintAfterChildren(SpriteBatch spriteBatch, Rectangle bounds)
     {
+        if (_transparent) return;
+        
         PaintTitleText(spriteBatch);
         PaintExitButton(spriteBatch);
         PaintCorner(spriteBatch);

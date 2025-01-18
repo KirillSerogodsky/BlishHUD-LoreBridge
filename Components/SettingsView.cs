@@ -226,6 +226,33 @@ public class SettingsView(SettingsModel settings) : View
         };
         fixedWindowCheckbox.CheckedChanged += (o, e) =>
             settings.WindowFixed.Value = e.Checked;
+        
+        var transparentWindowPanel = new FlowPanel
+        {
+            Parent = translationWindowPanel,
+            FlowDirection = ControlFlowDirection.LeftToRight,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            ControlPadding = new Vector2(6, 0)
+        };
+
+        var transparentWindowLabel = new Label
+        {
+            Parent = transparentWindowPanel,
+            Text = "Transparent",
+            ShowShadow = true,
+            Height = 16,
+            Width = 180,
+        };
+
+        var transparentWindowCheckbox = new Checkbox
+        {
+            Parent = transparentWindowPanel,
+            Checked = settings.WindowTransparent.Value,
+            Height = 16
+        };
+        transparentWindowCheckbox.CheckedChanged += (o, e) =>
+            settings.WindowTransparent.Value = e.Checked;
 
         var coloredNamesPanel = new FlowPanel
         {

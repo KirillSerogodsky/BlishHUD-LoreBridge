@@ -27,6 +27,7 @@ public sealed class TranslationWindow : ChatWindow
         CanCloseWithEscape = false;
         CanResize = !settings.WindowFixed.Value;
         Title = "Translation";
+        Transparent = settings.WindowTransparent.Value;
 
         _settings = settings;
         _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
@@ -34,6 +35,7 @@ public sealed class TranslationWindow : ChatWindow
         _settings.ToggleTranslationWindowHotKey.Value.Enabled = true;
         _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
         _settings.WindowFixed.SettingChanged += OnFixedChanged;
+        _settings.WindowTransparent.SettingChanged += OnTransparentChange;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
 
         _clearButton = new StandardButton
@@ -54,6 +56,11 @@ public sealed class TranslationWindow : ChatWindow
     private void OnFixedChanged(object sender, ValueChangedEventArgs<bool> e)
     {
         CanResize = !e.NewValue;
+    }
+
+    private void OnTransparentChange(object sender, ValueChangedEventArgs<bool> e)
+    {
+        Transparent = e.NewValue;
     }
 
     protected override void OnShown(EventArgs e)
@@ -105,14 +112,14 @@ public sealed class TranslationWindow : ChatWindow
     protected override void OnMouseEntered(MouseEventArgs e)
     {
         if (_clearButton != null) _clearButton.Visible = true;
-
+        if (_settings != null && _settings.WindowTransparent.Value) Transparent = false;
         base.OnMouseEntered(e);
     }
 
     protected override void OnMouseLeft(MouseEventArgs e)
     {
         if (_clearButton != null) _clearButton.Visible = false;
-
+        if (_settings != null && _settings.WindowTransparent.Value) Transparent = true;
         base.OnMouseLeft(e);
     }
 
