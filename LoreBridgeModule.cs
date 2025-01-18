@@ -190,12 +190,13 @@ public class LoreBridgeModule : Module
         if (result.Length <= 0) return;
 
         var text = "";
-        foreach (var row in result)
+        for (var i = 0; i < result.Length; i++)
         {
-            if (row.EndsWith(".")) text += $"{row}\n";
+            var row = result[i];
+            if (row.EndsWith(".") && i != result.Length - 1) text += $"{row}\n";
             else text += row;
         }
-        
+
         _ = TranslateTextAsync(string.Join("\n", text));
     }
 }
