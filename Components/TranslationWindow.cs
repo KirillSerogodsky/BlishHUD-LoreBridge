@@ -2,9 +2,9 @@
 using Blish_HUD;
 using Blish_HUD.Controls;
 using Blish_HUD.Input;
+using FontStashSharp;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
 
@@ -17,7 +17,7 @@ public sealed class TranslationWindow : ChatWindow
 
     public TranslationWindow(SettingsModel settings,
         TranslationListModel translationList,
-        BitmapFont font)
+        SpriteFontBase font)
     {
         Parent = GameService.Graphics.SpriteScreen;
         Location = new Point(settings.WindowLocationX.Value, settings.WindowLocationY.Value);
@@ -35,7 +35,7 @@ public sealed class TranslationWindow : ChatWindow
         _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
         _settings.WindowFixed.SettingChanged += OnFixedChanged;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
-        
+
         _clearButton = new StandardButton
         {
             Parent = this,
@@ -44,13 +44,10 @@ public sealed class TranslationWindow : ChatWindow
             Height = 20,
             Top = 0,
             Right = settings.WindowWidth.Value,
-            Visible = false,
+            Visible = false
         };
-        _clearButton.Click += delegate
-        {
-            translationList.Clear();
-        };
-        
+        _clearButton.Click += delegate { translationList.Clear(); };
+
         if (settings.WindowVisible.Value) Show();
     }
 
@@ -82,7 +79,7 @@ public sealed class TranslationWindow : ChatWindow
                 Location = new Point(_settings.WindowLocationX.Value, _settings.WindowLocationY.Value);
                 return;
             }
-            
+
             _settings.WindowLocationX.Value = e.CurrentLocation.X;
             _settings.WindowLocationY.Value = e.CurrentLocation.Y;
         }
@@ -108,14 +105,14 @@ public sealed class TranslationWindow : ChatWindow
     protected override void OnMouseEntered(MouseEventArgs e)
     {
         if (_clearButton != null) _clearButton.Visible = true;
-       
+
         base.OnMouseEntered(e);
     }
-    
+
     protected override void OnMouseLeft(MouseEventArgs e)
     {
         if (_clearButton != null) _clearButton.Visible = false;
-       
+
         base.OnMouseLeft(e);
     }
 
@@ -145,7 +142,7 @@ public sealed class TranslationWindow : ChatWindow
         _settings.ToggleTranslationWindowHotKey.Value.Activated -= OnToggleHotKey;
         _settings.WindowFixed.SettingChanged -= OnFixedChanged;
         GameService.Gw2Mumble.UI.IsMapOpenChanged -= OnIsMapOpenChanged;
-        
+
         base.DisposeControl();
     }
 }

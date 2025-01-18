@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Blish_HUD.Controls;
+using FontStashSharp;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
 
@@ -17,7 +17,7 @@ public sealed class TranslationScrollPanel : FlowPanel
     private readonly TranslationPanel _scrollPanel;
     private float? _scrollTarget;
 
-    public TranslationScrollPanel(TranslationListModel translationList, BitmapFont font)
+    public TranslationScrollPanel(TranslationListModel translationList, SpriteFontBase font)
     {
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
         WidthSizingMode = SizingMode.Fill;
@@ -26,7 +26,7 @@ public sealed class TranslationScrollPanel : FlowPanel
         _scrollPanel = new TranslationPanel(translationList, font)
         {
             Parent = this,
-            Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0),
+            Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0)
         };
         _scrollBar = new Scrollbar(_scrollPanel)
         {
@@ -53,6 +53,7 @@ public sealed class TranslationScrollPanel : FlowPanel
             _scrollBar.ScrollDistance = factor != 0 ? _scrollTarget.Value / factor : 0;
             _scrollTarget = null;
         }
+
         _scrollPanel.Location = new Point(ScrollBarOffsetX * 2 + ScrollBarWidth, 0);
     }
 

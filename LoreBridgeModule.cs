@@ -10,6 +10,7 @@ using Blish_HUD.Input;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
+using FontStashSharp;
 using LoreBridge.Components;
 using LoreBridge.Enums;
 using LoreBridge.Language;
@@ -19,7 +20,6 @@ using LoreBridge.Translation;
 using LoreBridge.Translation.Translators;
 using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
-using BitmapFont = MonoGame.Extended.BitmapFonts.BitmapFont;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace LoreBridge;
@@ -28,9 +28,14 @@ namespace LoreBridge;
 public class LoreBridgeModule : Module
 {
     private const string FontPath = "fonts/FiraSansCondensed-Medium.ttf";
+    private const string FontTCPath = "fonts/NotoSansTC-Medium.ttf";
+    private const string FontSCPath = "fonts/NotoSansTC-Medium.ttf";
+    private const string FontJPPath = "fonts/NotoSansJP-Medium.ttf";
+    private const string FontKRPath = "fonts/NotoSansKR-Medium.ttf";
 
     private LoreBridgeCornerIcon _cornerIcon;
-    private BitmapFont _font;
+    private SpriteFontBase _font;
+    private FontSystem _fontSystem;
     private WindowsOcr _ocrEngine;
     private ScreenCapturer _screenCapturer;
     private SettingsModel _settings;
@@ -61,7 +66,19 @@ public class LoreBridgeModule : Module
 
     protected override async Task LoadAsync()
     {
-        _font = ContentsManager.GetBitmapFont(FontPath, _settings.WindowFontSize.Value);
+        var baseFontStream = ContentsManager.GetFileStream(FontPath);
+        var krFontStream = ContentsManager.GetFileStream(FontKRPath);
+        var tcFontStream = ContentsManager.GetFileStream(FontTCPath);
+        var scFontStream = ContentsManager.GetFileStream(FontSCPath);
+        var jpFontStream = ContentsManager.GetFileStream(FontJPPath);
+        _fontSystem = new FontSystem();
+        _fontSystem.AddFont(baseFontStream);
+        _fontSystem.AddFont(krFontStream);
+        _fontSystem.AddFont(tcFontStream);
+        _fontSystem.AddFont(scFontStream);
+        _fontSystem.AddFont(jpFontStream);
+        _font = _fontSystem.GetFont(_settings.WindowFontSize.Value);
+
         _translationList = new TranslationListModel(_settings);
         _translationWindow = new TranslationWindow(_settings, _translationList, _font);
         _cornerIcon = new LoreBridgeCornerIcon(ContentsManager);
@@ -136,7 +153,7 @@ public class LoreBridgeModule : Module
 
     private void OnFontSizeChanged(object sender, ValueChangedEventArgs<int> e)
     {
-        // TODO
+        _font = _fontSystem.GetFont(e.NewValue);
     }
 
     private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)
@@ -152,9 +169,7 @@ public class LoreBridgeModule : Module
     private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
     {
         if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId == 9999)
-        {
             await TranslateTextAsync(chatMessage.Text, chatMessage.CharacterName);
-        }
     }
 
     private void OnScreenCaptured(object o, Rectangle rectangle)

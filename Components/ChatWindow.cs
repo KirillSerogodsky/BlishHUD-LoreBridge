@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
@@ -219,10 +217,10 @@ public abstract class ChatWindow : Container, IWindow
         {
             // TODO
         }
-        
+
         // Draw left texture
         var maxOffset = 52;
-        
+
         var leftTextureOffset = Math.Max(0, maxOffset - (MaxWindowWidth - TitleBarBounds.Width));
         if (leftTextureOffset > 0)
         {
@@ -245,7 +243,7 @@ public abstract class ChatWindow : Container, IWindow
                 sourceRectFirst
             );
         }
-        
+
         var rightTextureOffset = Math.Max(0, maxOffset - (TitleBarBounds.Width - _textureTitleBarLeft.Width));
         var destinationRect = new Rectangle(
             TitleBarBounds.X + leftTextureOffset,
@@ -265,7 +263,7 @@ public abstract class ChatWindow : Container, IWindow
             destinationRect,
             sourceRect
         );
-        
+
         // Draw right corner
         spriteBatch.DrawOnCtrl(
             this,
@@ -276,13 +274,13 @@ public abstract class ChatWindow : Container, IWindow
             MathHelper.ToRadians(270),
             new Vector2(_textureTitleBarRight.Height, 0)
         );
-        
+
         // Draw divider
         var dividerScaledWidth = (int)(_textureTitleBarDivider.Width * 1.11);
-        var dividerScaledHeight = (int)(_textureTitleBarDivider.Height * 1.4);
+        var dividerScaledHeight = (int)(_textureTitleBarDivider.Height * 1.3);
         var targetRect = new Rectangle(
             0,
-            TitleBarBounds.Bottom - dividerScaledHeight + 10,
+            TitleBarBounds.Bottom - dividerScaledHeight + 8,
             dividerScaledWidth,
             dividerScaledHeight
         );
@@ -301,7 +299,7 @@ public abstract class ChatWindow : Container, IWindow
             _textureTitleBarDivider,
             visibleRect,
             dividerSourceRect,
-            new Color(220, 220, 220)
+            Color.White * 0.6f
         );
     }
 
@@ -466,7 +464,7 @@ public abstract class ChatWindow : Container, IWindow
     {
         // Title bar bounds
         _rightTitleBarDrawBounds = new Rectangle(
-            TitleBarBounds.Width - _textureTitleBarRight.Width + CornerOffset * 2,
+            TitleBarBounds.Width - _textureTitleBarRight.Width + CornerOffset * 2 - 1,
             TitleBarBounds.Y - CornerOffset,
             _textureTitleBarRight.Width,
             _textureTitleBarRight.Height);

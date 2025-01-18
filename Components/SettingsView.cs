@@ -71,10 +71,7 @@ public class SettingsView(SettingsModel settings) : View
 
         languageDropdown.ValueChanged += (o, e) =>
         {
-            settings.TranslationLanguage.Value = (int)Enum.Parse(typeof(Languages), e.CurrentValue);
-
-            var selectedLanguage = LanguageDetails.List
-                .FirstOrDefault(ld => ld.Name == e.CurrentValue);
+            var selectedLanguage = LanguageDetails.GetByName(e.CurrentValue);
             if (selectedLanguage?.Language != null)
                 settings.TranslationLanguage.Value = (int)selectedLanguage.Language;
         };

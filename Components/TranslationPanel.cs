@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blish_HUD.Controls;
+using FontStashSharp;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
 
@@ -13,11 +13,11 @@ public sealed class TranslationPanel : FlowPanel
     private const int InnerPadding = 6;
 
     private readonly List<TranslationItemPanel> _entries = [];
-    private readonly BitmapFont _font;
+    private readonly SpriteFontBase _font;
 
     private readonly TranslationListModel _translationList;
 
-    public TranslationPanel(TranslationListModel translationList, BitmapFont font)
+    public TranslationPanel(TranslationListModel translationList, SpriteFontBase font)
     {
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
         OuterControlPadding = new Vector2(0, OuterPadding);

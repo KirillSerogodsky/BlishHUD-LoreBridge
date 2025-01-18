@@ -1,14 +1,14 @@
 ﻿using Blish_HUD.Controls;
+using FontStashSharp;
 using LoreBridge.Models;
-using MonoGame.Extended.BitmapFonts;
 
 namespace LoreBridge.Components;
 
 public sealed class TranslationItemPanel : FlowPanel
 {
-    private readonly TranslationItemLabel _translationItemLabel;
+    private readonly Label2 _translationItemLabel;
 
-    public TranslationItemPanel(TranslationListItemModel listItem, BitmapFont font)
+    public TranslationItemPanel(TranslationListItemModel listItem, SpriteFontBase font)
     {
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.AutoSize;
@@ -16,7 +16,7 @@ public sealed class TranslationItemPanel : FlowPanel
 
         if (!string.IsNullOrWhiteSpace(listItem.Name))
         {
-            var label = new Label
+            var label = new Label2
             {
                 Parent = this,
                 Text = listItem.Name,
@@ -27,12 +27,21 @@ public sealed class TranslationItemPanel : FlowPanel
             };
         }
 
-        _translationItemLabel = new TranslationItemLabel(listItem.Text, font) { Parent = this, Width = _size.X };
+        _translationItemLabel = new Label2
+        {
+            Parent = this,
+            Width = _size.X,
+            Text = listItem.Text,
+            AutoSizeHeight = true,
+            Font = font,
+            ShowShadow = true,
+            WrapText = true
+        };
     }
 
     protected override void OnResized(ResizedEventArgs e)
     {
-        _translationItemLabel.RerenderText(e.CurrentSize.X - 8);
+        _translationItemLabel.Width = e.CurrentSize.X - 8;
         base.OnResized(e);
     }
 }
