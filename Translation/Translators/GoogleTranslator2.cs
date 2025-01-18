@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ public class GoogleTranslator2(TranslatorConfig config) : ITranslator
 
     public async Task<string> TranslateAsync(string text)
     {
-        var targetLang = config.TargetLang.IsoCode;
+        var targetLang = config.TargetLang.IsoCode.ToLower();
         var url = $"{ApiUrl}?{string.Format(ApiUrlParams, "en", targetLang, HttpUtility.UrlEncode(text))}";
         using var response = await _httpClient.GetAsync(url).ConfigureAwait(false);
         
