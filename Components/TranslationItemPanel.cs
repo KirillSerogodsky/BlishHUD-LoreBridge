@@ -1,4 +1,5 @@
-﻿using Blish_HUD.Controls;
+﻿#nullable enable
+using Blish_HUD.Controls;
 using FontStashSharp;
 using LoreBridge.Models;
 
@@ -7,6 +8,7 @@ namespace LoreBridge.Components;
 public sealed class TranslationItemPanel : FlowPanel
 {
     private readonly Label2 _translationItemLabel;
+    private readonly Label2? _translationItemNameLabel;
 
     public TranslationItemPanel(TranslationListItemModel listItem, SpriteFontBase font)
     {
@@ -15,8 +17,7 @@ public sealed class TranslationItemPanel : FlowPanel
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
         if (!string.IsNullOrWhiteSpace(listItem.Name))
-        {
-            var label = new Label2
+            _translationItemNameLabel = new Label2
             {
                 Parent = this,
                 Text = listItem.Name,
@@ -25,7 +26,6 @@ public sealed class TranslationItemPanel : FlowPanel
                 AutoSizeWidth = true,
                 ShowShadow = true
             };
-        }
 
         _translationItemLabel = new Label2
         {
@@ -37,6 +37,12 @@ public sealed class TranslationItemPanel : FlowPanel
             ShowShadow = true,
             WrapText = true
         };
+    }
+
+    public void UpdateFont(SpriteFontBase font)
+    {
+        if (_translationItemNameLabel is not null) _translationItemNameLabel.Font = font;
+        _translationItemLabel.Font = font;
     }
 
     protected override void OnResized(ResizedEventArgs e)

@@ -13,9 +13,8 @@ public sealed class TranslationPanel : FlowPanel
     private const int InnerPadding = 6;
 
     private readonly List<TranslationItemPanel> _entries = [];
-    private readonly SpriteFontBase _font;
-
     private readonly TranslationListModel _translationList;
+    private SpriteFontBase _font;
 
     public TranslationPanel(TranslationListModel translationList, SpriteFontBase font)
     {
@@ -27,6 +26,12 @@ public sealed class TranslationPanel : FlowPanel
         _translationList = translationList;
         _translationList.Added += OnAdded;
         _translationList.Cleared += OnCleared;
+    }
+
+    public void UpdateFont(SpriteFontBase font)
+    {
+        _font = font;
+        foreach (var item in _entries) item.UpdateFont(font);
     }
 
     private void OnAdded(object sender, TranslationListItemModel e)

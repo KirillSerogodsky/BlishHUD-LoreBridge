@@ -63,6 +63,11 @@ public sealed class TranslationWindow : ChatWindow
         Transparent = e.NewValue;
     }
 
+    public void UpdateFont(SpriteFontBase font)
+    {
+        _panel.UpdateFont(font);
+    }
+
     protected override void OnShown(EventArgs e)
     {
         if (_settings != null) _settings.WindowVisible.Value = true;

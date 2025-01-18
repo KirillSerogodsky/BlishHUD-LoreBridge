@@ -154,6 +154,7 @@ public class LoreBridgeModule : Module
     private void OnFontSizeChanged(object sender, ValueChangedEventArgs<int> e)
     {
         _font = _fontSystem.GetFont(e.NewValue);
+        _translationWindow.UpdateFont(_font);
     }
 
     private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)

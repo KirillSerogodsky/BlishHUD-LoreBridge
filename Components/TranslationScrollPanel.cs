@@ -63,6 +63,11 @@ public sealed class TranslationScrollPanel : FlowPanel
             _scrollTarget = _scrollBar.ScrollDistance * (_scrollPanel.Height - _scrollPanel.ContentBounds.Y);
     }
 
+    public void UpdateFont(SpriteFontBase font)
+    {
+        _scrollPanel.UpdateFont(font);
+    }
+
     private void ResizeComponents()
     {
         if (_scrollBar != null)

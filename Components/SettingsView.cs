@@ -179,8 +179,7 @@ public class SettingsView(SettingsModel settings) : View
             MinValue = 16,
             MaxValue = 32,
             Width = 160,
-            Value = settings.WindowFontSize.Value,
-            BasicTooltipText = "You need to restart the module to accept the changes"
+            Value = settings.WindowFontSize.Value
         };
 
         var fontSizeCurrentLabel = new Label
