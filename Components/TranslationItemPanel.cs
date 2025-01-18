@@ -22,9 +22,10 @@ public sealed class TranslationItemPanel : FlowPanel
                 Parent = this,
                 Text = listItem.Name,
                 TextColor = listItem.NameColor,
+                AutoSizeHeight = true,
                 Font = font,
-                AutoSizeWidth = true,
-                ShowShadow = true
+                ShowShadow = true,
+                WrapText = true
             };
 
         _translationItemLabel = new Label2
@@ -47,6 +48,7 @@ public sealed class TranslationItemPanel : FlowPanel
 
     protected override void OnResized(ResizedEventArgs e)
     {
+        if (_translationItemNameLabel is not null) _translationItemNameLabel.Width = e.CurrentSize.X - 8;
         _translationItemLabel.Width = e.CurrentSize.X - 8;
         base.OnResized(e);
     }
