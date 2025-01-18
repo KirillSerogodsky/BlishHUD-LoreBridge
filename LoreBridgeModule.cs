@@ -189,6 +189,13 @@ public class LoreBridgeModule : Module
 
         if (result.Length <= 0) return;
 
-        _ = TranslateTextAsync(string.Join(" ", result));
+        var text = "";
+        foreach (var row in result)
+        {
+            if (row.EndsWith(".")) text += $"{row}\n";
+            else text += row;
+        }
+        
+        _ = TranslateTextAsync(string.Join("\n", text));
     }
 }
