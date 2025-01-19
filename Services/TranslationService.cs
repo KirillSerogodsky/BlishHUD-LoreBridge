@@ -9,7 +9,7 @@ namespace LoreBridge.Services;
 
 public class TranslationService(ITranslator translator, TranslationListModel translationList)
 {
-    private readonly List<(string text, string name, int channelId)> _taskList = [];
+    private readonly List<(string text, string name, int messageId)> _taskList = [];
     private readonly object _lock = new();
     private bool _isProcessing;
     
@@ -21,7 +21,7 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
 
             if (!messageId.HasValue)
             {
-                id = _taskList.Count > 0 ? _taskList.Max(t => t.channelId) + 1 : 1;
+                id = _taskList.Count > 0 ? _taskList.Max(t => t.messageId) + 1 : 1;
             }
 
             _taskList.Add((text, name, id));
@@ -37,7 +37,7 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
     {
         while (_isProcessing)
         {
-            List<(string text, string name, int channelId)> tasksToProcess;
+            List<(string text, string name, int messageId)> tasksToProcess;
 
             lock (_lock)
             {
@@ -47,7 +47,7 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
 
             if (tasksToProcess.Count > 0)
             {
-                tasksToProcess.Sort((x, y) => x.channelId.CompareTo(y.channelId));
+                tasksToProcess.Sort((x, y) => x.messageId.CompareTo(y.messageId));
                 foreach (var taskData in tasksToProcess)
                 {
                     await ProcessTranslationAsync(taskData.text, taskData.name).ConfigureAwait(false);
@@ -73,18 +73,12 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
             var translation = await translator.TranslateAsync(text);
             if (!string.IsNullOrWhiteSpace(translation))
             {
-                lock (translationList)
-                {
-                    translationList.Add(translation, name);
-                }
+                translationList.Add(translation, name);
             }
         }
         catch (Exception e)
         {
-            lock (translationList)
-            {
-                translationList.Add(e.Message, name);
-            }
+            translationList.Add(e.Message, name);
         }
     }
 }
