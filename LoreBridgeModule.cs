@@ -16,6 +16,7 @@ using LoreBridge.Enums;
 using LoreBridge.Language;
 using LoreBridge.Models;
 using LoreBridge.OCR;
+using LoreBridge.Services;
 using LoreBridge.Translation;
 using LoreBridge.Translation.Translators;
 using LoreBridge.Utils;
@@ -43,6 +44,7 @@ public class LoreBridgeModule : Module
     private TranslationWindow _translationWindow;
     private ITranslator _translator;
     private TranslatorConfig _translatorConfig;
+    private TranslationService _translationService;
 
     [ImportingConstructor]
     public LoreBridgeModule([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters)
@@ -89,6 +91,7 @@ public class LoreBridgeModule : Module
             TargetLang = LanguageDetails.GetByLanguage(_settings.TranslationLanguage.Value)
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
+        _translationService = new TranslationService(_translator, _translationList);
 
         _cornerIcon.Click += OnCornerIconClick;
         _screenCapturer.ScreenCaptured += OnScreenCaptured;
@@ -117,20 +120,6 @@ public class LoreBridgeModule : Module
         _cornerIcon.Dispose();
         _screenCapturer.Dispose();
         _translator.Dispose();
-    }
-
-    private async Task TranslateTextAsync(string text, string name = null)
-    {
-        try
-        {
-            var translation = await _translator.TranslateAsync(text);
-            if (!string.IsNullOrWhiteSpace(translation))
-                _translationList.Add(translation, name);
-        }
-        catch (Exception e)
-        {
-            _translationList.Add(e.Message);
-        }
     }
 
     private void CreateTranslator(Translators translator, TranslatorConfig config)
@@ -169,8 +158,10 @@ public class LoreBridgeModule : Module
 
     private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
     {
-        if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId == 9999)
-            await TranslateTextAsync(chatMessage.Text, chatMessage.CharacterName);
+        if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId > 99)
+        {
+            _translationService.Add(chatMessage.Text, chatMessage.CharacterName, (int)chatMessage.ChannelId);
+        }
     }
 
     private void OnScreenCaptured(object o, Rectangle rectangle)
@@ -197,6 +188,6 @@ public class LoreBridgeModule : Module
             else text += row;
         }
 
-        _ = TranslateTextAsync(string.Join("\n", text));
+        _translationService.Add(text);
     }
 }
