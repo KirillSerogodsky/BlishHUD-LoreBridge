@@ -160,7 +160,7 @@ public class LoreBridgeModule : Module
     {
         if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId > 99)
         {
-            var time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.Hour}:{chatMessage.TimeStamp.Minute}" : "";
+            var time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.ToShortTimeString()}" : "";
             _translationService.Add(chatMessage.Text, chatMessage.CharacterName, time, (int)chatMessage.ChannelId);
         }
     }
