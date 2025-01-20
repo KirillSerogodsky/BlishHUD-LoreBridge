@@ -17,16 +17,19 @@ public sealed class TranslationItemPanel : FlowPanel
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
         if (!string.IsNullOrWhiteSpace(listItem.Name))
+        {
+            var time = string.IsNullOrWhiteSpace(listItem.TimeStamp) ? "" : $"[{listItem.TimeStamp}] ";
             _translationItemNameLabel = new Label2
             {
                 Parent = this,
-                Text = listItem.Name,
+                Text = $"{time}{listItem.Name}",
                 TextColor = listItem.NameColor,
                 AutoSizeHeight = true,
                 Font = font,
                 ShowShadow = true,
                 WrapText = true
             };
+        }
 
         _translationItemLabel = new Label2
         {

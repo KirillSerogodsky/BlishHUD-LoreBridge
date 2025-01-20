@@ -20,13 +20,14 @@ public sealed class TranslationListModel
     public event EventHandler<TranslationListItemModel> Added;
     public event EventHandler Cleared;
 
-    public void Add(string text, string name = "")
+    public void Add(string text, string name = null, string timestamp = null)
     {
         var item = new TranslationListItemModel
         {
             Name = name,
             NameColor = GetNameColor(name),
-            Text = text
+            Text = text,
+            TimeStamp = timestamp
         };
         Value.Add(item);
         Added?.Invoke(this, item);

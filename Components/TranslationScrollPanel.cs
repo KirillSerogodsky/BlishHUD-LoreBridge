@@ -38,7 +38,7 @@ public sealed class TranslationScrollPanel : FlowPanel
         {
             Task.Run(async () =>
             {
-                await Task.Delay(50);
+                await Task.Delay(200);
                 _scrollBar.ScrollDistance = 1;
             });
         };

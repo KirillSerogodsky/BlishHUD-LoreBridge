@@ -41,10 +41,10 @@ public class LoreBridgeModule : Module
     private ScreenCapturer _screenCapturer;
     private SettingsModel _settings;
     private TranslationListModel _translationList;
+    private TranslationService _translationService;
     private TranslationWindow _translationWindow;
     private ITranslator _translator;
     private TranslatorConfig _translatorConfig;
-    private TranslationService _translationService;
 
     [ImportingConstructor]
     public LoreBridgeModule([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters)
@@ -160,7 +160,8 @@ public class LoreBridgeModule : Module
     {
         if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId > 99)
         {
-            _translationService.Add(chatMessage.Text, chatMessage.CharacterName, (int)chatMessage.ChannelId);
+            var time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.Hour}:{chatMessage.TimeStamp.Minute}" : "";
+            _translationService.Add(chatMessage.Text, chatMessage.CharacterName, time, (int)chatMessage.ChannelId);
         }
     }
 

@@ -279,6 +279,33 @@ public class SettingsView(SettingsModel settings) : View
         };
         coloredNamesCheckbox.CheckedChanged += (o, e) =>
             settings.WindowColoredNames.Value = e.Checked;
+        
+        var showTimePanel = new FlowPanel
+        {
+            Parent = translationWindowPanel,
+            FlowDirection = ControlFlowDirection.LeftToRight,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            ControlPadding = new Vector2(6, 0)
+        };
+
+        var showTimeLabel = new Label
+        {
+            Parent = showTimePanel,
+            Text = "Show time",
+            ShowShadow = true,
+            Height = 16,
+            Width = 180
+        };
+
+        var showTimeCheckbox = new Checkbox
+        {
+            Parent = showTimePanel,
+            Checked = settings.WindowShowTime.Value,
+            Height = 16
+        };
+        showTimeCheckbox.CheckedChanged += (o, e) =>
+            settings.WindowShowTime.Value = e.Checked;
 
         var keyBindPanel = new FlowPanel
         {

@@ -9,22 +9,19 @@ namespace LoreBridge.Services;
 
 public class TranslationService(ITranslator translator, TranslationListModel translationList)
 {
-    private readonly List<(string text, string name, int messageId)> _taskList = [];
     private readonly object _lock = new();
+    private readonly List<(string text, string name, string timestamp, int messageId)> _taskList = [];
     private bool _isProcessing;
-    
-    public void Add(string text, string name = null, int? messageId = null)
+
+    public void Add(string text, string name = null, string timestamp = null, int? messageId = null)
     {
         lock (_lock)
         {
             var id = messageId ?? 0;
 
-            if (!messageId.HasValue)
-            {
-                id = _taskList.Count > 0 ? _taskList.Max(t => t.messageId) + 1 : 1;
-            }
+            if (!messageId.HasValue) id = _taskList.Count > 0 ? _taskList.Max(t => t.messageId) + 1 : 1;
 
-            _taskList.Add((text, name, id));
+            _taskList.Add((text, name, timestamp, id));
 
             if (_isProcessing) return;
 
@@ -37,7 +34,9 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
     {
         while (_isProcessing)
         {
-            List<(string text, string name, int messageId)> tasksToProcess;
+            List<(string text, string name, string timestamp, int messageId)> tasksToProcess;
+
+            await Task.Delay(100);
 
             lock (_lock)
             {
@@ -49,36 +48,30 @@ public class TranslationService(ITranslator translator, TranslationListModel tra
             {
                 tasksToProcess.Sort((x, y) => x.messageId.CompareTo(y.messageId));
                 foreach (var taskData in tasksToProcess)
-                {
-                    await ProcessTranslationAsync(taskData.text, taskData.name).ConfigureAwait(false);
-                }
+                    await ProcessTranslationAsync(taskData.text, taskData.name, taskData.timestamp)
+                        .ConfigureAwait(false);
             }
-
-            await Task.Delay(100);
 
             lock (_lock)
             {
                 if (_taskList.Count != 0) continue;
-                
+
                 _isProcessing = false;
                 break;
             }
         }
     }
 
-    private async Task ProcessTranslationAsync(string text, string name = null)
+    private async Task ProcessTranslationAsync(string text, string name = null, string timestamp = null)
     {
         try
         {
             var translation = await translator.TranslateAsync(text);
-            if (!string.IsNullOrWhiteSpace(translation))
-            {
-                translationList.Add(translation, name);
-            }
+            if (!string.IsNullOrWhiteSpace(translation)) translationList.Add(translation, name, timestamp);
         }
         catch (Exception e)
         {
-            translationList.Add(e.Message, name);
+            translationList.Add(e.Message);
         }
     }
 }

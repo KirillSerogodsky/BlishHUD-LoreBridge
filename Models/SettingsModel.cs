@@ -34,4 +34,5 @@ public class SettingsModel(SettingCollection settings)
     public readonly SettingEntry<bool> WindowTransparent = settings.DefineSetting("Window.Transparent", false);
     public readonly SettingEntry<int> WindowFontSize = settings.DefineSetting("Window.FontSize", 20);
     public readonly SettingEntry<bool> WindowColoredNames = settings.DefineSetting("Window.ColoredNames", true);
+    public readonly SettingEntry<bool> WindowShowTime = settings.DefineSetting("Window.ShowTime", true);
 }
