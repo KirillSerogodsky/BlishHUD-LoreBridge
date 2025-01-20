@@ -101,8 +101,6 @@ public sealed class TranslationWindow : ChatWindow
 
     protected override void OnResized(ResizedEventArgs e)
     {
-        _panel?.SaveScroll();
-
         if (_clearButton != null) _clearButton.Right = e.CurrentSize.X;
 
         if (_settings != null)
@@ -118,6 +116,7 @@ public sealed class TranslationWindow : ChatWindow
     {
         if (_clearButton != null) _clearButton.Visible = true;
         if (_settings != null && _settings.WindowTransparent.Value) Transparent = false;
+
         base.OnMouseEntered(e);
     }
 
@@ -125,6 +124,7 @@ public sealed class TranslationWindow : ChatWindow
     {
         if (_clearButton != null) _clearButton.Visible = false;
         if (_settings != null && _settings.WindowTransparent.Value) Transparent = true;
+
         base.OnMouseLeft(e);
     }
 
