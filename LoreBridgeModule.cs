@@ -133,6 +133,7 @@ public class LoreBridgeModule : Module
             Translators.Yandex => new YandexTranslator(config),
             _ => null
         };
+        _translationService = new TranslationService(_translator, _translationList);
     }
 
     private void OnCornerIconClick(object o, MouseEventArgs e)

@@ -47,7 +47,7 @@ public static class SpriteBatchExtensions
                 string text1;
                 for (var y = 0;
                      destinationRectangle.Height - y > 0 && (text1 = stringReader.ReadLine()) != null;
-                     y += font.LineHeight)
+                     y += (int)font.MeasureString("A").Y)
                     spriteBatch.DrawStringOnCtrl2(ctrl, text1, font, destinationRectangle.Add(0, y, 0, 0), color, wrap,
                         stroke, strokeDistance, horizontalAlignment, verticalAlignment);
             }
