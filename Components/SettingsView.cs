@@ -197,7 +197,7 @@ public class SettingsView(SettingsModel settings) : View
             settings.WindowFontSize.Value = (int)e.Value;
             fontSizeCurrentLabel.Text = settings.WindowFontSize.Value.ToString();
         };
-        
+
         var fixedWindowPanel = new FlowPanel
         {
             Parent = translationWindowPanel,
@@ -225,7 +225,7 @@ public class SettingsView(SettingsModel settings) : View
         };
         fixedWindowCheckbox.CheckedChanged += (o, e) =>
             settings.WindowFixed.Value = e.Checked;
-        
+
         var transparentWindowPanel = new FlowPanel
         {
             Parent = translationWindowPanel,
@@ -241,7 +241,7 @@ public class SettingsView(SettingsModel settings) : View
             Text = "Transparent",
             ShowShadow = true,
             Height = 16,
-            Width = 180,
+            Width = 180
         };
 
         var transparentWindowCheckbox = new Checkbox
@@ -279,7 +279,7 @@ public class SettingsView(SettingsModel settings) : View
         };
         coloredNamesCheckbox.CheckedChanged += (o, e) =>
             settings.WindowColoredNames.Value = e.Checked;
-        
+
         var showTimePanel = new FlowPanel
         {
             Parent = translationWindowPanel,

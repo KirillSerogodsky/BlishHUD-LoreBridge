@@ -81,9 +81,9 @@ public sealed class OverlayForm : Form
     private void OnMouseUp(object sender, MouseEventArgs e)
     {
         Hide();
-        
+
         if (e.Button != MouseButtons.Left) return;
-        
+
         var rectangle = GetRectangle(_startMousePos, e.Location);
         if (rectangle is { Width: > 10, Height: > 10 }) AreaSelected?.Invoke(this, rectangle);
     }

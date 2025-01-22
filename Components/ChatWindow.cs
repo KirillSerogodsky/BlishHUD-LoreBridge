@@ -100,6 +100,12 @@ public abstract class ChatWindow : Container, IWindow
         private set => SetProperty(ref _resizing, value);
     }
 
+    public bool Transparent
+    {
+        get => _transparent;
+        set => SetProperty(ref _transparent, value);
+    }
+
     /// <summary>
     ///     If <c>true</c>, draws an X icon on the window's titlebar and allows the user to close it by pressing it.
     ///     <br /><br />Default: <c>true</c>
@@ -131,12 +137,6 @@ public abstract class ChatWindow : Container, IWindow
         set => SetProperty(ref _topMost, value);
     }
 
-    public bool Transparent
-    {
-        get => _transparent;
-        set => SetProperty(ref _transparent, value);
-    }
-
     public override void UpdateContainer(GameTime gameTime)
     {
         if (Dragging)
@@ -165,7 +165,7 @@ public abstract class ChatWindow : Container, IWindow
     public override void PaintBeforeChildren(SpriteBatch spriteBatch, Rectangle bounds)
     {
         if (_transparent) return;
-        
+
         PaintWindowBackground(spriteBatch);
         PaintTitleBar(spriteBatch);
     }
@@ -173,7 +173,7 @@ public abstract class ChatWindow : Container, IWindow
     public override void PaintAfterChildren(SpriteBatch spriteBatch, Rectangle bounds)
     {
         if (_transparent) return;
-        
+
         PaintTitleText(spriteBatch);
         PaintExitButton(spriteBatch);
         PaintCorner(spriteBatch);

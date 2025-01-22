@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="BlishHUD" Version="1.2.0" ExcludeAssets="runtime;contentFiles;analyzers"/>
-        <PackageReference Include="FontStashSharp.MonoGame" Version="0.9.4" />
+        <PackageReference Include="FontStashSharp.MonoGame" Version="0.9.4"/>
         <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.1742"/>
         <PackageReference Include="System.ComponentModel.Composition" Version="9.0.0"/>
     </ItemGroup>

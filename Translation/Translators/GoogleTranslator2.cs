@@ -18,9 +18,9 @@ public class GoogleTranslator2(TranslatorConfig config) : ITranslator
         var targetLang = config.TargetLang.IsoCode.ToLower();
         var url = $"{ApiUrl}?{string.Format(ApiUrlParams, "en", targetLang, HttpUtility.UrlEncode(text))}";
         using var response = await _httpClient.GetAsync(url).ConfigureAwait(false);
-        
+
         response.EnsureSuccessStatusCode();
-        
+
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         return string.Join(string.Empty, JArray.Parse(responseText)[0].Select(x => x[0]));
     }

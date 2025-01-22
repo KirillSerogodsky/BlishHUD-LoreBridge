@@ -10,7 +10,7 @@ public static class DrawUtil2
     {
         var isCjk = text.Any(IsCjk);
         var sb = new StringBuilder();
-        
+
         if (isCjk)
         {
             var lineWidth = 0f;
