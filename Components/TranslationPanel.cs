@@ -25,6 +25,7 @@ public sealed class TranslationPanel : FlowPanel
         _font = font;
         _messages = messages;
         _messages.Added += OnAdded;
+        _messages.Updated += OnUpdated;
         _messages.Cleared += OnCleared;
     }
 
@@ -37,6 +38,13 @@ public sealed class TranslationPanel : FlowPanel
     private void OnAdded(object sender, MessageEntry e)
     {
         _entries.Add(new TranslationItemPanel(e, _font) { Parent = this });
+    }
+
+    private void OnUpdated(object sender, SortedList<ulong, MessageEntry> e)
+    {
+        foreach (var item in _entries) item.Dispose();
+        foreach (var message in e)
+            _entries.Add(new TranslationItemPanel(message.Value, _font) { Parent = this });
     }
 
     private void OnCleared(object sender, EventArgs e)

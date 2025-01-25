@@ -9,19 +9,23 @@ public sealed class MessagesModel(SettingsModel settings)
     private readonly Dictionary<string, Color> _colorPairs = new();
     private readonly Random _random = new();
 
-    private List<MessageEntry> Value { get; } = [];
+    private SortedList<ulong, MessageEntry> Value { get; } = [];
 
     public event EventHandler<MessageEntry> Added;
+    public event EventHandler<SortedList<ulong, MessageEntry>> Updated;
     public event EventHandler Cleared;
 
     public void Add(MessageEntry message)
     {
-        if (!string.IsNullOrEmpty(message.Name))
-        {
-            message.NameColor = GetNameColor(message.Name);
-        }
-        Value.Add(message);
-        Added?.Invoke(this, message);
+        if (!string.IsNullOrEmpty(message.Name)) message.NameColor = GetNameColor(message.Name);
+
+        Value.Add(message.TimeStamp, message);
+
+        var lastKey = Value.Keys[Value.Count - 1];
+        if (message.TimeStamp == lastKey)
+            Added?.Invoke(this, message);
+        else
+            Updated?.Invoke(this, Value);
     }
 
     public void Clear()
