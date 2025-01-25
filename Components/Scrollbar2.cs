@@ -296,10 +296,10 @@ public class Scrollbar2 : Control
 
     protected override void Paint(SpriteBatch spriteBatch, Rectangle bounds)
     {
-        spriteBatch.DrawOnCtrl(this, _textureTrack, _trackBounds);
-
         // Don't show the scrollbar if there is nothing to scroll
         if (_scrollbarPercent > 0.99) return;
+        
+        spriteBatch.DrawOnCtrl(this, _textureTrack, _trackBounds);
 
         var drawTint = (ScrollFocus == ClickFocus.None && MouseOver) ||
                        (_associatedContainer != null && _associatedContainer.MouseOver)
