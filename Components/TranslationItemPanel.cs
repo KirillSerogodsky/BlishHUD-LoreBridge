@@ -18,7 +18,7 @@ public sealed class TranslationItemPanel : FlowPanel
 
         if (!string.IsNullOrEmpty(listItem.Name))
         {
-            var time = string.IsNullOrEmpty(listItem.Time) ? "" : $"[{listItem.TimeStamp}] ";
+            var time = string.IsNullOrEmpty(listItem.Time) ? "" : $"[{listItem.Time}] ";
             _translationItemNameLabel = new Label2
             {
                 Parent = this,
