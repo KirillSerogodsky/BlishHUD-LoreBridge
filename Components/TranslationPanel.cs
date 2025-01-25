@@ -13,19 +13,19 @@ public sealed class TranslationPanel : FlowPanel
     private const int InnerPadding = 6;
 
     private readonly List<TranslationItemPanel> _entries = [];
-    private readonly TranslationListModel _translationList;
+    private readonly MessagesModel _messages;
     private SpriteFontBase _font;
 
-    public TranslationPanel(TranslationListModel translationList, SpriteFontBase font)
+    public TranslationPanel(MessagesModel messages, SpriteFontBase font)
     {
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
         OuterControlPadding = new Vector2(0, OuterPadding);
         ControlPadding = new Vector2(0, InnerPadding);
 
         _font = font;
-        _translationList = translationList;
-        _translationList.Added += OnAdded;
-        _translationList.Cleared += OnCleared;
+        _messages = messages;
+        _messages.Added += OnAdded;
+        _messages.Cleared += OnCleared;
     }
 
     public void UpdateFont(SpriteFontBase font)
@@ -34,7 +34,7 @@ public sealed class TranslationPanel : FlowPanel
         foreach (var item in _entries) item.UpdateFont(font);
     }
 
-    private void OnAdded(object sender, TranslationListItemModel e)
+    private void OnAdded(object sender, MessageEntry e)
     {
         _entries.Add(new TranslationItemPanel(e, _font) { Parent = this });
     }

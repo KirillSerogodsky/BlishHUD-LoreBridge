@@ -16,7 +16,7 @@ public sealed class TranslationWindow : ChatWindow
     private bool _preventSaveVisible;
 
     public TranslationWindow(SettingsModel settings,
-        TranslationListModel translationList,
+        MessagesModel messages,
         SpriteFontBase font)
     {
         Parent = GameService.Graphics.SpriteScreen;
@@ -30,7 +30,7 @@ public sealed class TranslationWindow : ChatWindow
         Transparent = settings.WindowTransparent.Value;
 
         _settings = settings;
-        _panel = new TranslationScrollPanel(translationList, font) { Parent = this };
+        _panel = new TranslationScrollPanel(messages, font) { Parent = this };
 
         _settings.ToggleTranslationWindowHotKey.Value.Enabled = true;
         _settings.ToggleTranslationWindowHotKey.Value.Activated += OnToggleHotKey;
@@ -48,7 +48,7 @@ public sealed class TranslationWindow : ChatWindow
             Right = settings.WindowWidth.Value,
             Visible = false
         };
-        _clearButton.Click += delegate { translationList.Clear(); };
+        _clearButton.Click += delegate { messages.Clear(); };
 
         if (settings.WindowVisible.Value) Show();
     }

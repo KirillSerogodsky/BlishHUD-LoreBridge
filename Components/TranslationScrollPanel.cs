@@ -15,12 +15,12 @@ public sealed class TranslationScrollPanel : Panel
 
     private readonly TranslationPanel _scrollPanel;
 
-    public TranslationScrollPanel(TranslationListModel translationList, SpriteFontBase font)
+    public TranslationScrollPanel(MessagesModel messages, SpriteFontBase font)
     {
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.Fill;
 
-        _scrollPanel = new TranslationPanel(translationList, font)
+        _scrollPanel = new TranslationPanel(messages, font)
         {
             Parent = this,
             Location = new Point(ScrollBarOffsetLeft + ScrollBarOffsetRight + ScrollBarWidth, 0)

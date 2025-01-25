@@ -10,15 +10,15 @@ public sealed class TranslationItemPanel : FlowPanel
     private readonly Label2 _translationItemLabel;
     private readonly Label2? _translationItemNameLabel;
 
-    public TranslationItemPanel(TranslationListItemModel listItem, SpriteFontBase font)
+    public TranslationItemPanel(MessageEntry listItem, SpriteFontBase font)
     {
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.AutoSize;
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
-        if (!string.IsNullOrWhiteSpace(listItem.Name))
+        if (!string.IsNullOrEmpty(listItem.Name))
         {
-            var time = string.IsNullOrWhiteSpace(listItem.TimeStamp) ? "" : $"[{listItem.TimeStamp}] ";
+            var time = string.IsNullOrEmpty(listItem.Time) ? "" : $"[{listItem.TimeStamp}] ";
             _translationItemNameLabel = new Label2
             {
                 Parent = this,

@@ -10,14 +10,8 @@ public static class LanguageDetails
     [
         // new LanguageDetail { Language = Languages.Arabic, Code = "ar-AR", IsoCode = "ar", Name = "Arabic" },
         new() { Language = Languages.Bulgarian, Code = "bg-BG", IsoCode = "bg", Name = "Bulgarian" },
-        new()
-        {
-            Language = Languages.ChineseSimplified, Code = "zh-CN", IsoCode = "zh-CN", Name = "Chinese (Simplified)"
-        },
-        new()
-        {
-            Language = Languages.ChineseTraditional, Code = "zh-TW", IsoCode = "zh-TW", Name = "Chinese (Traditional)"
-        },
+        new() { Language = Languages.ChineseSimplified, Code = "zh-CN", IsoCode = "zh-CN", Name = "Chinese (Simplified)" },
+        new() { Language = Languages.ChineseTraditional, Code = "zh-TW", IsoCode = "zh-TW", Name = "Chinese (Traditional)" },
         new() { Language = Languages.Czech, Code = "cs-CZ", IsoCode = "cs", Name = "Czech" },
         new() { Language = Languages.Danish, Code = "da-DK", IsoCode = "da", Name = "Danish" },
         new() { Language = Languages.Dutch, Code = "nl-NL", IsoCode = "nl", Name = "Dutch" },
@@ -34,10 +28,7 @@ public static class LanguageDetails
         new() { Language = Languages.Norwegian, Code = "no-NO", IsoCode = "no", Name = "Norwegian" },
         new() { Language = Languages.Polish, Code = "pl-PL", IsoCode = "pl", Name = "Polish" },
         new() { Language = Languages.Portuguese, Code = "pt-PT", IsoCode = "pt", Name = "Portuguese" },
-        new()
-        {
-            Language = Languages.PortugueseBrazilian, Code = "pt-BR", IsoCode = "pt-BR", Name = "Portuguese (Brazil)"
-        },
+        new() { Language = Languages.PortugueseBrazilian, Code = "pt-BR", IsoCode = "pt-BR", Name = "Portuguese (Brazil)" },
         new() { Language = Languages.Romanian, Code = "ro-RO", IsoCode = "ro", Name = "Romanian" },
         new() { Language = Languages.Russian, Code = "ru-RU", IsoCode = "ru", Name = "Russian" },
         new() { Language = Languages.Slovak, Code = "sk-SK", IsoCode = "sk", Name = "Slovak" },

@@ -37,10 +37,10 @@ public class LoreBridgeModule : Module
     private LoreBridgeCornerIcon _cornerIcon;
     private SpriteFontBase _font;
     private FontSystem _fontSystem;
+    private MessagesModel _messages;
     private WindowsOcr _ocrEngine;
     private ScreenCapturer _screenCapturer;
     private SettingsModel _settings;
-    private TranslationListModel _translationList;
     private TranslationService _translationService;
     private TranslationWindow _translationWindow;
     private ITranslator _translator;
@@ -81,8 +81,8 @@ public class LoreBridgeModule : Module
         _fontSystem.AddFont(jpFontStream);
         _font = _fontSystem.GetFont(_settings.WindowFontSize.Value);
 
-        _translationList = new TranslationListModel(_settings);
-        _translationWindow = new TranslationWindow(_settings, _translationList, _font);
+        _messages = new MessagesModel(_settings);
+        _translationWindow = new TranslationWindow(_settings, _messages, _font);
         _cornerIcon = new LoreBridgeCornerIcon(ContentsManager);
         _ocrEngine = new WindowsOcr();
         _screenCapturer = new ScreenCapturer(_settings);
@@ -91,7 +91,7 @@ public class LoreBridgeModule : Module
             TargetLang = LanguageDetails.GetByLanguage(_settings.TranslationLanguage.Value)
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
-        _translationService = new TranslationService(_translator, _translationList);
+        _translationService = new TranslationService(_translator, _messages);
 
         _cornerIcon.Click += OnCornerIconClick;
         _screenCapturer.ScreenCaptured += OnScreenCaptured;
@@ -133,7 +133,7 @@ public class LoreBridgeModule : Module
             Translators.Yandex => new YandexTranslator(config),
             _ => null
         };
-        _translationService = new TranslationService(_translator, _translationList);
+        _translationService = new TranslationService(_translator, _messages);
     }
 
     private void OnCornerIconClick(object o, MouseEventArgs e)
@@ -160,10 +160,13 @@ public class LoreBridgeModule : Module
     private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
     {
         if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId > 99)
-        {
-            var time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.ToShortTimeString()}" : "";
-            _translationService.Add(chatMessage.Text, chatMessage.CharacterName, time, (int)chatMessage.ChannelId);
-        }
+            _translationService.Add(new MessageEntry
+            {
+                Text = chatMessage.Text,
+                Name = chatMessage.CharacterName,
+                TimeStamp = chatMessage.ChannelId,
+                Time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.ToShortTimeString()}" : ""
+            });
     }
 
     private void OnScreenCaptured(object o, Rectangle rectangle)
@@ -177,7 +180,10 @@ public class LoreBridgeModule : Module
         }
         catch (Exception exception)
         {
-            _translationList.Add(exception.Message);
+            _messages.Add(new MessageEntry
+            {
+                Text = exception.Message
+            });
         }
 
         if (result.Length <= 0) return;
@@ -190,6 +196,9 @@ public class LoreBridgeModule : Module
             else text += row;
         }
 
-        _translationService.Add(text);
+        _translationService.Add(new MessageEntry
+        {
+            Text = text
+        });
     }
 }
