@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LoreBridge.Models;
 using LoreBridge.Translation;
@@ -9,21 +9,18 @@ namespace LoreBridge.Services;
 
 public class TranslationService(ITranslator translator, MessagesModel messages)
 {
-    private readonly object _lock = new();
-    private readonly List<MessageEntry> _taskList = [];
+    private readonly ConcurrentQueue<MessageEntry> _taskQueue = new();
+    private readonly object _processingLock = new();
     private bool _isProcessing;
 
     public void Add(MessageEntry message)
     {
-        lock (_lock)
+        if (message.TimeStamp == 0) message.TimeStamp = (uint)DateTime.UtcNow.Ticks;
+
+        _taskQueue.Enqueue(message);
+
+        lock (_processingLock)
         {
-            var id = message.TimeStamp;
-
-            if (id == 0) id = _taskList.Count > 0 ? _taskList.Max(t => t.TimeStamp) + 1 : 1;
-
-            message.TimeStamp = id;
-            _taskList.Add(message);
-
             if (_isProcessing) return;
 
             _isProcessing = true;
@@ -35,15 +32,10 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
     {
         while (_isProcessing)
         {
-            List<MessageEntry> tasksToProcess;
+            await Task.Delay(250);
 
-            await Task.Delay(100);
-
-            lock (_lock)
-            {
-                tasksToProcess = _taskList.ToList();
-                _taskList.Clear();
-            }
+            var tasksToProcess = new List<MessageEntry>();
+            while (_taskQueue.TryDequeue(out var message)) tasksToProcess.Add(message);
 
             if (tasksToProcess.Count > 0)
             {
@@ -52,9 +44,9 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
                     await ProcessTranslationAsync(message).ConfigureAwait(false);
             }
 
-            lock (_lock)
+            lock (_processingLock)
             {
-                if (_taskList.Count != 0) continue;
+                if (!_taskQueue.IsEmpty) continue;
 
                 _isProcessing = false;
                 break;
@@ -66,7 +58,7 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
     {
         try
         {
-            var translation = await translator.TranslateAsync(message.Text);
+            var translation = await translator.TranslateAsync(message.Text).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(translation))
             {
                 message.Text = translation;
@@ -75,10 +67,7 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
         }
         catch (Exception e)
         {
-            messages.Add(new MessageEntry
-            {
-                Text = e.Message
-            });
+            messages.Add(new MessageEntry { Text = e.Message });
         }
     }
 }
