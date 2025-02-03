@@ -3,8 +3,8 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Blish_HUD;
-using Blish_HUD.GameServices.ArcDps.Models.UnofficialExtras;
 using Blish_HUD.GameServices.ArcDps.V2;
+using Blish_HUD.GameServices.ArcDps.V2.Models.UnofficialExtras;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Modules;
@@ -102,7 +102,7 @@ public class LoreBridgeModule : Module
         try
         {
             if (GameService.ArcDpsV2.Loaded)
-                GameService.ArcDpsV2.RegisterMessageType<ChatMessageInfo>(MessageType.ChatMessage, OnNpcChatMessage);
+                GameService.ArcDpsV2.RegisterMessageType<NpcMessageInfo>(MessageType.NpcMessage, OnNpcChatMessage);
         }
         catch (Exception e)
         {
@@ -157,16 +157,18 @@ public class LoreBridgeModule : Module
         CreateTranslator((Translators)e.NewValue, _translatorConfig);
     }
 
-    private async Task OnNpcChatMessage(ChatMessageInfo chatMessage, CancellationToken cancellationToken)
+    private async Task OnNpcChatMessage(NpcMessageInfo chatMessage, CancellationToken cancellationToken)
     {
-        if (_settings.TranslationAutoTranslateNpcDialogs.Value && chatMessage.ChannelId > 99)
-            _translationService.Add(new MessageEntry
-            {
-                Text = chatMessage.Text,
-                Name = chatMessage.CharacterName,
-                TimeStamp = chatMessage.ChannelId,
-                Time = _settings.WindowShowTime.Value ? $"{chatMessage.TimeStamp.ToShortTimeString()}" : ""
-            });
+        var timeSpan = TimeSpan.FromSeconds(chatMessage.TimeStamp / 1_000_000_000.0);
+        var dateTime = DateTime.Today.Add(timeSpan + DateTimeOffset.Now.Offset);
+        var localDateTime = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Local);
+        _translationService.Add(new MessageEntry
+        {
+            Text = chatMessage.Message,
+            Name = chatMessage.CharacterName,
+            TimeStamp = chatMessage.TimeStamp,
+            Time = localDateTime.ToShortTimeString()
+        });
     }
 
     private void OnScreenCaptured(object o, Rectangle rectangle)

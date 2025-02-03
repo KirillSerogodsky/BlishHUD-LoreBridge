@@ -15,7 +15,7 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
 
     public void Add(MessageEntry message)
     {
-        if (message.TimeStamp == 0) message.TimeStamp = (uint)DateTime.UtcNow.Ticks;
+        if (message.TimeStamp == 0) message.TimeStamp = (ulong)DateTime.UtcNow.Ticks * 100;
 
         _taskQueue.Enqueue(message);
 
@@ -32,7 +32,7 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
     {
         while (_isProcessing)
         {
-            await Task.Delay(250);
+            await Task.Delay(100);
 
             var tasksToProcess = new List<MessageEntry>();
             while (_taskQueue.TryDequeue(out var message)) tasksToProcess.Add(message);
