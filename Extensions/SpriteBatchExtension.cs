@@ -39,17 +39,21 @@ public static class SpriteBatchExtensions
     {
         if (string.IsNullOrEmpty(text))
             return;
+
         text = wrap ? DrawUtil2.WrapText(font, text, destinationRectangle.Width) : text;
-        if (horizontalAlignment != HorizontalAlignment.Left && (wrap || text.Contains("\n")))
+        if (horizontalAlignment != HorizontalAlignment.Left && text.Contains("\n"))
         {
             using (var stringReader = new StringReader(text))
             {
-                string text1;
-                for (var y = 0;
-                     destinationRectangle.Height - y > 0 && (text1 = stringReader.ReadLine()) != null;
-                     y += (int)font.MeasureString("A").Y)
-                    spriteBatch.DrawStringOnCtrl2(ctrl, text1, font, destinationRectangle.Add(0, y, 0, 0), color, wrap,
+                var lineCount = 0;
+                var text1 = stringReader.ReadLine();
+                while (text1 != null)
+                {
+                    spriteBatch.DrawStringOnCtrl2(ctrl, text1, font, destinationRectangle.Add(0, (int)(lineCount * font.MeasureString(text1).Y), 0, 0), color, wrap,
                         stroke, strokeDistance, horizontalAlignment, verticalAlignment);
+                    lineCount++;
+                    text1 = stringReader.ReadLine();
+                }
             }
         }
         else

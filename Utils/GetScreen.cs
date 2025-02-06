@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace LoreBridge.Utils;
 
@@ -19,6 +21,7 @@ internal static class Screen
                 Point.Empty.Y,
                 screen.Size
             );
+        // screen.Save($"{(int)DateTime.UtcNow.TimeOfDay.TotalMilliseconds}.jpg", ImageFormat.Jpeg);
 
         return screen;
     }

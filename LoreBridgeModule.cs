@@ -35,8 +35,11 @@ public class LoreBridgeModule : Module
     private const string FontKRPath = "fonts/NotoSansKR-Medium.ttf";
 
     private LoreBridgeCornerIcon _cornerIcon;
+    private CutsceneSubtitlesService _cutsceneSubtitlesService;
     private SpriteFontBase _font;
     private FontSystem _fontSystem;
+    private GameStatePanel _gameState;
+    private GameStateService _gameStateService;
     private MessagesModel _messages;
     private WindowsOcr _ocrEngine;
     private ScreenCapturer _screenCapturer;
@@ -99,10 +102,21 @@ public class LoreBridgeModule : Module
         _settings.TranslationLanguage.SettingChanged += OnTranslationLanguageChanged;
         _settings.TranslationTranslator.SettingChanged += OnTranslationTranslatorChanged;
 
+        _gameStateService = new GameStateService();
+        _gameState = new GameStatePanel(_gameStateService);
+        _cutsceneSubtitlesService = new CutsceneSubtitlesService(_ocrEngine, _font);
+        _gameStateService.GameStateChanged += (o, e) =>
+        {
+            _cutsceneSubtitlesService.Enabled = e == GameState.Cutscene;
+        };
+
         try
         {
             if (GameService.ArcDpsV2.Loaded)
-                GameService.ArcDpsV2.RegisterMessageType<NpcMessageInfo>(MessageType.NpcMessage, OnNpcChatMessage);
+            {
+                var listener = new ArcDpsMessageListener<NpcMessageInfo>(MessageType.NpcMessage, OnNpcChatMessage);
+                GameService.ArcDpsV2.RegisterMessageType(listener);
+            }
         }
         catch (Exception e)
         {
@@ -112,6 +126,8 @@ public class LoreBridgeModule : Module
 
     protected override void Update(GameTime gameTime)
     {
+        _gameStateService.Run(gameTime);
+        _cutsceneSubtitlesService.Run(gameTime);
     }
 
     protected override void Unload()
@@ -120,6 +136,10 @@ public class LoreBridgeModule : Module
         _cornerIcon.Dispose();
         _screenCapturer.Dispose();
         _translator.Dispose();
+
+        _gameStateService.Dispose();
+        _gameState.Dispose();
+        _cutsceneSubtitlesService?.Dispose();
     }
 
     private void CreateTranslator(Translators translator, TranslatorConfig config)

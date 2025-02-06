@@ -15,7 +15,7 @@ public class TranslationService(ITranslator translator, MessagesModel messages)
 
     public void Add(MessageEntry message)
     {
-        if (message.TimeStamp == 0) message.TimeStamp = (ulong)DateTime.UtcNow.Ticks * 100;
+        if (message.TimeStamp == 0) message.TimeStamp = (uint)DateTime.UtcNow.Ticks;
 
         _taskQueue.Enqueue(message);
 
