@@ -163,33 +163,26 @@ public class CutsceneSubtitlesService : IDisposable
     {
         const int threshold = 1;
         const int width = 2;
-        var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
-        var factor = GameService.Graphics.UIScaleMultiplier;
+        var resolution = GameService.Graphics.Resolution;
         var left = Screen.GetScreen(
-            new Rectangle(
-                new Point(0, 0),
-                new Size(
-                    width,
-                    (int)(bounds.Height * factor)
-                )
+            new Point(0, 0),
+            new Size(
+                width,
+                resolution.Y
             )
         );
         var right = Screen.GetScreen(
-            new Rectangle(
-                new Point((int)(bounds.Width * factor) - width, 0),
-                new Size(
-                    width,
-                    (int)(bounds.Height * factor)
-                )
+            new Point(resolution.X - width, 0),
+            new Size(
+                width,
+                resolution.Y
             )
         );
         var center = Screen.GetScreen(
-            new Rectangle(
-                new Point((int)(bounds.Width * factor) / 2 - width / 2, 0),
-                new Size(
-                    width,
-                    (int)(bounds.Height * factor)
-                )
+            new Point(resolution.X / 2 - width / 2, 0),
+            new Size(
+                width,
+                resolution.Y
             )
         );
 
@@ -200,7 +193,7 @@ public class CutsceneSubtitlesService : IDisposable
         {
             var pixelColor = left.GetPixel(x, y);
             if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
-            h1 = (int)(bounds.Height - y / factor);
+            h1 = resolution.Y - y;
             found = true;
             break;
         }
@@ -212,7 +205,7 @@ public class CutsceneSubtitlesService : IDisposable
         {
             var pixelColor = right.GetPixel(x, y);
             if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
-            h2 = (int)(bounds.Height - y / factor);
+            h2 = resolution.Y - y;
             found = true;
             break;
         }
@@ -224,7 +217,7 @@ public class CutsceneSubtitlesService : IDisposable
         {
             var pixelColor = center.GetPixel(x, y);
             if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
-            h3 = (int)(bounds.Height - y / factor);
+            h3 = resolution.Y - y;
             found = true;
             break;
         }
@@ -234,18 +227,15 @@ public class CutsceneSubtitlesService : IDisposable
 
     private async Task DetectText(GameTime gameTime)
     {
-        var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
         var factor = GameService.Graphics.UIScaleMultiplier;
         var bitmap = Screen.GetScreen(
-            new Rectangle(
-                new Point(
-                    bounds.Left + (int)(_cutsceneRegion.Location.X * factor),
-                    bounds.Top + (int)(_cutsceneRegion.Location.Y * factor)
-                ),
-                new Size(
-                    (int)(_cutsceneRegion.Size.X * factor),
-                    (int)(_cutsceneRegion.Size.Y * factor)
-                )
+            new Point(
+                (int)(_cutsceneRegion.Location.X * factor),
+                (int)(_cutsceneRegion.Location.Y * factor)
+            ),
+            new Size(
+                (int)(_cutsceneRegion.Size.X * factor),
+                (int)(_cutsceneRegion.Size.Y * factor)
             )
         );
         var text = _engine.GetTextLines(bitmap);

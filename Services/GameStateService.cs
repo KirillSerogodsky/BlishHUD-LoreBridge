@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,10 +120,10 @@ public class GameStateService : IDisposable
         // Cutscenes, Dialogs, Vistas after entering the game 
         if (_isInGame == false && _isInCharacterSelectOrLoading == false)
         {
-            var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
+            var resolution = GameService.Graphics.Resolution;
             var size = new Point(50, 50);
-            var topRight = CaptureRegion(size, new Point(bounds.Width - size.X, 0));
-            var bottomLeft = CaptureRegion(size, new Point(0, bounds.Height - size.Y));
+            var topRight = Screen.GetScreen(new Point(resolution.X - size.X, 0), size);
+            var bottomLeft = Screen.GetScreen(new Point(0, resolution.Y - size.Y), size);
 
             // Cutscene
             if (IsBitmapBlack(topRight) && IsBitmapBlack(bottomLeft))
@@ -136,26 +137,6 @@ public class GameStateService : IDisposable
         CurrentGameState = newStatus;
     }
 
-    private static Bitmap CaptureRegion(Point size, Point pos)
-    {
-        var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
-        var factor = GameService.Graphics.UIScaleMultiplier;
-        var bitmap = Screen.GetScreen(
-            new Rectangle(
-                new System.Drawing.Point(
-                    bounds.Left + (int)(pos.X * factor),
-                    bounds.Top + (int)(pos.Y * factor)
-                ),
-                new Size(
-                    (int)(size.X * factor),
-                    (int)(size.Y * factor)
-                )
-            )
-        );
-
-        return bitmap;
-    }
-
     private static bool IsBitmapBlack(Bitmap bitmap)
     {
         const int threshold = 1;
@@ -164,7 +145,7 @@ public class GameStateService : IDisposable
         for (var x = 0; x < bitmap.Width; x++)
         {
             var pixelColor = bitmap.GetPixel(x, y);
-            if (pixelColor.R > threshold && pixelColor.G > threshold && pixelColor.B > threshold)
+            if (pixelColor.R > threshold || pixelColor.G > threshold || pixelColor.B > threshold)
                 return false;
         }
 

@@ -1,11 +1,19 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing;
 
 namespace LoreBridge.Utils;
 
 internal static class Screen
 {
+    public static Bitmap GetScreen(Microsoft.Xna.Framework.Point pos, Microsoft.Xna.Framework.Point size)
+    {
+        return GetScreen(new Rectangle(pos.X, pos.Y, size.X, size.Y));
+    }
+
+    public static Bitmap GetScreen(Point pos, Size size)
+    {
+        return GetScreen(new Rectangle(pos.X, pos.Y, size.Width, size.Height));
+    }
+
     public static Bitmap GetScreen(Rectangle rectangle)
     {
         var screen = new Bitmap(
@@ -21,7 +29,6 @@ internal static class Screen
                 Point.Empty.Y,
                 screen.Size
             );
-        // screen.Save($"{(int)DateTime.UtcNow.TimeOfDay.TotalMilliseconds}.jpg", ImageFormat.Jpeg);
 
         return screen;
     }
