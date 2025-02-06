@@ -34,8 +34,9 @@ public class CutsceneSubtitlesService : IDisposable
     private bool _enabled;
     private double _lastTick;
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
-    private string _prevTextDetect;
+    private string _prevDetectedText;
     private double _timeAfterLastDetect;
+    private bool _isCutsceneWithMessages;
 
     public CutsceneSubtitlesService(WindowsOcr engine, SpriteFontBase font)
     {
@@ -93,24 +94,20 @@ public class CutsceneSubtitlesService : IDisposable
         _lastTick = gameTime.TotalGameTime.TotalMilliseconds;
 
         if (!GameService.GameIntegration.Gw2Instance.Gw2HasFocus) return;
-        
-        // _cutsceneRegion.Width = bounds.Width - 10;
-        // _cutsceneRegion.Height = CalcBottomBarHeight();
-        // _cutsceneRegion.Left = 10;
-        // _cutsceneRegion.Bottom = bounds.Bottom;
-        // _cutsceneRegion.Visible = true;
 
-        if (_messages.Count > 0)
-            _subtitlesLabel.Text = _messages.Last().Value;
-
-        // _ = DetectText(gameTime);
+        if (!_isCutsceneWithMessages)
+            _ = DetectText(gameTime);
     }
 
     private async Task OnNpcChatMessage(NpcMessageInfo chatMessage, CancellationToken cancellationToken)
     {
+        _isCutsceneWithMessages = true;
         var translation = await _translator.TranslateAsync(chatMessage.Message);
         if (!string.IsNullOrWhiteSpace(translation))
+        {
             _messages.Add(chatMessage.TimeStamp, string.Join("", $"{chatMessage.CharacterName}: ", translation));
+            _subtitlesLabel.Text = _messages.Last().Value;
+        }
     }
 
     private void CreateNpcMessageListener()
@@ -134,10 +131,20 @@ public class CutsceneSubtitlesService : IDisposable
         _subtitlesLabel.Top = bounds.Top + 2;
     }
 
+    private void RecalculateBottomBarBounds()
+    {
+        var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
+        _cutsceneRegion.Height = CalculateBottomBarHeight();
+        _cutsceneRegion.Width = bounds.Width;
+        _cutsceneRegion.Left = 0;
+        _cutsceneRegion.Bottom = bounds.Bottom;
+    }
+
     private void Start()
     {
         CreateNpcMessageListener();
         RecalculateSubtitlesBounds();
+        RecalculateBottomBarBounds();
         _cutsceneRegion.Visible = true;
         _subtitlesLabel.Visible = true;
     }
@@ -149,36 +156,80 @@ public class CutsceneSubtitlesService : IDisposable
         _subtitlesLabel.Visible = false;
         _subtitlesLabel.Text = null;
         _messages.Clear();
+        _isCutsceneWithMessages = false;
     }
 
-    private int CalcBottomBarHeight()
+    private int CalculateBottomBarHeight()
     {
-        const int threshold = 3;
+        const int threshold = 1;
+        const int width = 2;
         var bounds = GameService.Graphics.SpriteScreen.LocalBounds;
         var factor = GameService.Graphics.UIScaleMultiplier;
-        var bitmap = Screen.GetScreen(
+        var left = Screen.GetScreen(
             new Rectangle(
                 new Point(0, 0),
                 new Size(
-                    2,
+                    width,
+                    (int)(bounds.Height * factor)
+                )
+            )
+        );
+        var right = Screen.GetScreen(
+            new Rectangle(
+                new Point((int)(bounds.Width * factor) - width, 0),
+                new Size(
+                    width,
+                    (int)(bounds.Height * factor)
+                )
+            )
+        );
+        var center = Screen.GetScreen(
+            new Rectangle(
+                new Point((int)(bounds.Width * factor) / 2 - width / 2, 0),
+                new Size(
+                    width,
                     (int)(bounds.Height * factor)
                 )
             )
         );
 
-        var h = -1;
+        var h1 = 0;
         var found = false;
-        for (var y = bitmap.Height - 1; y >= 0 && !found; y--)
-        for (var x = 0; x < bitmap.Width; x++)
+        for (var y = left.Height - 1; y >= 0 && !found; y--)
+        for (var x = 0; x < left.Width; x++)
         {
-            var pixelColor = bitmap.GetPixel(x, y);
+            var pixelColor = left.GetPixel(x, y);
             if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
-            h = (int)(bounds.Height - y / factor);
+            h1 = (int)(bounds.Height - y / factor);
             found = true;
             break;
         }
 
-        return h;
+        var h2 = 0;
+        found = false;
+        for (var y = right.Height - 1; y >= 0 && !found; y--)
+        for (var x = 0; x < right.Width; x++)
+        {
+            var pixelColor = right.GetPixel(x, y);
+            if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
+            h2 = (int)(bounds.Height - y / factor);
+            found = true;
+            break;
+        }
+
+        var h3 = 0;
+        found = false;
+        for (var y = center.Height - 1; y >= 0 && !found; y--)
+        for (var x = 0; x < center.Width; x++)
+        {
+            var pixelColor = center.GetPixel(x, y);
+            if (pixelColor.R <= threshold || pixelColor.G <= threshold || pixelColor.B <= threshold) continue;
+            h3 = (int)(bounds.Height - y / factor);
+            found = true;
+            break;
+        }
+
+        return Math.Max(Math.Max(h1, h2), h3);
     }
 
     private async Task DetectText(GameTime gameTime)
@@ -197,30 +248,32 @@ public class CutsceneSubtitlesService : IDisposable
                 )
             )
         );
-
         var text = _engine.GetTextLines(bitmap);
+
+        // Remove button text
+        if (text.Last().ToLower() == "skip to end") 
+            text = text.Take(text.Length - 1).ToArray();
+
         var text2 = string.Join("\n", text);
 
+        // No text detected
         if (string.IsNullOrWhiteSpace(text2))
         {
-            _subtitlesLabel.Visible = false;
-            _subtitlesLabel.Text = "";
-            _prevTextDetect = "";
+            _subtitlesLabel.Text = null;
             _timeAfterLastDetect = gameTime.TotalGameTime.TotalMilliseconds;
             return;
         }
 
-        if (gameTime.TotalGameTime.TotalMilliseconds - _timeAfterLastDetect < 1000) return;
+        if (gameTime.TotalGameTime.TotalMilliseconds - _timeAfterLastDetect < 500) return;
         _timeAfterLastDetect = gameTime.TotalGameTime.TotalMilliseconds;
 
-        if (_prevTextDetect != text2)
+        if (_prevDetectedText != text2)
         {
-            _prevTextDetect = text2;
+            _prevDetectedText = text2;
             var translation = await _translator.TranslateAsync(text2);
-            if (!string.IsNullOrWhiteSpace(translation))
+            if (!string.IsNullOrWhiteSpace(translation) && _isCutsceneWithMessages)
             {
                 _subtitlesLabel.Text = translation;
-                _subtitlesLabel.Visible = true;
             }
         }
     }
