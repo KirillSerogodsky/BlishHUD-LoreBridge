@@ -3,6 +3,7 @@ using Blish_HUD.Controls;
 using FontStashSharp;
 using LoreBridge.Controls;
 using LoreBridge.Models;
+using LoreBridge.Modules.Chat.Models;
 
 namespace LoreBridge.Modules.Chat.Controls;
 
@@ -11,7 +12,7 @@ public sealed class TranslationItemPanel : FlowPanel
     private readonly Label2 _translationItemLabel;
     private readonly Label2? _translationItemNameLabel;
 
-    public TranslationItemPanel(MessageEntry listItem, SpriteFontBase font)
+    public TranslationItemPanel(Message listItem, SpriteFontBase font)
     {
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.AutoSize;

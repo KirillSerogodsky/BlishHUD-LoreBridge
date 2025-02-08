@@ -8,7 +8,9 @@ using FontStashSharp;
 using LoreBridge.Controls;
 using LoreBridge.Models;
 using LoreBridge.Modules.Chat.Controls;
+using LoreBridge.Modules.Chat.Models;
 using LoreBridge.Resources;
+using LoreBridge.Services;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat;
@@ -17,7 +19,7 @@ public class Chat : Module
 {
     private readonly CornerIcon _cornerIcon;
     private SpriteFontBase _font;
-    private MessagesModel _messages;
+    private Messages _messages;
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
     private SettingsModel _settings;
     private TranslationWindow _translationWindow;
@@ -30,7 +32,7 @@ public class Chat : Module
     public override void Load(SettingsModel settings)
     {
         _settings = settings;
-        _messages = new MessagesModel(_settings);
+        _messages = new Messages(_settings);
         _font = Fonts.FontSystem.GetFont(_settings.WindowFontSize.Value);
         _translationWindow = new TranslationWindow(_settings, _messages, _font);
 
@@ -78,12 +80,22 @@ public class Chat : Module
         var timeSpan = TimeSpan.FromSeconds(chatMessage.TimeStamp / 1_000_000_000.0);
         var dateTime = DateTime.Today.Add(timeSpan + DateTimeOffset.Now.Offset);
         var localDateTime = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Local);
-        /* _translationService.Add(new MessageEntry
+
+        try
         {
-            Text = chatMessage.Message,
-            Name = chatMessage.CharacterName,
-            TimeStamp = chatMessage.TimeStamp,
-            Time = localDateTime.ToShortTimeString()
-        }); */
+            var translation = await Service.Translation.TranslateAsync(chatMessage.Message);
+            if (!string.IsNullOrEmpty(translation))
+                _messages.Add(new Message
+                {
+                    Text = chatMessage.Message,
+                    Name = chatMessage.CharacterName,
+                    TimeStamp = chatMessage.TimeStamp,
+                    Time = localDateTime.ToShortTimeString()
+                });
+        }
+        catch (Exception e)
+        {
+            //
+        }
     }
 }

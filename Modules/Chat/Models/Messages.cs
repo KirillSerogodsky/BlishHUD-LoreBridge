@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Models;
+namespace LoreBridge.Modules.Chat.Models;
 
-public sealed class MessagesModel(SettingsModel settings)
+public sealed class Messages(SettingsModel settings)
 {
     private readonly Dictionary<string, Color> _colorPairs = new();
     private readonly Random _random = new();
 
-    private SortedList<ulong, MessageEntry> Value { get; } = [];
+    private SortedList<ulong, Message> Value { get; } = [];
 
-    public event EventHandler<MessageEntry> Added;
-    public event EventHandler<SortedList<ulong, MessageEntry>> Updated;
+    public event EventHandler<Message> Added;
+    public event EventHandler<SortedList<ulong, Message>> Updated;
     public event EventHandler Cleared;
 
-    public void Add(MessageEntry message)
+    public void Add(Message message)
     {
         if (!string.IsNullOrEmpty(message.Name)) message.NameColor = GetNameColor(message.Name);
 

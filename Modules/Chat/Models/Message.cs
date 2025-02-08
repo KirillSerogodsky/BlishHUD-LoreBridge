@@ -1,8 +1,8 @@
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Models;
+namespace LoreBridge.Modules.Chat.Models;
 
-public sealed class MessageEntry
+public sealed class Message
 {
     public string Name { get; set; }
     public Color NameColor { get; set; }

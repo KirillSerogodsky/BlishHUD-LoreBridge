@@ -2,6 +2,7 @@
 using FontStashSharp;
 using LoreBridge.Controls;
 using LoreBridge.Models;
+using LoreBridge.Modules.Chat.Models;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Controls;
@@ -16,7 +17,7 @@ public sealed class TranslationScrollPanel : Panel
 
     private readonly TranslationPanel _scrollPanel;
 
-    public TranslationScrollPanel(MessagesModel messages, SpriteFontBase font)
+    public TranslationScrollPanel(Messages messages, SpriteFontBase font)
     {
         WidthSizingMode = SizingMode.Fill;
         HeightSizingMode = SizingMode.Fill;

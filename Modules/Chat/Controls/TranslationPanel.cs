@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blish_HUD.Controls;
 using FontStashSharp;
 using LoreBridge.Models;
+using LoreBridge.Modules.Chat.Models;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Controls;
@@ -13,10 +14,10 @@ public sealed class TranslationPanel : FlowPanel
     private const int InnerPadding = 6;
 
     private readonly List<TranslationItemPanel> _entries = [];
-    private readonly MessagesModel _messages;
+    private readonly Messages _messages;
     private SpriteFontBase _font;
 
-    public TranslationPanel(MessagesModel messages, SpriteFontBase font)
+    public TranslationPanel(Messages messages, SpriteFontBase font)
     {
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
         OuterControlPadding = new Vector2(0, OuterPadding);
@@ -35,12 +36,12 @@ public sealed class TranslationPanel : FlowPanel
         foreach (var item in _entries) item.UpdateFont(font);
     }
 
-    private void OnAdded(object sender, MessageEntry e)
+    private void OnAdded(object sender, Message e)
     {
         _entries.Add(new TranslationItemPanel(e, _font) { Parent = this });
     }
 
-    private void OnUpdated(object sender, SortedList<ulong, MessageEntry> e)
+    private void OnUpdated(object sender, SortedList<ulong, Message> e)
     {
         foreach (var item in _entries) item.Dispose();
         foreach (var message in e)

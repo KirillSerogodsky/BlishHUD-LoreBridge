@@ -3,17 +3,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LoreBridge.Models;
+using LoreBridge.Modules.Chat.Models;
 using LoreBridge.Translation;
 
 namespace LoreBridge.Services;
 
-public class TranslationService1(ITranslator translator, MessagesModel messages)
+public class TranslationService1(ITranslator translator, Messages messages)
 {
-    private readonly ConcurrentQueue<MessageEntry> _taskQueue = new();
+    private readonly ConcurrentQueue<Message> _taskQueue = new();
     private readonly object _processingLock = new();
     private bool _isProcessing;
 
-    public void Add(MessageEntry message)
+    public void Add(Message message)
     {
         if (message.TimeStamp == 0) message.TimeStamp = (uint)DateTime.UtcNow.Ticks;
 
@@ -34,7 +35,7 @@ public class TranslationService1(ITranslator translator, MessagesModel messages)
         {
             await Task.Delay(100);
 
-            var tasksToProcess = new List<MessageEntry>();
+            var tasksToProcess = new List<Message>();
             while (_taskQueue.TryDequeue(out var message)) tasksToProcess.Add(message);
 
             if (tasksToProcess.Count > 0)
@@ -54,7 +55,7 @@ public class TranslationService1(ITranslator translator, MessagesModel messages)
         }
     }
 
-    private async Task ProcessTranslationAsync(MessageEntry message)
+    private async Task ProcessTranslationAsync(Message message)
     {
         try
         {
@@ -67,7 +68,7 @@ public class TranslationService1(ITranslator translator, MessagesModel messages)
         }
         catch (Exception e)
         {
-            messages.Add(new MessageEntry { Text = e.Message });
+            messages.Add(new Message { Text = e.Message });
         }
     }
 }

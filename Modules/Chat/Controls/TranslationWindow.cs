@@ -4,6 +4,7 @@ using Blish_HUD.Controls;
 using Blish_HUD.Input;
 using FontStashSharp;
 using LoreBridge.Models;
+using LoreBridge.Modules.Chat.Models;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Controls;
@@ -16,7 +17,7 @@ public sealed class TranslationWindow : ChatWindow
     private bool _preventSaveVisible;
 
     public TranslationWindow(SettingsModel settings,
-        MessagesModel messages,
+        Messages messages,
         SpriteFontBase font)
     {
         Parent = GameService.Graphics.SpriteScreen;
