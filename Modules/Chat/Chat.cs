@@ -9,8 +9,8 @@ using LoreBridge.Controls;
 using LoreBridge.Models;
 using LoreBridge.Modules.Chat.Controls;
 using LoreBridge.Modules.Chat.Models;
+using LoreBridge.Modules.Chat.Services;
 using LoreBridge.Resources;
-using LoreBridge.Services;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat;
@@ -23,6 +23,7 @@ public class Chat : Module
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
     private SettingsModel _settings;
     private TranslationWindow _translationWindow;
+    private TranslationQueue _translationQueue;
 
     public Chat(CornerIcon cornerIcon)
     {
@@ -35,6 +36,7 @@ public class Chat : Module
         _messages = new Messages(_settings);
         _font = Fonts.FontSystem.GetFont(_settings.WindowFontSize.Value);
         _translationWindow = new TranslationWindow(_settings, _messages, _font);
+        _translationQueue = new TranslationQueue(_messages);
 
         _cornerIcon.Click += OnCornerIconClick;
         _settings.WindowFontSize.SettingChanged += OnFontSizeChanged;
@@ -80,22 +82,12 @@ public class Chat : Module
         var timeSpan = TimeSpan.FromSeconds(chatMessage.TimeStamp / 1_000_000_000.0);
         var dateTime = DateTime.Today.Add(timeSpan + DateTimeOffset.Now.Offset);
         var localDateTime = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Local);
-
-        try
+        _translationQueue.Add(new Message
         {
-            var translation = await Service.Translation.TranslateAsync(chatMessage.Message);
-            if (!string.IsNullOrEmpty(translation))
-                _messages.Add(new Message
-                {
-                    Text = chatMessage.Message,
-                    Name = chatMessage.CharacterName,
-                    TimeStamp = chatMessage.TimeStamp,
-                    Time = localDateTime.ToShortTimeString()
-                });
-        }
-        catch (Exception e)
-        {
-            //
-        }
+            Text = chatMessage.Message,
+            TimeStamp = chatMessage.TimeStamp,
+            Name = chatMessage.CharacterName,
+            Time = localDateTime.ToShortTimeString(),
+        });
     }
 }

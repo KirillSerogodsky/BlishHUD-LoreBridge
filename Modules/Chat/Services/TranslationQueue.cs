@@ -2,13 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LoreBridge.Models;
 using LoreBridge.Modules.Chat.Models;
-using LoreBridge.Translation;
+using LoreBridge.Services;
 
-namespace LoreBridge.Services;
+namespace LoreBridge.Modules.Chat.Services;
 
-public class TranslationService1(ITranslator translator, Messages messages)
+public class TranslationQueue(Messages messages)
 {
     private readonly ConcurrentQueue<Message> _taskQueue = new();
     private readonly object _processingLock = new();
@@ -16,8 +15,6 @@ public class TranslationService1(ITranslator translator, Messages messages)
 
     public void Add(Message message)
     {
-        if (message.TimeStamp == 0) message.TimeStamp = (uint)DateTime.UtcNow.Ticks;
-
         _taskQueue.Enqueue(message);
 
         lock (_processingLock)
@@ -59,7 +56,7 @@ public class TranslationService1(ITranslator translator, Messages messages)
     {
         try
         {
-            var translation = await translator.TranslateAsync(message.Text).ConfigureAwait(false);
+            var translation = await Service.Translation.TranslateAsync(message.Text).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(translation))
             {
                 message.Text = translation;
