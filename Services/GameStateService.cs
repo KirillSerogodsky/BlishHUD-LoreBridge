@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using Blish_HUD.GameServices.ArcDps.V2.Models;
 using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
 using Point = Microsoft.Xna.Framework.Point;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace LoreBridge.Services;
 

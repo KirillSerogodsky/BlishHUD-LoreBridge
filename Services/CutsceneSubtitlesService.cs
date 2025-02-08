@@ -17,7 +17,6 @@ using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = System.Drawing.Point;
-using Rectangle = System.Drawing.Rectangle;
 using Screen = LoreBridge.Utils.Screen;
 
 namespace LoreBridge.Services;

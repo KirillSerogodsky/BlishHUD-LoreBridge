@@ -39,21 +39,21 @@ public static class LanguageDetails
         new() { Language = Languages.Ukrainian, Code = "uk-UA", IsoCode = "uk", Name = "Ukrainian" }
     ];
 
-    private static readonly Dictionary<Languages, LanguageDetail> ByLanguage =
+    private static readonly Dictionary<Languages, LanguageDetail> _byLanguage =
         List.ToDictionary(d => d.Language);
 
-    private static readonly Dictionary<string, LanguageDetail> ByName =
+    private static readonly Dictionary<string, LanguageDetail> _byName =
         List.ToDictionary(d => d.Name);
 
     public static LanguageDetail GetByLanguage(int languageCode)
     {
         if (!Enum.IsDefined(typeof(Languages), languageCode)) return null;
 
-        return ByLanguage.TryGetValue((Languages)languageCode, out var detail) ? detail : null;
+        return _byLanguage.TryGetValue((Languages)languageCode, out var detail) ? detail : null;
     }
 
     public static LanguageDetail GetByName(string name)
     {
-        return ByName.TryGetValue(name, out var detail) ? detail : null;
+        return _byName.TryGetValue(name, out var detail) ? detail : null;
     }
 }
