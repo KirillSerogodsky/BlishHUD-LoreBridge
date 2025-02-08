@@ -14,7 +14,7 @@ public class SettingsModel(SettingCollection settings)
     public readonly SettingEntry<KeyBinding> ToggleTranslationWindowHotKey = settings.DefineSetting(
         "Hotkeys.ToggleTranslationWindow",
         new KeyBinding(),
-        () => "Toggle translation window");
+        () => "Toggle chat window");
 
     public readonly SettingEntry<bool> TranslationAutoTranslateNpcDialogs =
         settings.DefineSetting("Translation.AutoTranslateNpcDialogs", false);

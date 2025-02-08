@@ -27,7 +27,7 @@ public sealed class TranslationWindow : ChatWindow
         CanClose = true;
         CanCloseWithEscape = false;
         CanResize = !settings.WindowFixed.Value;
-        Title = "Translation";
+        Title = "Chat";
         Transparent = settings.WindowTransparent.Value;
 
         _settings = settings;

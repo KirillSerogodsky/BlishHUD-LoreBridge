@@ -114,9 +114,42 @@ public class SettingsView(SettingsModel settings) : View
                 translatorDropdownItems.IndexOf(e.CurrentValue).ToString());
         };
 
+        var translationAreaPanel = new FlowPanel
+        {
+            Parent = _settingsPanel,
+            Title = "Area",
+            CanCollapse = true,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            FlowDirection = ControlFlowDirection.SingleTopToBottom,
+            OuterControlPadding = new Vector2(6, 6),
+            ControlPadding = new Vector2(6, 6),
+            ShowBorder = true
+        };
+
+        var toggleCapturerHotKeybindingAssigner = new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
+        {
+            Parent = translationAreaPanel,
+            KeyBindingName = settings.ToggleCapturerHotkey.DisplayName,
+            BasicTooltipText = settings.ToggleCapturerHotkey.Description
+        };
+
+        var translationWindowPanel = new FlowPanel
+        {
+            Parent = _settingsPanel,
+            Title = "Chat",
+            CanCollapse = true,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            FlowDirection = ControlFlowDirection.SingleTopToBottom,
+            OuterControlPadding = new Vector2(6, 6),
+            ControlPadding = new Vector2(6, 6),
+            ShowBorder = true
+        };
+
         var autoTranslateNpcDialoguesPanel = new FlowPanel
         {
-            Parent = generalPanel,
+            Parent = translationWindowPanel,
             FlowDirection = ControlFlowDirection.LeftToRight,
             WidthSizingMode = SizingMode.Fill,
             HeightSizingMode = SizingMode.AutoSize,
@@ -141,19 +174,6 @@ public class SettingsView(SettingsModel settings) : View
         };
         autoTranslateNpcDialoguesCheckbox.CheckedChanged += (o, e) =>
             settings.TranslationAutoTranslateNpcDialogs.Value = e.Checked;
-
-        var translationWindowPanel = new FlowPanel
-        {
-            Parent = _settingsPanel,
-            Title = "Translation Window",
-            CanCollapse = true,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            FlowDirection = ControlFlowDirection.SingleTopToBottom,
-            OuterControlPadding = new Vector2(6, 6),
-            ControlPadding = new Vector2(6, 6),
-            ShowBorder = true
-        };
 
         var fontSizePanel = new FlowPanel
         {
@@ -221,7 +241,8 @@ public class SettingsView(SettingsModel settings) : View
         {
             Parent = fixedWindowPanel,
             Checked = settings.WindowFixed.Value,
-            Height = 16
+            Height = 16,
+            BasicTooltipText = "Prevents the window from resizing and moving"
         };
         fixedWindowCheckbox.CheckedChanged += (o, e) =>
             settings.WindowFixed.Value = e.Checked;
@@ -307,10 +328,18 @@ public class SettingsView(SettingsModel settings) : View
         showTimeCheckbox.CheckedChanged += (o, e) =>
             settings.WindowShowTime.Value = e.Checked;
 
-        var keyBindPanel = new FlowPanel
+        var toggleTranslationWindowKeybindingAssigner =
+            new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
+            {
+                Parent = translationWindowPanel,
+                KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
+                BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description
+            };
+
+        var cutscenesPanel = new FlowPanel
         {
             Parent = _settingsPanel,
-            Title = "Key Binds",
+            Title = "Cutscenes (Experimental)",
             CanCollapse = true,
             WidthSizingMode = SizingMode.Fill,
             HeightSizingMode = SizingMode.AutoSize,
@@ -319,21 +348,6 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 6),
             ShowBorder = true
         };
-
-        var toggleCapturerHotKeybindingAssigner = new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
-        {
-            Parent = keyBindPanel,
-            KeyBindingName = settings.ToggleCapturerHotkey.DisplayName,
-            BasicTooltipText = settings.ToggleCapturerHotkey.Description
-        };
-
-        var toggleTranslationWindowKeybindingAssigner =
-            new KeybindingAssigner(settings.ToggleTranslationWindowHotKey.Value)
-            {
-                Parent = keyBindPanel,
-                KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
-                BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description
-            };
 
         base.Build(buildPanel);
     }
