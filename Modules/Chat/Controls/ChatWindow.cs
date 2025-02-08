@@ -9,7 +9,7 @@ using Glide;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.Chat.Controls;
 
 public abstract class ChatWindow : Container, IWindow
 {

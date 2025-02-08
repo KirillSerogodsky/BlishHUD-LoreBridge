@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
-using LoreBridge.Enums;
 using LoreBridge.Language;
 using LoreBridge.Models;
+using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
 using Panel = Blish_HUD.Controls.Panel;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Views;
 
 public class SettingsView(SettingsModel settings) : View
 {

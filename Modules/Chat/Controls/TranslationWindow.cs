@@ -6,7 +6,7 @@ using FontStashSharp;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.Chat.Controls;
 
 public sealed class TranslationWindow : ChatWindow
 {

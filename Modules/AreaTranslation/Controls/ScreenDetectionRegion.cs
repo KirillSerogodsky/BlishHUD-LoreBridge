@@ -3,7 +3,7 @@ using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.AreaTranslation.Controls;
 
 public sealed class ScreenDetectionRegion : Control
 {

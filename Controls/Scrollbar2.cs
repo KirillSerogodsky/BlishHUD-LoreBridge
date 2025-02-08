@@ -10,7 +10,7 @@ using Control = Blish_HUD.Controls.Control;
 using MouseEventArgs = Blish_HUD.Input.MouseEventArgs;
 using Panel = Blish_HUD.Controls.Panel;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Controls;
 
 public class Scrollbar2 : Control
 {

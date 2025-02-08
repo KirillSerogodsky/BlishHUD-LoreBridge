@@ -1,9 +1,10 @@
 ﻿using Blish_HUD.Controls;
 using FontStashSharp;
+using LoreBridge.Controls;
 using LoreBridge.Models;
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.Chat.Controls;
 
 public sealed class TranslationScrollPanel : Panel
 {

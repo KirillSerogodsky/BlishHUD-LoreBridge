@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Controls;
 
 public abstract class LabelBase2 : Control
 {

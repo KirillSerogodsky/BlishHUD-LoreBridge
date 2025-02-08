@@ -5,34 +5,74 @@ using System.Threading.Tasks;
 using Blish_HUD;
 using Blish_HUD.GameServices.ArcDps.V2;
 using Blish_HUD.GameServices.ArcDps.V2.Models;
+using LoreBridge.Models;
+using LoreBridge.Services.GameState;
+using LoreBridge.Services.GameState.Controls;
 using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
 using Point = Microsoft.Xna.Framework.Point;
 
 namespace LoreBridge.Services;
 
-public enum GameState
+public class GameStateService : Service
 {
-    None = -1,
-    Unknown = 0,
-    InGame,
-    Cutscene,
-    Dialog,
-    VistaOrCutscene,
-    LoadingOrCharacterSelection
-}
-
-public class GameStateService : IDisposable
-{
-    private readonly IArcDpsMessageListener<ImGuiCallback> _imGuiListener;
-    private GameState _gameState = GameState.None;
+    private GameStateType _gameState = GameStateType.None;
+    private GameStatePanel _gameStatePanel;
+    private IArcDpsMessageListener<ImGuiCallback> _imGuiListener;
     private bool _isInCharacterSelectOrLoading;
     private bool _isInGame;
     private double _lastTick;
     private int _tickDelay = 25;
 
-    public GameStateService()
+    public GameStateType CurrentGameState
     {
+        get => _gameState;
+        private set
+        {
+            if (_gameState == value) return;
+
+            _gameState = value;
+
+            switch (_gameState)
+            {
+                case GameStateType.InGame:
+                    ChangedToInGame?.Invoke(this, true);
+                    break;
+                case GameStateType.LoadingOrCharacterSelection:
+                    ChangedToLoadingOrCharacterSelect?.Invoke(this, true);
+                    break;
+                case GameStateType.Cutscene:
+                    ChangedToCutscene?.Invoke(this, true);
+                    break;
+                case GameStateType.Dialog:
+                    ChangedToDialog?.Invoke(this, true);
+                    break;
+                case GameStateType.VistaOrCutscene:
+                    ChangedToVistaOrCutscene?.Invoke(this, true);
+                    break;
+                case GameStateType.Unknown:
+                    ChangedToUnknown?.Invoke(this, true);
+                    break;
+                case GameStateType.None:
+                    break;
+            }
+
+            GameStateChanged?.Invoke(this, _gameState);
+        }
+    }
+
+    public event EventHandler<GameStateType> GameStateChanged;
+    public event EventHandler<bool> ChangedToInGame;
+    public event EventHandler<bool> ChangedToLoadingOrCharacterSelect;
+    public event EventHandler<bool> ChangedToCutscene;
+    public event EventHandler<bool> ChangedToDialog;
+    public event EventHandler<bool> ChangedToVistaOrCutscene;
+    public event EventHandler<bool> ChangedToUnknown;
+
+    public override void Load(SettingsModel settings)
+    {
+        _gameStatePanel = new GameStatePanel();
+
         _isInGame = GameService.GameIntegration.Gw2Instance.IsInGame;
         GameService.GameIntegration.Gw2Instance.IsInGameChanged += OnIsInGameChange;
 
@@ -48,72 +88,21 @@ public class GameStateService : IDisposable
         }
     }
 
-    public GameState CurrentGameState
-    {
-        get => _gameState;
-        private set
-        {
-            if (_gameState == value) return;
-
-            _gameState = value;
-
-            switch (_gameState)
-            {
-                case GameState.InGame:
-                    ChangedToInGame?.Invoke(this, true);
-                    break;
-                case GameState.LoadingOrCharacterSelection:
-                    ChangedToLoadingOrCharacterSelect?.Invoke(this, true);
-                    break;
-                case GameState.Cutscene:
-                    ChangedToCutscene?.Invoke(this, true);
-                    break;
-                case GameState.Dialog:
-                    ChangedToDialog?.Invoke(this, true);
-                    break;
-                case GameState.VistaOrCutscene:
-                    ChangedToVistaOrCutscene?.Invoke(this, true);
-                    break;
-                case GameState.Unknown:
-                    ChangedToUnknown?.Invoke(this, true);
-                    break;
-                case GameState.None:
-                    break;
-            }
-
-            GameStateChanged?.Invoke(this, _gameState);
-        }
-    }
-
-    public void Dispose()
-    {
-        GameService.GameIntegration.Gw2Instance.IsInGameChanged -= OnIsInGameChange;
-        _imGuiListener?.Dispose();
-    }
-
-    public event EventHandler<GameState> GameStateChanged;
-    public event EventHandler<bool> ChangedToInGame;
-    public event EventHandler<bool> ChangedToLoadingOrCharacterSelect;
-    public event EventHandler<bool> ChangedToCutscene;
-    public event EventHandler<bool> ChangedToDialog;
-    public event EventHandler<bool> ChangedToVistaOrCutscene;
-    public event EventHandler<bool> ChangedToUnknown;
-
-    public void Run(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         if (gameTime.TotalGameTime.TotalMilliseconds - _lastTick <= _tickDelay) return;
         _lastTick = gameTime.TotalGameTime.TotalMilliseconds;
 
         if (!GameService.GameIntegration.Gw2Instance.Gw2HasFocus) return;
 
-        var newStatus = GameState.Unknown;
+        var newStatus = GameStateType.Unknown;
 
-        if (_isInCharacterSelectOrLoading) newStatus = GameState.LoadingOrCharacterSelection;
+        if (_isInCharacterSelectOrLoading) newStatus = GameStateType.LoadingOrCharacterSelection;
 
-        if (_isInGame) newStatus = GameState.InGame;
+        if (_isInGame) newStatus = GameStateType.InGame;
 
         // Never entered into the game
-        if (newStatus is GameState.Unknown && _gameState is GameState.None) return;
+        if (newStatus is GameStateType.Unknown && _gameState is GameStateType.None) return;
 
         // Cutscenes, Dialogs, Vistas after entering the game 
         if (_isInGame == false && _isInCharacterSelectOrLoading == false)
@@ -125,14 +114,21 @@ public class GameStateService : IDisposable
 
             // Cutscene
             if (IsBitmapBlack(topRight) && IsBitmapBlack(bottomLeft))
-                newStatus = GameState.Cutscene;
+                newStatus = GameStateType.Cutscene;
             else
-                newStatus = GameState.Unknown;
+                newStatus = GameStateType.Unknown;
         }
 
-        _tickDelay = newStatus == GameState.Cutscene ? 250 : 25;
+        _tickDelay = newStatus == GameStateType.Cutscene ? 250 : 25;
 
         CurrentGameState = newStatus;
+    }
+
+    public override void Unload()
+    {
+        _gameStatePanel.Dispose();
+        GameService.GameIntegration.Gw2Instance.IsInGameChanged -= OnIsInGameChange;
+        _imGuiListener?.Dispose();
     }
 
     private static bool IsBitmapBlack(Bitmap bitmap)

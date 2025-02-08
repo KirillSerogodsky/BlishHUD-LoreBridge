@@ -9,8 +9,9 @@ using Blish_HUD.Controls;
 using Blish_HUD.GameServices.ArcDps.V2;
 using Blish_HUD.GameServices.ArcDps.V2.Models.UnofficialExtras;
 using FontStashSharp;
-using LoreBridge.Components;
+using LoreBridge.Controls;
 using LoreBridge.Language;
+using LoreBridge.Modules.AreaTranslation.Controls;
 using LoreBridge.OCR;
 using LoreBridge.Translation;
 using LoreBridge.Translation.Translators;
@@ -19,23 +20,23 @@ using Color = Microsoft.Xna.Framework.Color;
 using Point = System.Drawing.Point;
 using Screen = LoreBridge.Utils.Screen;
 
-namespace LoreBridge.Services;
+namespace LoreBridge.Modules.CutsceneSubtitles.Services;
 
 public class CutsceneSubtitlesService : IDisposable
 {
     private readonly ScreenDetectionRegion _cutsceneRegion;
     private readonly WindowsOcr _engine;
-    private readonly Label2 _subtitlesLabel;
 
     private readonly SortedList<ulong, string> _messages = [];
+    private readonly Label2 _subtitlesLabel;
     private readonly YandexTranslator _translator;
 
     private bool _enabled;
+    private bool _isCutsceneWithMessages;
     private double _lastTick;
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
     private string _prevDetectedText;
     private double _timeAfterLastDetect;
-    private bool _isCutsceneWithMessages;
 
     public CutsceneSubtitlesService(WindowsOcr engine, SpriteFontBase font)
     {
@@ -240,7 +241,7 @@ public class CutsceneSubtitlesService : IDisposable
         var text = _engine.GetTextLines(bitmap);
 
         // Remove button text
-        if (text.Last().ToLower() == "skip to end") 
+        if (text.Last().ToLower() == "skip to end")
             text = text.Take(text.Length - 1).ToArray();
 
         var text2 = string.Join("\n", text);
@@ -260,10 +261,7 @@ public class CutsceneSubtitlesService : IDisposable
         {
             _prevDetectedText = text2;
             var translation = await _translator.TranslateAsync(text2);
-            if (!string.IsNullOrWhiteSpace(translation) && _isCutsceneWithMessages)
-            {
-                _subtitlesLabel.Text = translation;
-            }
+            if (!string.IsNullOrWhiteSpace(translation) && _isCutsceneWithMessages) _subtitlesLabel.Text = translation;
         }
     }
 }

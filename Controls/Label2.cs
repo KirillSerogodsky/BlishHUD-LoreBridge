@@ -2,7 +2,7 @@ using Blish_HUD.Controls;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Controls;
 
 public class Label2 : LabelBase2
 {

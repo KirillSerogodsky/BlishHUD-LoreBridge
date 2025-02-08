@@ -1,20 +1,17 @@
 using System;
 using Blish_HUD;
 using Blish_HUD.Controls;
-using LoreBridge.Services;
 using Microsoft.Xna.Framework;
 using Label = Blish_HUD.Controls.Label;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Services.GameState.Controls;
 
 public class GameStatePanel : IDisposable
 {
     private readonly FlowPanel _flowPanel;
-    private readonly GameStateService _stateService;
     
-    public GameStatePanel(GameStateService stateService)
+    public GameStatePanel()
     {
-        _stateService = stateService;
         _flowPanel = new FlowPanel
         {
             Parent = GameService.Graphics.SpriteScreen,
@@ -95,28 +92,28 @@ public class GameStatePanel : IDisposable
             Text = "None: True"
         };
 
-        _stateService.GameStateChanged += (o, e) =>
+        Service.GameState.GameStateChanged += (o, e) =>
         {
-            label1.Text = $"Cutscene: {(e == GameState.Cutscene).ToString()}";
-            label1.TextColor = e == GameState.Cutscene ? Color.Green : Color.White;
+            label1.Text = $"Cutscene: {(e == GameStateType.Cutscene).ToString()}";
+            label1.TextColor = e == GameStateType.Cutscene ? Color.Green : Color.White;
 
-            label2.Text = $"Dialog: {(e == GameState.Dialog).ToString()}";
-            label2.TextColor = e == GameState.Dialog ? Color.Green : Color.White;
+            label2.Text = $"Dialog: {(e == GameStateType.Dialog).ToString()}";
+            label2.TextColor = e == GameStateType.Dialog ? Color.Green : Color.White;
 
-            label3.Text = $"Vista/Cutscene: {(e == GameState.VistaOrCutscene).ToString()}";
-            label3.TextColor = e == GameState.VistaOrCutscene ? Color.Green : Color.White;
+            label3.Text = $"Vista/Cutscene: {(e == GameStateType.VistaOrCutscene).ToString()}";
+            label3.TextColor = e == GameStateType.VistaOrCutscene ? Color.Green : Color.White;
 
-            label4.Text = $"Is game: {(e == GameState.InGame).ToString()}";
-            label4.TextColor = e == GameState.InGame ? Color.Green : Color.White;
+            label4.Text = $"Is game: {(e == GameStateType.InGame).ToString()}";
+            label4.TextColor = e == GameStateType.InGame ? Color.Green : Color.White;
 
-            label5.Text = $"Loading/Char Select/Map: {(e == GameState.LoadingOrCharacterSelection).ToString()}";
-            label5.TextColor = e == GameState.LoadingOrCharacterSelection ? Color.Green : Color.White;
+            label5.Text = $"Loading/Char Select/Map: {(e == GameStateType.LoadingOrCharacterSelection).ToString()}";
+            label5.TextColor = e == GameStateType.LoadingOrCharacterSelection ? Color.Green : Color.White;
 
-            label6.Text = $"Unknown: {(e == GameState.Unknown).ToString()}";
-            label6.TextColor = e == GameState.Unknown ? Color.Green : Color.White;
+            label6.Text = $"Unknown: {(e == GameStateType.Unknown).ToString()}";
+            label6.TextColor = e == GameStateType.Unknown ? Color.Green : Color.White;
             
-            label7.Text = $"None: {(e == GameState.None).ToString()}";
-            label7.TextColor = e == GameState.None ? Color.Green : Color.White;
+            label7.Text = $"None: {(e == GameStateType.None).ToString()}";
+            label7.TextColor = e == GameStateType.None ? Color.Green : Color.White;
         };
     }
 

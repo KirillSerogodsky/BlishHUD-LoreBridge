@@ -1,9 +1,10 @@
 ﻿#nullable enable
 using Blish_HUD.Controls;
 using FontStashSharp;
+using LoreBridge.Controls;
 using LoreBridge.Models;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.Chat.Controls;
 
 public sealed class TranslationItemPanel : FlowPanel
 {

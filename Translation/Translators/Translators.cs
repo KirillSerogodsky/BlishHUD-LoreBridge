@@ -1,4 +1,4 @@
-﻿namespace LoreBridge.Enums;
+﻿namespace LoreBridge.Translation.Translators;
 
 public enum Translators
 {

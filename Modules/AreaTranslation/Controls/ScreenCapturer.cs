@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using Blish_HUD;
+using LoreBridge.Components;
 using LoreBridge.Models;
 
-namespace LoreBridge.Components;
+namespace LoreBridge.Modules.AreaTranslation.Controls;
 
 internal class ScreenCapturer : IDisposable
 {
