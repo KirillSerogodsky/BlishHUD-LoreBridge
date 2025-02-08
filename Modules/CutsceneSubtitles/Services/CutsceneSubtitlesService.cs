@@ -12,7 +12,7 @@ using FontStashSharp;
 using LoreBridge.Controls;
 using LoreBridge.Language;
 using LoreBridge.Modules.AreaTranslation.Controls;
-using LoreBridge.OCR;
+using LoreBridge.Services.Ocr;
 using LoreBridge.Translation;
 using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;

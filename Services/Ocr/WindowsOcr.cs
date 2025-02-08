@@ -8,7 +8,7 @@ using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
 using Windows.Storage.Streams;
 
-namespace LoreBridge.OCR;
+namespace LoreBridge.Services.Ocr;
 
 public class WindowsOcr
 {

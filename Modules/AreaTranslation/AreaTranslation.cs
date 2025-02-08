@@ -1,5 +1,8 @@
+using System;
 using LoreBridge.Models;
 using LoreBridge.Modules.AreaTranslation.Controls;
+using LoreBridge.Services;
+using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -30,19 +33,19 @@ public class AreaTranslation : Module
 
     private void OnScreenCaptured(object o, Rectangle rectangle)
     {
-        /* string[] result = [];
+        string[] result = [];
 
         try
         {
             var bitmap = Screen.GetScreen(rectangle);
-            result = _ocrEngine.GetTextLines(bitmap);
+            result = Service.Ocr.GetTextLines(bitmap);
         }
         catch (Exception exception)
         {
-            _messages.Add(new MessageEntry
+            /* _messages.Add(new MessageEntry
             {
                 Text = exception.Message
-            });
+            }); */
         }
 
         if (result.Length <= 0) return;
@@ -55,7 +58,7 @@ public class AreaTranslation : Module
             else text += row;
         }
 
-        _translationService.Add(new MessageEntry
+        /* _translationService.Add(new MessageEntry
         {
             Text = text
         }); */

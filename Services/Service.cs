@@ -7,14 +7,14 @@ public abstract class Service
 {
     public static readonly GameStateService GameState;
     public static readonly TranslationService Translation;
+    public static readonly OcrService Ocr;
 
-    private static readonly Service[] _services =
+    public static Service[] All { get; } =
     [
         GameState = new GameStateService(),
-        Translation = new TranslationService()
+        Translation = new TranslationService(),
+        Ocr = new OcrService()
     ];
-
-    public static Service[] All => _services;
 
     public abstract void Load(SettingsModel settings);
 
