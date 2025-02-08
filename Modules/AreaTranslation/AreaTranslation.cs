@@ -1,6 +1,9 @@
 using System;
+using Blish_HUD;
+using FontStashSharp;
 using LoreBridge.Models;
 using LoreBridge.Modules.AreaTranslation.Controls;
+using LoreBridge.Resources;
 using LoreBridge.Services;
 using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
@@ -10,14 +13,18 @@ namespace LoreBridge.Modules.AreaTranslation;
 
 public class AreaTranslation : Module
 {
-    private ScreenCapturer _screenCapturer;
     private SettingsModel _settings;
+    private ScreenCapturer _screenCapturer;
+    private TranslationPanel _translationPanel;
+    private DynamicSpriteFont _font;
 
     public override void Load(SettingsModel settings)
     {
         _settings = settings;
         _screenCapturer = new ScreenCapturer(_settings);
-
+        _font = Fonts.FontSystem.GetFont(18);
+        _translationPanel = new TranslationPanel(_font);
+        
         _screenCapturer.ScreenCaptured += OnScreenCaptured;
     }
 
@@ -27,11 +34,12 @@ public class AreaTranslation : Module
 
     public override void Unload()
     {
-        _screenCapturer.Dispose();
         _screenCapturer.ScreenCaptured -= OnScreenCaptured;
+        _screenCapturer.Dispose();
+        _translationPanel.Dispose();
     }
 
-    private void OnScreenCaptured(object o, Rectangle rectangle)
+    private async void OnScreenCaptured(object o, Rectangle rectangle)
     {
         string[] result = [];
 
@@ -40,12 +48,9 @@ public class AreaTranslation : Module
             var bitmap = Screen.GetScreen(rectangle);
             result = Service.Ocr.GetTextLines(bitmap);
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            /* _messages.Add(new MessageEntry
-            {
-                Text = exception.Message
-            }); */
+            //
         }
 
         if (result.Length <= 0) return;
@@ -58,9 +63,24 @@ public class AreaTranslation : Module
             else text += row;
         }
 
-        /* _translationService.Add(new MessageEntry
+        var translation = "";
+        try
         {
-            Text = text
-        }); */
+            translation = await Service.Translation.TranslateAsync(text);
+        }
+        catch (Exception e)
+        {
+            //
+        }
+
+        if (string.IsNullOrEmpty(translation)) return;
+
+        var scale = GameService.Graphics.UIScaleMultiplier;
+        _translationPanel.Top = (int)(rectangle.Top / scale);
+        _translationPanel.Left = (int)(rectangle.Left / scale);
+        _translationPanel.Width = (int)(rectangle.Width / scale);
+        _translationPanel.Height = (int)(rectangle.Height / scale);
+        _translationPanel.Text = translation;
+        _translationPanel.Visible = true;
     }
 }
