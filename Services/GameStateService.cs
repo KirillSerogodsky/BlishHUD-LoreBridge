@@ -33,41 +33,11 @@ public class GameStateService : Service
 
             _gameState = value;
 
-            switch (_gameState)
-            {
-                case GameStateType.InGame:
-                    ChangedToInGame?.Invoke(this, true);
-                    break;
-                case GameStateType.LoadingOrCharacterSelection:
-                    ChangedToLoadingOrCharacterSelect?.Invoke(this, true);
-                    break;
-                case GameStateType.Cutscene:
-                    ChangedToCutscene?.Invoke(this, true);
-                    break;
-                case GameStateType.Dialog:
-                    ChangedToDialog?.Invoke(this, true);
-                    break;
-                case GameStateType.VistaOrCutscene:
-                    ChangedToVistaOrCutscene?.Invoke(this, true);
-                    break;
-                case GameStateType.Unknown:
-                    ChangedToUnknown?.Invoke(this, true);
-                    break;
-                case GameStateType.None:
-                    break;
-            }
-
             GameStateChanged?.Invoke(this, _gameState);
         }
     }
 
     public event EventHandler<GameStateType> GameStateChanged;
-    public event EventHandler<bool> ChangedToInGame;
-    public event EventHandler<bool> ChangedToLoadingOrCharacterSelect;
-    public event EventHandler<bool> ChangedToCutscene;
-    public event EventHandler<bool> ChangedToDialog;
-    public event EventHandler<bool> ChangedToVistaOrCutscene;
-    public event EventHandler<bool> ChangedToUnknown;
 
     public override void Load(SettingsModel settings)
     {
