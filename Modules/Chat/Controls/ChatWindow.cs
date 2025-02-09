@@ -436,22 +436,6 @@ public abstract class ChatWindow : Container, IWindow
 
     #region Implementation Properties
 
-    private bool _showSideBar;
-
-    protected bool ShowSideBar
-    {
-        get => _showSideBar;
-        set => SetProperty(ref _showSideBar, value);
-    }
-
-    private int _sideBarHeight = 100;
-
-    protected int SideBarHeight
-    {
-        get => _sideBarHeight;
-        set => SetProperty(ref _sideBarHeight, value, true);
-    }
-
     private double _lastWindowInteract;
     double IWindow.LastInteraction => _lastWindowInteract;
 

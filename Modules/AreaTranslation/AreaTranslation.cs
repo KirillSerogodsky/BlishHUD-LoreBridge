@@ -1,6 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using Blish_HUD;
 using FontStashSharp;
+using LoreBridge.Components;
 using LoreBridge.Models;
 using LoreBridge.Modules.AreaTranslation.Controls;
 using LoreBridge.Resources;
@@ -13,19 +15,21 @@ namespace LoreBridge.Modules.AreaTranslation;
 
 public class AreaTranslation : Module
 {
-    private SettingsModel _settings;
-    private ScreenCapturer _screenCapturer;
-    private TranslationPanel _translationPanel;
     private DynamicSpriteFont _font;
+    private SettingsModel _settings;
+    private TranslationWindow _translationWindow;
+    private readonly OverlayForm _overlay = new();
 
     public override void Load(SettingsModel settings)
     {
         _settings = settings;
-        _screenCapturer = new ScreenCapturer(_settings);
         _font = Fonts.FontSystem.GetFont(_settings.AreaFontSize.Value);
-        _translationPanel = new TranslationPanel(_font);
+        _translationWindow = new TranslationWindow(_font);
         
-        _screenCapturer.ScreenCaptured += OnScreenCaptured;
+        _settings.ToggleCapturerHotkey.Value.Enabled = true;
+        _settings.ToggleCapturerHotkey.Value.Activated += CaptureScreen;
+        GameService.GameIntegration.Gw2Instance.Gw2LostFocus += LostFocus;
+        _overlay.AreaSelected += OnAreaSelected;
         _settings.AreaFontSize.SettingChanged += OnFontSizeChanged;
     }
 
@@ -35,25 +39,44 @@ public class AreaTranslation : Module
 
     public override void Unload()
     {
-        _screenCapturer.ScreenCaptured -= OnScreenCaptured;
+        _settings.ToggleCapturerHotkey.Value.Enabled = false;
+        _settings.ToggleCapturerHotkey.Value.Activated -= CaptureScreen;
+        GameService.GameIntegration.Gw2Instance.Gw2LostFocus -= LostFocus;
+        _overlay.AreaSelected -= OnAreaSelected;
         _settings.AreaFontSize.SettingChanged -= OnFontSizeChanged;
-        _screenCapturer.Dispose();
-        _translationPanel.Dispose();
+        _translationWindow.Dispose();
     }
 
     private void OnFontSizeChanged(object sender, ValueChangedEventArgs<int> e)
     {
         _font = Fonts.FontSystem.GetFont(e.NewValue);
-        _translationPanel.UpdateFont(_font);
+        _translationWindow.UpdateFont(_font);
     }
 
-    private async void OnScreenCaptured(object o, Rectangle rectangle)
+    private void CaptureScreen(object sender, EventArgs e)
+    {
+        _translationWindow.Hide();
+        _overlay.Show();
+    }
+
+    private void LostFocus(object o, EventArgs e)
+    {
+        _overlay.Hide();
+    }
+
+    private void OnAreaSelected(object o, Rectangle e)
+    {
+        _overlay.Hide();
+        _ = ProcessTranslationAsync(e);
+    }
+
+    private async Task ProcessTranslationAsync(Rectangle rectangle)
     {
         string[] result = [];
+        var bitmap = Screen.GetScreen(rectangle);
 
         try
         {
-            var bitmap = Screen.GetScreen(rectangle);
             result = Service.Ocr.GetTextLines(bitmap);
         }
         catch (Exception e)
@@ -84,10 +107,10 @@ public class AreaTranslation : Module
         if (string.IsNullOrEmpty(translation)) return;
 
         var factor = GameService.Graphics.UIScaleMultiplier;
-        _translationPanel.Top = (int)(rectangle.Top / factor);
-        _translationPanel.Left = (int)(rectangle.Left / factor);
-        _translationPanel.Width = (int)(rectangle.Width / factor);
-        _translationPanel.Text = translation;
-        _translationPanel.Visible = true;
+        _translationWindow.Top = (int)(rectangle.Top / factor);
+        _translationWindow.Left = (int)(rectangle.Left / factor);
+        _translationWindow.Size = new Point((int)(rectangle.Width / factor), (int)(rectangle.Height / factor));
+        _translationWindow.Text = translation;
+        _translationWindow.Show();
     }
 }
