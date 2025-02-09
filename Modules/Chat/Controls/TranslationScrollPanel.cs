@@ -1,7 +1,6 @@
 ﻿using Blish_HUD.Controls;
 using FontStashSharp;
 using LoreBridge.Controls;
-using LoreBridge.Models;
 using LoreBridge.Modules.Chat.Models;
 using Microsoft.Xna.Framework;
 

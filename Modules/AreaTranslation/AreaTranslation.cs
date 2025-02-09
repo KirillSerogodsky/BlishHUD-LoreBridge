@@ -15,17 +15,17 @@ namespace LoreBridge.Modules.AreaTranslation;
 
 public class AreaTranslation : Module
 {
+    private readonly OverlayForm _overlay = new();
     private DynamicSpriteFont _font;
     private SettingsModel _settings;
     private TranslationWindow _translationWindow;
-    private readonly OverlayForm _overlay = new();
 
     public override void Load(SettingsModel settings)
     {
         _settings = settings;
         _font = Fonts.FontSystem.GetFont(_settings.AreaFontSize.Value);
         _translationWindow = new TranslationWindow(_font);
-        
+
         _settings.ToggleCapturerHotkey.Value.Enabled = true;
         _settings.ToggleCapturerHotkey.Value.Activated += CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus += LostFocus;
