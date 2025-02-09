@@ -16,6 +16,8 @@ public class SettingsModel(SettingCollection settings)
         new KeyBinding(),
         () => "Toggle chat window");
 
+    public readonly SettingEntry<int> AreaFontSize = settings.DefineSetting("Area.FontSize", 20);
+
     public readonly SettingEntry<bool> TranslationAutoTranslateNpcDialogs =
         settings.DefineSetting("Translation.AutoTranslateNpcDialogs", false);
 

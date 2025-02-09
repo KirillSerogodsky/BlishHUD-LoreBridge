@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.AreaTranslation.Controls;
 
-public sealed class TranslationPanel : FlowPanel
+public sealed class TranslationPanel : Panel
 {
     private readonly Label2 _label;
 
@@ -15,15 +15,16 @@ public sealed class TranslationPanel : FlowPanel
     {
         Parent = GameService.Graphics.SpriteScreen;
         Visible = false;
-        BackgroundColor = Color.Black;
-        FlowDirection = ControlFlowDirection.SingleTopToBottom;
+        HeightSizingMode = SizingMode.AutoSize;
+        BackgroundColor = Color.Black * 0.9f;
 
         _label = new Label2
         {
             Parent = this,
             Font = font,
             WrapText = true,
-            TextColor = Color.White
+            TextColor = Color.White,
+            AutoSizeHeight = true
         };
     }
     public string Text
@@ -37,18 +38,13 @@ public sealed class TranslationPanel : FlowPanel
         set
         {
             base.Width = value;
-            _label.Width = value;
+            _label.Width = value - 10;
         }
     }
 
-    public new int Height
+    public void UpdateFont(SpriteFontBase font)
     {
-        get => base.Height;
-        set
-        {
-            base.Height = value;
-            _label.Height = value;
-        }
+        _label.Font = font;
     }
 
     protected override void OnClick(MouseEventArgs e) {

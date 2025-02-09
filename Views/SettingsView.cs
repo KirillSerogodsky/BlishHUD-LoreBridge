@@ -126,6 +126,49 @@ public class SettingsView(SettingsModel settings) : View
             ControlPadding = new Vector2(6, 6),
             ShowBorder = true
         };
+        
+        var areaFontSizePanel = new FlowPanel
+        {
+            Parent = translationAreaPanel,
+            FlowDirection = ControlFlowDirection.LeftToRight,
+            WidthSizingMode = SizingMode.Fill,
+            HeightSizingMode = SizingMode.AutoSize,
+            ControlPadding = new Vector2(6, 0)
+        };
+
+        var areaFontSizeLabel = new Label
+        {
+            Parent = areaFontSizePanel,
+            Text = "Font size",
+            ShowShadow = true,
+            Height = 16,
+            Width = 180
+        };
+
+        var areaFontSizeTrackBar = new TrackBar
+        {
+            Parent = areaFontSizePanel,
+            MinValue = 16,
+            MaxValue = 32,
+            Width = 160,
+            Value = settings.AreaFontSize.Value
+        };
+
+        var areaFontSizeCurrentLabel = new Label
+        {
+            Parent = areaFontSizePanel,
+            Text = settings.AreaFontSize.Value.ToString(),
+            ShowShadow = true,
+            Height = 16,
+            AutoSizeWidth = true,
+            TextColor = Color.Gray
+        };
+
+        areaFontSizeTrackBar.ValueChanged += (o, e) =>
+        {
+            settings.AreaFontSize.Value = (int)e.Value;
+            areaFontSizeCurrentLabel.Text = settings.AreaFontSize.Value.ToString();
+        };
 
         var toggleCapturerHotKeybindingAssigner = new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
         {

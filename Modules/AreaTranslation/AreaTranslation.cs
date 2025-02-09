@@ -22,10 +22,11 @@ public class AreaTranslation : Module
     {
         _settings = settings;
         _screenCapturer = new ScreenCapturer(_settings);
-        _font = Fonts.FontSystem.GetFont(18);
+        _font = Fonts.FontSystem.GetFont(_settings.AreaFontSize.Value);
         _translationPanel = new TranslationPanel(_font);
         
         _screenCapturer.ScreenCaptured += OnScreenCaptured;
+        _settings.AreaFontSize.SettingChanged += OnFontSizeChanged;
     }
 
     public override void Update(GameTime gameTime)
@@ -35,8 +36,15 @@ public class AreaTranslation : Module
     public override void Unload()
     {
         _screenCapturer.ScreenCaptured -= OnScreenCaptured;
+        _settings.AreaFontSize.SettingChanged -= OnFontSizeChanged;
         _screenCapturer.Dispose();
         _translationPanel.Dispose();
+    }
+
+    private void OnFontSizeChanged(object sender, ValueChangedEventArgs<int> e)
+    {
+        _font = Fonts.FontSystem.GetFont(e.NewValue);
+        _translationPanel.UpdateFont(_font);
     }
 
     private async void OnScreenCaptured(object o, Rectangle rectangle)
@@ -75,11 +83,10 @@ public class AreaTranslation : Module
 
         if (string.IsNullOrEmpty(translation)) return;
 
-        var scale = GameService.Graphics.UIScaleMultiplier;
-        _translationPanel.Top = (int)(rectangle.Top / scale);
-        _translationPanel.Left = (int)(rectangle.Left / scale);
-        _translationPanel.Width = (int)(rectangle.Width / scale);
-        _translationPanel.Height = (int)(rectangle.Height / scale);
+        var factor = GameService.Graphics.UIScaleMultiplier;
+        _translationPanel.Top = (int)(rectangle.Top / factor);
+        _translationPanel.Left = (int)(rectangle.Left / factor);
+        _translationPanel.Width = (int)(rectangle.Width / factor);
         _translationPanel.Text = translation;
         _translationPanel.Visible = true;
     }
