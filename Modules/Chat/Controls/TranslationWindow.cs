@@ -5,6 +5,8 @@ using Blish_HUD.Input;
 using FontStashSharp;
 using LoreBridge.Models;
 using LoreBridge.Modules.Chat.Models;
+using LoreBridge.Services;
+using LoreBridge.Services.GameState;
 using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Controls;
@@ -38,6 +40,7 @@ public sealed class TranslationWindow : ChatWindow
         _settings.WindowFixed.SettingChanged += OnFixedChanged;
         _settings.WindowTransparent.SettingChanged += OnTransparentChange;
         GameService.Gw2Mumble.UI.IsMapOpenChanged += OnIsMapOpenChanged;
+        Service.GameState.GameStateChanged += OnGameStateChanged;
 
         _clearButton = new StandardButton
         {
@@ -138,9 +141,23 @@ public sealed class TranslationWindow : ChatWindow
                 Hide();
                 break;
             case false when _settings != null && _settings.WindowVisible.Value:
-                _preventSaveVisible = false;
                 Show();
+                _preventSaveVisible = false;
                 break;
+        }
+    }
+
+    private void OnGameStateChanged(object o, GameStateType e)
+    {
+        if (e == GameStateType.LoadingOrCharacterSelection)
+        {
+            _preventSaveVisible = true;
+            Hide();
+        }
+        else if (_settings != null && _settings.WindowVisible.Value)
+        {
+            Show();
+            _preventSaveVisible = false;
         }
     }
 
