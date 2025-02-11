@@ -5,9 +5,9 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace LoreBridge.Translation.Models;
 
-public sealed class DeepLRequestModel
+public sealed class DeepLRequest
 {
-    public DeepLRequestModel(long id, string sentence, string sourceLanguage, string targetLanguage)
+    public DeepLRequest(long id, string sentence, string sourceLanguage, string targetLanguage)
     {
         Id = id;
         Jsonrpc = "2.0";

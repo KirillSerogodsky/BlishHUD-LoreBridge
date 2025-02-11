@@ -48,10 +48,11 @@ public class TranslationService : Service
         _translator?.Dispose();
         _translator = translator switch
         {
-            Translators.DeepL => new DeepLTranslator(config),
-            Translators.Google => new GoogleTranslator(config),
-            Translators.Google2 => new GoogleTranslator2(config),
-            Translators.Yandex => new YandexTranslator(config),
+            // Translators.DeepL => new DeepLTranslator(config),
+            Translators.Google => new Google(config),
+            Translators.Google2 => new Google2(config),
+            Translators.Yandex => new Yandex(config),
+            Translators.LibreTranslate => new LibreTranslate(config),
             _ => null
         };
     }

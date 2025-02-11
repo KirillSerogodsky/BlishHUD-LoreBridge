@@ -10,14 +10,14 @@ using LoreBridge.Translation.Models;
 
 namespace LoreBridge.Translation.Translators;
 
-public class DeepLTranslator : ITranslator
+public class DeepL : ITranslator
 {
     private const string ApiUrl = "https://www2.deepl.com/jsonrpc";
     private readonly TranslatorConfig _config;
     private readonly CookieContainer _cookies;
     private readonly HttpClient _httpClient;
 
-    public DeepLTranslator(TranslatorConfig config)
+    public DeepL(TranslatorConfig config)
     {
         _config = config;
         Id = GenerateId();
@@ -39,8 +39,8 @@ public class DeepLTranslator : ITranslator
         throw new Exception("DeepL translator not implemented");
 
         var targetLang = _config.TargetLang.IsoCode;
-        DeepLRequestModel requestModel = new(Id, text, "EN", targetLang);
-        var body = requestModel.ToJsonString();
+        DeepLRequest request = new(Id, text, "EN", targetLang);
+        var body = request.ToJsonString();
         StringContent content = new(body, Encoding.UTF8, "application/json");
         content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
         content.Headers.TryAddWithoutValidation("Dnt", "1");
@@ -54,7 +54,7 @@ public class DeepLTranslator : ITranslator
 
             if (response.StatusCode.ToString() == "OK")
             {
-                var deserializedModel = JsonSerializer.Deserialize<DeepLResponseModel>(responseBody);
+                var deserializedModel = JsonSerializer.Deserialize<DeepLResponse>(responseBody);
                 if (deserializedModel.Result?.Translations != null)
                 {
                     var beam = deserializedModel.Result?.Translations[0].Beams.First();
@@ -63,7 +63,7 @@ public class DeepLTranslator : ITranslator
             }
             else
             {
-                var deserializedModel = JsonSerializer.Deserialize<DeepLResponseErrorModel>(responseBody);
+                var deserializedModel = JsonSerializer.Deserialize<DeepLResponseError>(responseBody);
                 result = $"Error: {deserializedModel.Error.Message}";
             }
         }

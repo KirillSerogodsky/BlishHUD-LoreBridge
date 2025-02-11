@@ -17,7 +17,7 @@ namespace LoreBridge.Services;
 public class GameStateService : Service
 {
     private GameStateType _gameState = GameStateType.None;
-    private GameStatePanel _gameStatePanel;
+    // private GameStatePanel _gameStatePanel;
     private IArcDpsMessageListener<ImGuiCallback> _imGuiListener;
     private bool _isInCharacterSelectOrLoading;
     private bool _isInGame;
@@ -41,7 +41,7 @@ public class GameStateService : Service
 
     public override void Load(SettingsModel settings)
     {
-        _gameStatePanel = new GameStatePanel();
+        // _gameStatePanel = new GameStatePanel();
 
         _isInGame = GameService.GameIntegration.Gw2Instance.IsInGame;
         GameService.GameIntegration.Gw2Instance.IsInGameChanged += OnIsInGameChange;
@@ -96,7 +96,7 @@ public class GameStateService : Service
 
     public override void Unload()
     {
-        _gameStatePanel.Dispose();
+        // _gameStatePanel.Dispose();
         GameService.GameIntegration.Gw2Instance.IsInGameChanged -= OnIsInGameChange;
         _imGuiListener?.Dispose();
     }

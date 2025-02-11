@@ -96,10 +96,11 @@ public class SettingsView(SettingsModel settings) : View
 
         var translatorDropdownItems = new List<string>
         {
-            "DeepL",
+            // "DeepL",
             "Google (Simple)",
             "Google (Advanced)",
-            "Yandex"
+            "Yandex",
+            "LibreTranslate"
         };
         var translatorDropdown = new Dropdown
         {

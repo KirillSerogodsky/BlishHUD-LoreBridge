@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace LoreBridge.Translation.Translators;
 
-public class GoogleTranslator2(TranslatorConfig config) : ITranslator
+public class Google2(TranslatorConfig config) : ITranslator
 {
     private const string ApiUrl = "https://translate.googleapis.com/translate_a/single";
     private const string ApiUrlParams = "client=gtx&sl={0}&tl={1}&dt=t&q={2}";

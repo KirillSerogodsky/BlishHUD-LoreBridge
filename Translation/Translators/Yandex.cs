@@ -10,7 +10,7 @@ using HttpClient = System.Net.Http.HttpClient;
 
 namespace LoreBridge.Translation.Translators;
 
-public class YandexTranslator : ITranslator
+public class Yandex : ITranslator
 {
     private const string ApiUrl = "https://translate.yandex.net/api/v1/tr.json";
     private const string UserAgent = "ru.yandex.translate/3.20.2024";
@@ -19,7 +19,7 @@ public class YandexTranslator : ITranslator
     private readonly HttpClient _httpClient = new();
     private readonly YandexUcid _ucid = new();
 
-    public YandexTranslator(TranslatorConfig config)
+    public Yandex(TranslatorConfig config)
     {
         _config = config;
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
@@ -40,7 +40,7 @@ public class YandexTranslator : ITranslator
 
         response.EnsureSuccessStatusCode();
 
-        var result = JsonSerializer.Deserialize<YandexResponseModel>(response.Content.ReadAsStringAsync().Result);
+        var result = JsonSerializer.Deserialize<YandexResponse>(response.Content.ReadAsStringAsync().Result);
         if (result.Code != HttpStatusCode.OK) throw new Exception(result.Message);
 
         return result.Text[0];

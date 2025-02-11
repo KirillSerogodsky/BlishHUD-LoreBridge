@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace LoreBridge.Translation.Models;
 
-public sealed class DeepLResponseModel
+public sealed class DeepLResponse
 {
     [JsonPropertyName("result")] public ResponseResult Result { get; set; }
 

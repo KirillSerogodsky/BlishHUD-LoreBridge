@@ -6,7 +6,7 @@ using System.Web;
 
 namespace LoreBridge.Translation.Translators;
 
-public class GoogleTranslator(TranslatorConfig config) : ITranslator
+public class Google(TranslatorConfig config) : ITranslator
 {
     private const string BaseUrl = "https://translate.google.com/m?&sl={0}&tl={1}&hl={1}&q={2}";
 

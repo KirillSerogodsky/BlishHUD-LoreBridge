@@ -29,7 +29,7 @@ public class CutsceneSubtitlesService : IDisposable
 
     private readonly SortedList<ulong, string> _messages = [];
     private readonly Label2 _subtitlesLabel;
-    private readonly YandexTranslator _translator;
+    private readonly Yandex _translator;
 
     private bool _enabled;
     private bool _isCutsceneWithMessages;
@@ -40,7 +40,7 @@ public class CutsceneSubtitlesService : IDisposable
 
     public CutsceneSubtitlesService(WindowsOcr engine, SpriteFontBase font)
     {
-        _translator = new YandexTranslator(new TranslatorConfig
+        _translator = new Yandex(new TranslatorConfig
             {
                 TargetLang = LanguageDetails.GetByLanguage((int)Languages.Russian)
             }

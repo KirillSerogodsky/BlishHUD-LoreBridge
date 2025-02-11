@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace LoreBridge.Translation.Models;
 
-public class YandexResponseModel
+public class YandexResponse
 {
     [JsonPropertyName("code")] public HttpStatusCode Code { get; set; }
     [JsonPropertyName("text")] public List<string> Text { get; set; }

@@ -2,7 +2,7 @@
 
 namespace LoreBridge.Translation.Models;
 
-public sealed class DeepLResponseErrorModel
+public sealed class DeepLResponseError
 {
     [JsonPropertyName("error")] public ResponseError Error { get; set; }
 
