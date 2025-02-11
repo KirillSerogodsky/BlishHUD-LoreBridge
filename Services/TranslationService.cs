@@ -19,7 +19,8 @@ public class TranslationService : Service
         _settings = settings;
         _translatorConfig = new TranslatorConfig
         {
-            TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value)
+            TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value),
+            ApiUrl = settings.TranslationLibreTranslateUrl.Value
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
 
@@ -36,6 +37,7 @@ public class TranslationService : Service
     {
         _settings.TranslationLanguage.SettingChanged -= OnTranslationLanguageChanged;
         _settings.TranslationTranslator.SettingChanged -= OnTranslationTranslatorChanged;
+        _settings.TranslationLibreTranslateUrl.SettingChanged += OnLibreTranslateUrlChanged;
     }
 
     public async Task<string> TranslateAsync(string text)
