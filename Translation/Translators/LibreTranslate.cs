@@ -15,6 +15,10 @@ public class LibreTranslate(TranslatorConfig config) : ITranslator
     {
         var targetLang = config.TargetLang.IsoCode.ToLower();
         var url = config.ApiUrl;
+
+        if (string.IsNullOrWhiteSpace(text))
+            return "Error: No API URL provided";
+
         var requestBody = new LibreTranslateRequest
         {
             Source = "en",
@@ -28,7 +32,7 @@ public class LibreTranslate(TranslatorConfig config) : ITranslator
 
         try
         {
-            using var response = await _httpClient.PostAsync(url, content)
+            using var response = await _httpClient.PostAsync($"{url}/translation", content)
                 .ConfigureAwait(false);
             var responseBody = await response.Content.ReadAsStringAsync();
             var responseModel = JsonSerializer.Deserialize<LibreTranslateResponse>(responseBody);
