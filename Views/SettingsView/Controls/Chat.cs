@@ -1,186 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Blish_HUD.Controls;
-using Blish_HUD.Graphics.UI;
 using LoreBridge.Models;
-using LoreBridge.Translation.Language;
-using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
-using Panel = Blish_HUD.Controls.Panel;
 
-namespace LoreBridge.Views;
+namespace LoreBridge.Views.SettingsView.Controls;
 
-public class SettingsView(SettingsModel settings) : View
+public class Chat
 {
-    private Panel _settingsPanel;
-
-    protected override void Build(Container buildPanel)
+    public Chat(Panel mainPanel, SettingsModel settings)
     {
-        _settingsPanel = new FlowPanel
-        {
-            Parent = buildPanel,
-            CanCollapse = false,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            FlowDirection = ControlFlowDirection.SingleTopToBottom,
-            OuterControlPadding = new Vector2(22, 6),
-            ControlPadding = new Vector2(6, 6),
-            HorizontalScrollOffset = 16
-        };
-
-        var generalPanel = new FlowPanel
-        {
-            Parent = _settingsPanel,
-            Title = "General",
-            CanCollapse = true,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            FlowDirection = ControlFlowDirection.SingleTopToBottom,
-            OuterControlPadding = new Vector2(6, 6),
-            ControlPadding = new Vector2(6, 6),
-            ShowBorder = true
-        };
-
-        var languagePanel = new FlowPanel
-        {
-            Parent = generalPanel,
-            FlowDirection = ControlFlowDirection.LeftToRight,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            ControlPadding = new Vector2(6, 0)
-        };
-
-        var languageLabel = new Label
-        {
-            Parent = languagePanel,
-            Text = "Translation language",
-            ShowShadow = true,
-            Height = 28,
-            Width = 180
-        };
-
-        var languageDropdown = new Dropdown
-        {
-            Parent = languagePanel,
-            Width = 160,
-            SelectedItem = LanguagesInfo.GetByLanguage(settings.TranslationLanguage.Value)?.Name
-        };
-        foreach (var languageDetail in LanguagesInfo.List.OrderBy(ld => ld.Name))
-            languageDropdown.Items.Add(languageDetail.Name);
-
-        languageDropdown.ValueChanged += (o, e) =>
-        {
-            var selectedLanguage = LanguagesInfo.GetByName(e.CurrentValue);
-            if (selectedLanguage?.Language != null)
-                settings.TranslationLanguage.Value = (int)selectedLanguage.Language;
-        };
-
-        var translatorPanel = new FlowPanel
-        {
-            Parent = generalPanel,
-            FlowDirection = ControlFlowDirection.LeftToRight,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            ControlPadding = new Vector2(6, 0)
-        };
-
-        var translatorLabel = new Label
-        {
-            Parent = translatorPanel,
-            Text = "Translator",
-            ShowShadow = true,
-            Height = 28,
-            Width = 180
-        };
-
-        var translatorDropdownItems = new List<string>
-        {
-            // "DeepL",
-            "Google (Simple)",
-            "Google (Advanced)",
-            "Yandex",
-            "LibreTranslate"
-        };
-        var translatorDropdown = new Dropdown
-        {
-            Parent = translatorPanel,
-            Width = 160,
-            SelectedItem = translatorDropdownItems[settings.TranslationTranslator.Value]
-        };
-        foreach (var item in translatorDropdownItems) translatorDropdown.Items.Add(item);
-        translatorDropdown.ValueChanged += (o, e) =>
-        {
-            settings.TranslationTranslator.Value = (int)Enum.Parse(typeof(Translators),
-                translatorDropdownItems.IndexOf(e.CurrentValue).ToString());
-        };
-
-        var translationAreaPanel = new FlowPanel
-        {
-            Parent = _settingsPanel,
-            Title = "Area",
-            CanCollapse = true,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            FlowDirection = ControlFlowDirection.SingleTopToBottom,
-            OuterControlPadding = new Vector2(6, 6),
-            ControlPadding = new Vector2(6, 6),
-            ShowBorder = true
-        };
-        
-        var areaFontSizePanel = new FlowPanel
-        {
-            Parent = translationAreaPanel,
-            FlowDirection = ControlFlowDirection.LeftToRight,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            ControlPadding = new Vector2(6, 0)
-        };
-
-        var areaFontSizeLabel = new Label
-        {
-            Parent = areaFontSizePanel,
-            Text = "Font size",
-            ShowShadow = true,
-            Height = 16,
-            Width = 180
-        };
-
-        var areaFontSizeTrackBar = new TrackBar
-        {
-            Parent = areaFontSizePanel,
-            MinValue = 16,
-            MaxValue = 32,
-            Width = 160,
-            Value = settings.AreaFontSize.Value
-        };
-
-        var areaFontSizeCurrentLabel = new Label
-        {
-            Parent = areaFontSizePanel,
-            Text = settings.AreaFontSize.Value.ToString(),
-            ShowShadow = true,
-            Height = 16,
-            AutoSizeWidth = true,
-            TextColor = Color.Gray
-        };
-
-        areaFontSizeTrackBar.ValueChanged += (o, e) =>
-        {
-            settings.AreaFontSize.Value = (int)e.Value;
-            areaFontSizeCurrentLabel.Text = settings.AreaFontSize.Value.ToString();
-        };
-
-        var toggleCapturerHotKeybindingAssigner = new KeybindingAssigner(settings.ToggleCapturerHotkey.Value)
-        {
-            Parent = translationAreaPanel,
-            KeyBindingName = settings.ToggleCapturerHotkey.DisplayName,
-            BasicTooltipText = settings.ToggleCapturerHotkey.Description
-        };
-
         var translationWindowPanel = new FlowPanel
         {
-            Parent = _settingsPanel,
+            Parent = mainPanel,
             Title = "Chat",
             CanCollapse = true,
             WidthSizingMode = SizingMode.Fill,
@@ -379,26 +209,5 @@ public class SettingsView(SettingsModel settings) : View
                 KeyBindingName = settings.ToggleTranslationWindowHotKey.DisplayName,
                 BasicTooltipText = settings.ToggleTranslationWindowHotKey.Description
             };
-
-        var cutscenesPanel = new FlowPanel
-        {
-            Parent = _settingsPanel,
-            Title = "Cutscenes (Experimental)",
-            CanCollapse = true,
-            WidthSizingMode = SizingMode.Fill,
-            HeightSizingMode = SizingMode.AutoSize,
-            FlowDirection = ControlFlowDirection.SingleTopToBottom,
-            OuterControlPadding = new Vector2(6, 6),
-            ControlPadding = new Vector2(6, 6),
-            ShowBorder = true
-        };
-
-        base.Build(buildPanel);
-    }
-
-    protected override void Unload()
-    {
-        _settingsPanel.Dispose();
-        base.Unload();
     }
 }

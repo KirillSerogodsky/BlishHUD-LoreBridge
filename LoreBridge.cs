@@ -13,7 +13,7 @@ using LoreBridge.Modules.CutsceneSubtitles;
 using LoreBridge.Modules.DialogSubtitles;
 using LoreBridge.Resources;
 using LoreBridge.Services;
-using LoreBridge.Views;
+using LoreBridge.Views.SettingsView;
 using Microsoft.Xna.Framework;
 using BlishHUDModule = Blish_HUD.Modules.Module;
 using BlishHUDModuleParameters = Blish_HUD.Modules.ModuleParameters;

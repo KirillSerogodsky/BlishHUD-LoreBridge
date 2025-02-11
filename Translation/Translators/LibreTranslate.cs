@@ -14,6 +14,7 @@ public class LibreTranslate(TranslatorConfig config) : ITranslator
     public async Task<string> TranslateAsync(string text)
     {
         var targetLang = config.TargetLang.IsoCode.ToLower();
+        var url = config.ApiUrl;
         var requestBody = new LibreTranslateRequest
         {
             Source = "en",
@@ -27,7 +28,7 @@ public class LibreTranslate(TranslatorConfig config) : ITranslator
 
         try
         {
-            using var response = await _httpClient.PostAsync("http://192.168.1.24:7017/translate", content)
+            using var response = await _httpClient.PostAsync(url, content)
                 .ConfigureAwait(false);
             var responseBody = await response.Content.ReadAsStringAsync();
             var responseModel = JsonSerializer.Deserialize<LibreTranslateResponse>(responseBody);
