@@ -32,8 +32,11 @@ public class LibreTranslate(TranslatorConfig config) : ITranslator
 
         try
         {
-            using var response = await _httpClient.PostAsync($"{url}/translation", content)
+            using var response = await _httpClient.PostAsync($"{url}/translate", content)
                 .ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
             var responseBody = await response.Content.ReadAsStringAsync();
             var responseModel = JsonSerializer.Deserialize<LibreTranslateResponse>(responseBody);
 
