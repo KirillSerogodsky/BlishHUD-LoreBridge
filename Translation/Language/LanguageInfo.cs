@@ -1,6 +1,6 @@
-namespace LoreBridge.Language;
+namespace LoreBridge.Translation.Language;
 
-public class LanguageDetail
+public class LanguageInfo
 {
     public Languages Language { get; set; }
     public string Code { get; set; }

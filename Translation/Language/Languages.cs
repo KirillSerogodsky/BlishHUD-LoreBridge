@@ -1,4 +1,4 @@
-﻿namespace LoreBridge.Language;
+﻿namespace LoreBridge.Translation.Language;
 
 public enum Languages
 {

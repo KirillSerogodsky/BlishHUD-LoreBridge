@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Blish_HUD;
-using LoreBridge.Language;
 using LoreBridge.Models;
 using LoreBridge.Translation;
+using LoreBridge.Translation.Language;
 using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
 
@@ -19,7 +19,7 @@ public class TranslationService : Service
         _settings = settings;
         _translatorConfig = new TranslatorConfig
         {
-            TargetLang = LanguageDetails.GetByLanguage(_settings.TranslationLanguage.Value)
+            TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value)
         };
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
 
@@ -59,7 +59,7 @@ public class TranslationService : Service
 
     private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)
     {
-        _translatorConfig.TargetLang = LanguageDetails.GetByLanguage(e.NewValue);
+        _translatorConfig.TargetLang = LanguagesInfo.GetByLanguage(e.NewValue);
     }
 
     private void OnTranslationTranslatorChanged(object sender, ValueChangedEventArgs<int> e)

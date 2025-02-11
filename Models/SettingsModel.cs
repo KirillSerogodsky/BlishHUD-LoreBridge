@@ -1,6 +1,6 @@
 ﻿using Blish_HUD.Input;
 using Blish_HUD.Settings;
-using LoreBridge.Language;
+using LoreBridge.Translation.Language;
 using LoreBridge.Translation.Translators;
 
 namespace LoreBridge.Models;

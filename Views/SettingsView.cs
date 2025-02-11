@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
-using LoreBridge.Language;
 using LoreBridge.Models;
+using LoreBridge.Translation.Language;
 using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
 using Panel = Blish_HUD.Controls.Panel;
@@ -64,14 +64,14 @@ public class SettingsView(SettingsModel settings) : View
         {
             Parent = languagePanel,
             Width = 160,
-            SelectedItem = LanguageDetails.GetByLanguage(settings.TranslationLanguage.Value)?.Name
+            SelectedItem = LanguagesInfo.GetByLanguage(settings.TranslationLanguage.Value)?.Name
         };
-        foreach (var languageDetail in LanguageDetails.List.OrderBy(ld => ld.Name))
+        foreach (var languageDetail in LanguagesInfo.List.OrderBy(ld => ld.Name))
             languageDropdown.Items.Add(languageDetail.Name);
 
         languageDropdown.ValueChanged += (o, e) =>
         {
-            var selectedLanguage = LanguageDetails.GetByName(e.CurrentValue);
+            var selectedLanguage = LanguagesInfo.GetByName(e.CurrentValue);
             if (selectedLanguage?.Language != null)
                 settings.TranslationLanguage.Value = (int)selectedLanguage.Language;
         };

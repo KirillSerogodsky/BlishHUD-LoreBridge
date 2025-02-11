@@ -10,10 +10,10 @@ using Blish_HUD.GameServices.ArcDps.V2;
 using Blish_HUD.GameServices.ArcDps.V2.Models.UnofficialExtras;
 using FontStashSharp;
 using LoreBridge.Controls;
-using LoreBridge.Language;
 using LoreBridge.Modules.AreaTranslation.Controls;
 using LoreBridge.Services.Ocr;
 using LoreBridge.Translation;
+using LoreBridge.Translation.Language;
 using LoreBridge.Translation.Translators;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
@@ -42,7 +42,7 @@ public class CutsceneSubtitlesService : IDisposable
     {
         _translator = new Yandex(new TranslatorConfig
             {
-                TargetLang = LanguageDetails.GetByLanguage((int)Languages.Russian)
+                TargetLang = LanguagesInfo.GetByLanguage((int)Languages.Russian)
             }
         );
         _engine = engine;

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LoreBridge.Language;
+namespace LoreBridge.Translation.Language;
 
-public static class LanguageDetails
+public static class LanguagesInfo
 {
-    public static readonly List<LanguageDetail> List =
+    public static readonly List<LanguageInfo> List =
     [
         // new LanguageDetail { Language = Languages.Arabic, Code = "ar-AR", IsoCode = "ar", Name = "Arabic" },
         new() { Language = Languages.Bulgarian, Code = "bg-BG", IsoCode = "bg", Name = "Bulgarian" },
@@ -39,20 +39,20 @@ public static class LanguageDetails
         new() { Language = Languages.Ukrainian, Code = "uk-UA", IsoCode = "uk", Name = "Ukrainian" }
     ];
 
-    private static readonly Dictionary<Languages, LanguageDetail> _byLanguage =
+    private static readonly Dictionary<Languages, LanguageInfo> _byLanguage =
         List.ToDictionary(d => d.Language);
 
-    private static readonly Dictionary<string, LanguageDetail> _byName =
+    private static readonly Dictionary<string, LanguageInfo> _byName =
         List.ToDictionary(d => d.Name);
 
-    public static LanguageDetail GetByLanguage(int languageCode)
+    public static LanguageInfo GetByLanguage(int languageCode)
     {
         if (!Enum.IsDefined(typeof(Languages), languageCode)) return null;
 
         return _byLanguage.TryGetValue((Languages)languageCode, out var detail) ? detail : null;
     }
 
-    public static LanguageDetail GetByName(string name)
+    public static LanguageInfo GetByName(string name)
     {
         return _byName.TryGetValue(name, out var detail) ? detail : null;
     }
