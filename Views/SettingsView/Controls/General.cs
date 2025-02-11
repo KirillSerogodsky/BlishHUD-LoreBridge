@@ -78,25 +78,37 @@ public class General
             Width = 180
         };
 
-        var translatorDropdownItems = new List<string>
+        var translators = new Dictionary<string, Translators>
         {
-            // "DeepL",
-            "Google (Simple)",
-            "Google (Advanced)",
-            "Yandex",
-            "LibreTranslate"
+            // { "DeepL", Translators.DeepL },
+            { "Google (Simple)", Translators.Google },
+            { "Google (Advanced)", Translators.Google2 },
+            { "Yandex", Translators.Yandex },
+            { "LibreTranslate", Translators.LibreTranslate }
         };
         var translatorDropdown = new Dropdown
         {
             Parent = translatorPanel,
-            Width = 160,
-            SelectedItem = translatorDropdownItems[settings.TranslationTranslator.Value]
+            Width = 160
         };
-        foreach (var item in translatorDropdownItems) translatorDropdown.Items.Add(item);
+
+        var currentTranslator = (Translators)settings.TranslationTranslator.Value;
+        var selectedItem = translators.FirstOrDefault(x => x.Value == currentTranslator).Key;
+        translatorDropdown.SelectedItem = selectedItem;
+
+        foreach (var item in translators.Keys)
+        {
+            translatorDropdown.Items.Add(item);
+        }
+
         translatorDropdown.ValueChanged += (o, e) =>
         {
-            settings.TranslationTranslator.Value = (int)Enum.Parse(typeof(Translators),
-                translatorDropdownItems.IndexOf(e.CurrentValue).ToString());
+            if (translators.TryGetValue(e.CurrentValue, out var translator))
+            {
+                settings.TranslationTranslator.Value = (int)translator;
+            }
         };
+
+        var libreTranslate = new LibreTranslate(mainPanel, settings);
     }
 }

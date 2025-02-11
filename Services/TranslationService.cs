@@ -25,6 +25,7 @@ public class TranslationService : Service
 
         _settings.TranslationLanguage.SettingChanged += OnTranslationLanguageChanged;
         _settings.TranslationTranslator.SettingChanged += OnTranslationTranslatorChanged;
+        _settings.TranslationLibreTranslateUrl.SettingChanged += OnLibreTranslateUrlChanged;
     }
 
     public override void Update(GameTime gameTime)
@@ -65,5 +66,10 @@ public class TranslationService : Service
     private void OnTranslationTranslatorChanged(object sender, ValueChangedEventArgs<int> e)
     {
         CreateTranslator((Translators)e.NewValue, _translatorConfig);
+    }
+
+    private void OnLibreTranslateUrlChanged(object sender, ValueChangedEventArgs<string> e)
+    {
+        _translatorConfig.ApiUrl = e.NewValue;
     }
 }
