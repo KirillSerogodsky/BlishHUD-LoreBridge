@@ -17,17 +17,6 @@ public class TranslationService : Service
     public override void Load(SettingsModel settings)
     {
         _settings = settings;
-        _translatorConfig = new TranslatorConfig
-        {
-            TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value)
-        };
-
-        switch (_settings.TranslationTranslator.Value)
-        {
-            case (int)Translators.LibreTranslate:
-                _translatorConfig.ApiUrl = settings.TranslationLibreTranslateUrl.Value;
-                break;
-        }
 
         CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
 
@@ -55,6 +44,15 @@ public class TranslationService : Service
 
     private void CreateTranslator(Translators translator, TranslatorConfig config)
     {
+        _translatorConfig ??= new TranslatorConfig();
+        _translatorConfig.TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value);
+        switch (_settings.TranslationTranslator.Value)
+        {
+            case (int)Translators.LibreTranslate:
+                _translatorConfig.ApiUrl = _settings.TranslationLibreTranslateUrl.Value;
+                break;
+        }
+
         _translator?.Dispose();
         _translator = translator switch
         {

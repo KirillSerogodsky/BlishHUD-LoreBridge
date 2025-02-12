@@ -70,7 +70,7 @@ public class LoreBridge : BlishHUDModule
 
     private void LoadModules()
     {
-        _modules.Add(new AreaTranslation());
+        _modules.Add(new Area());
         _modules.Add(new Chat(_cornerIcon));
         _modules.Add(new CutsceneSubtitles());
         _modules.Add(new DialogSubtitles());

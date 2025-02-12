@@ -13,7 +13,7 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace LoreBridge.Modules.AreaTranslation;
 
-public class AreaTranslation : Module
+public class Area : Module
 {
     private readonly OverlayForm _overlay = new();
     private DynamicSpriteFont _font;
