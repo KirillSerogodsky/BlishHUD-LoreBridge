@@ -17,10 +17,10 @@ public class Area : Module
 {
     private readonly OverlayForm _overlay = new();
     private DynamicSpriteFont _font;
-    private SettingsModel _settings;
+    private Settings _settings;
     private TranslationWindow _translationWindow;
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         _settings = settings;
         _font = Fonts.FontSystem.GetFont(_settings.AreaFontSize.Value);

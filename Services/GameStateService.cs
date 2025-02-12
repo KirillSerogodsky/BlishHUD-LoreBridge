@@ -39,7 +39,7 @@ public class GameStateService : Service
 
     public event EventHandler<GameStateType> GameStateChanged;
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         // _gameStatePanel = new GameStatePanel();
 

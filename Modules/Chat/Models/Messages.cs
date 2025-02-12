@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Models;
 
-public sealed class Messages(SettingsModel settings)
+public sealed class Messages(Settings settings)
 {
     private readonly Dictionary<string, Color> _colorPairs = new();
     private readonly Random _random = new();

@@ -7,7 +7,7 @@ namespace LoreBridge.Views.SettingsView.Controls;
 
 public sealed class LibreTranslate : FlowPanel
 {
-    public LibreTranslate(Panel mainPanel, SettingsModel settings)
+    public LibreTranslate(Panel mainPanel, Settings settings)
     {
         Parent = mainPanel;
         Title = "LibreTranslate";

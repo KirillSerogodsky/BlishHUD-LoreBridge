@@ -21,7 +21,7 @@ public class Chat : Module
     private SpriteFontBase _font;
     private Messages _messages;
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
-    private SettingsModel _settings;
+    private Settings _settings;
     private TranslationWindow _translationWindow;
     private TranslationQueue _translationQueue;
 
@@ -30,7 +30,7 @@ public class Chat : Module
         _cornerIcon = cornerIcon;
     }
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         _settings = settings;
         _messages = new Messages(_settings);

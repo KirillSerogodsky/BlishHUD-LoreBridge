@@ -16,7 +16,7 @@ public abstract class Service
         Ocr = new OcrService()
     ];
 
-    public abstract void Load(SettingsModel settings);
+    public abstract void Load(Settings settings);
 
     public abstract void Update(GameTime gameTime);
 

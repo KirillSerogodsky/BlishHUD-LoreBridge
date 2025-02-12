@@ -6,7 +6,7 @@ namespace LoreBridge.Views.SettingsView.Controls;
 
 public class Chat
 {
-    public Chat(Panel mainPanel, SettingsModel settings)
+    public Chat(Panel mainPanel, Settings settings)
     {
         var translationWindowPanel = new FlowPanel
         {

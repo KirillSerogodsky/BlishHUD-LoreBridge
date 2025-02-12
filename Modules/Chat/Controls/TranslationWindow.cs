@@ -15,10 +15,10 @@ public sealed class TranslationWindow : ChatWindow
 {
     private readonly StandardButton _clearButton;
     private readonly TranslationScrollPanel _panel;
-    private readonly SettingsModel _settings;
+    private readonly Settings _settings;
     private bool _preventSaveVisible;
 
-    public TranslationWindow(SettingsModel settings,
+    public TranslationWindow(Settings settings,
         Messages messages,
         SpriteFontBase font)
     {

@@ -6,7 +6,7 @@ namespace LoreBridge.Views.SettingsView.Controls;
 
 public class Cutscenes
 {
-    public Cutscenes(Panel mainPanel, SettingsModel settings)
+    public Cutscenes(Panel mainPanel, Settings settings)
     {
         var cutscenesPanel = new FlowPanel
         {

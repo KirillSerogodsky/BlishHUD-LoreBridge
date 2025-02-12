@@ -5,7 +5,7 @@ namespace LoreBridge.Modules;
 
 public abstract class Module
 {
-    public abstract void Load(SettingsModel settings);
+    public abstract void Load(Settings settings);
 
     public abstract void Update(GameTime gameTime);
 

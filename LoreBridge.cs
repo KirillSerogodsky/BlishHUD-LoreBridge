@@ -25,7 +25,7 @@ public class LoreBridge : BlishHUDModule
 {
     private readonly List<Module> _modules = [];
     private CornerIcon _cornerIcon;
-    private SettingsModel _settings;
+    private Settings _settings;
 
     [ImportingConstructor]
     public LoreBridge([Import("ModuleParameters")] BlishHUDModuleParameters moduleParameters) : base(moduleParameters)
@@ -36,7 +36,7 @@ public class LoreBridge : BlishHUDModule
 
     protected override void DefineSettings(SettingCollection settings)
     {
-        _settings = new SettingsModel(settings);
+        _settings = new Settings(settings);
     }
 
     public override IView GetSettingsView()

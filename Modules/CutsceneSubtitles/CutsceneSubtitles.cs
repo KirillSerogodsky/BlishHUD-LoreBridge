@@ -10,7 +10,7 @@ public class CutsceneSubtitles : Module
     // private SpriteFontBase _font;
     // private SettingsModel _settings;
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         // _settings = settings;
         // _font = Fonts.FontSystem.GetFont(_settings.WindowFontSize.Value);

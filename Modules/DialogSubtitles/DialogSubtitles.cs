@@ -5,7 +5,7 @@ namespace LoreBridge.Modules.DialogSubtitles;
 
 public class DialogSubtitles : Module
 {
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
     }
 

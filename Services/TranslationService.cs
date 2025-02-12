@@ -10,11 +10,11 @@ namespace LoreBridge.Services;
 
 public class TranslationService : Service
 {
-    private SettingsModel _settings;
+    private Settings _settings;
     private ITranslator _translator;
     private TranslatorConfig _translatorConfig;
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         _settings = settings;
 

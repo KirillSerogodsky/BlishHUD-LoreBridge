@@ -7,7 +7,7 @@ using Panel = Blish_HUD.Controls.Panel;
 
 namespace LoreBridge.Views.SettingsView;
 
-public class SettingsView(SettingsModel settings) : View
+public class SettingsView(Settings settings) : View
 {
     private Panel _settingsPanel;
 

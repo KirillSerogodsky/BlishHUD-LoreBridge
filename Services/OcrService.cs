@@ -9,7 +9,7 @@ public class OcrService : Service
 {
     private WindowsOcr _ocrEngine;
 
-    public override void Load(SettingsModel settings)
+    public override void Load(Settings settings)
     {
         _ocrEngine = new WindowsOcr();
     }

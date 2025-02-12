@@ -6,7 +6,7 @@ namespace LoreBridge.Views.SettingsView.Controls;
 
 public class Area
 {
-    public Area(Panel mainPanel, SettingsModel settings)
+    public Area(Panel mainPanel, Settings settings)
     {
         var translationAreaPanel = new FlowPanel
         {

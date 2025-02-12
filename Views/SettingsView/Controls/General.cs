@@ -11,7 +11,7 @@ namespace LoreBridge.Views.SettingsView.Controls;
 
 public class General
 {
-    public General(Panel mainPanel, SettingsModel settings)
+    public General(Panel mainPanel, Settings settings)
     {
         var generalPanel = new FlowPanel
         {

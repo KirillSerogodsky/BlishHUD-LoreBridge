@@ -5,7 +5,7 @@ using LoreBridge.Translation.Translators;
 
 namespace LoreBridge.Models;
 
-public class SettingsModel(SettingCollection settings)
+public class Settings(SettingCollection settings)
 {
     #region General
 
