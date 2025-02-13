@@ -18,7 +18,7 @@ public class TranslationService : Service
     {
         _settings = settings;
 
-        CreateTranslator((Translators)_settings.TranslationTranslator.Value, _translatorConfig);
+        CreateTranslator((Translators)_settings.TranslationTranslator.Value);
 
         _settings.TranslationLanguage.SettingChanged += OnTranslationLanguageChanged;
         _settings.TranslationTranslator.SettingChanged += OnTranslationTranslatorChanged;
@@ -42,7 +42,7 @@ public class TranslationService : Service
         return !string.IsNullOrWhiteSpace(translation) ? translation : "";
     }
 
-    private void CreateTranslator(Translators translator, TranslatorConfig config)
+    private void CreateTranslator(Translators translator)
     {
         _translatorConfig ??= new TranslatorConfig();
         _translatorConfig.TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value);
@@ -57,10 +57,10 @@ public class TranslationService : Service
         _translator = translator switch
         {
             // Translators.DeepL => new DeepLTranslator(config),
-            Translators.Google => new Google(config),
-            Translators.Google2 => new Google2(config),
-            Translators.Yandex => new Yandex(config),
-            Translators.LibreTranslate => new LibreTranslate(config),
+            Translators.Google => new Google(_translatorConfig),
+            Translators.Google2 => new Google2(_translatorConfig),
+            Translators.Yandex => new Yandex(_translatorConfig),
+            Translators.LibreTranslate => new LibreTranslate(_translatorConfig),
             _ => null
         };
     }
@@ -72,7 +72,7 @@ public class TranslationService : Service
 
     private void OnTranslationTranslatorChanged(object sender, ValueChangedEventArgs<int> e)
     {
-        CreateTranslator((Translators)e.NewValue, _translatorConfig);
+        CreateTranslator((Translators)e.NewValue);
     }
 
     private void OnLibreTranslateUrlChanged(object sender, ValueChangedEventArgs<string> e)
