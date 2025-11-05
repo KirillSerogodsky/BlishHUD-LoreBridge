@@ -28,7 +28,7 @@ public class SettingsView(Settings settings) : View
         var general = new General(_settingsPanel, settings);
         var area = new Area(_settingsPanel, settings);
         var chat = new Chat(_settingsPanel, settings);
-        var cutscenes = new Cutscenes(_settingsPanel, settings);
+        // var cutscenes = new Cutscenes(_settingsPanel, settings);
 
         base.Build(buildPanel);
     }
