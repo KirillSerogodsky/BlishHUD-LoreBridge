@@ -9,6 +9,9 @@ public class Settings(SettingCollection settings)
 {
     #region General
 
+    public readonly SettingEntry<bool> ContentUsePolicyConfirmation =
+        settings.DefineSetting("ContentUsePolicyConfirmation", false);
+
     public readonly SettingEntry<int> TranslationLanguage =
         settings.DefineSetting("Translation.Language", (int)Languages.Russian);
 
