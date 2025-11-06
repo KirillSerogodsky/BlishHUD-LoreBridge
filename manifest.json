@@ -1,12 +1,12 @@
 {
   "name": "LoreBridge",
-  "version": "0.2.0-rc.4",
+  "version": "0.3.0-rc.1",
   "namespace": "LoreBridge",
   "package": "LoreBridge.dll",
   "manifest_version": 1,
   "description": "Set of utilities primarily focused on translating storyline content.",
   "dependencies": {
-    "bh.blishhud": ">=1.2.0"
+    "bh.blishhud": ">=1.2.1"
   },
   "url": "https://github.com/KirillSerogodsky/BlishHUD-LoreBridge",
   "contributors": [

@@ -1,73 +1,83 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Blish_HUD;
 using LoreBridge.Models;
 using LoreBridge.Translation;
+using LoreBridge.Translation.Language;
+using LoreBridge.Translation.Translators;
+using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Services;
 
-public class TranslationService(ITranslator translator, MessagesModel messages)
+public class TranslationService : Service
 {
-    private readonly ConcurrentQueue<MessageEntry> _taskQueue = new();
-    private readonly object _processingLock = new();
-    private bool _isProcessing;
+    private Settings _settings;
+    private ITranslator _translator;
+    private TranslatorConfig _translatorConfig;
 
-    public void Add(MessageEntry message)
+    public override void Load(Settings settings)
     {
-        if (message.TimeStamp == 0) message.TimeStamp = (ulong)DateTime.UtcNow.Ticks * 100;
+        _settings = settings;
 
-        _taskQueue.Enqueue(message);
+        CreateTranslator((Translators)_settings.TranslationTranslator.Value);
 
-        lock (_processingLock)
-        {
-            if (_isProcessing) return;
-
-            _isProcessing = true;
-            _ = ProcessQueueAsync();
-        }
+        _settings.TranslationLanguage.SettingChanged += OnTranslationLanguageChanged;
+        _settings.TranslationTranslator.SettingChanged += OnTranslationTranslatorChanged;
+        _settings.TranslationLibreTranslateUrl.SettingChanged += OnLibreTranslateUrlChanged;
     }
 
-    private async Task ProcessQueueAsync()
+    public override void Update(GameTime gameTime)
     {
-        while (_isProcessing)
+    }
+
+    public override void Unload()
+    {
+        _settings.TranslationLanguage.SettingChanged -= OnTranslationLanguageChanged;
+        _settings.TranslationTranslator.SettingChanged -= OnTranslationTranslatorChanged;
+        _settings.TranslationLibreTranslateUrl.SettingChanged += OnLibreTranslateUrlChanged;
+    }
+
+    public async Task<string> TranslateAsync(string text)
+    {
+        var translation = await _translator.TranslateAsync(text).ConfigureAwait(false);
+        return !string.IsNullOrWhiteSpace(translation) ? translation : "";
+    }
+
+    private void CreateTranslator(Translators translator)
+    {
+        _translatorConfig ??= new TranslatorConfig();
+        _translatorConfig.TargetLang = LanguagesInfo.GetByLanguage(_settings.TranslationLanguage.Value);
+        switch (_settings.TranslationTranslator.Value)
         {
-            await Task.Delay(100);
-
-            var tasksToProcess = new List<MessageEntry>();
-            while (_taskQueue.TryDequeue(out var message)) tasksToProcess.Add(message);
-
-            if (tasksToProcess.Count > 0)
-            {
-                tasksToProcess.Sort((x, y) => x.TimeStamp.CompareTo(y.TimeStamp));
-                foreach (var message in tasksToProcess)
-                    await ProcessTranslationAsync(message).ConfigureAwait(false);
-            }
-
-            lock (_processingLock)
-            {
-                if (!_taskQueue.IsEmpty) continue;
-
-                _isProcessing = false;
+            case (int)Translators.LibreTranslate:
+                _translatorConfig.ApiUrl = _settings.TranslationLibreTranslateUrl.Value;
                 break;
-            }
         }
+
+        _translator?.Dispose();
+        _translator = translator switch
+        {
+            // Translators.DeepL => new DeepLTranslator(config),
+            Translators.Google => new Google(_translatorConfig),
+            Translators.Google2 => new Google2(_translatorConfig),
+            Translators.Yandex => new Yandex(_translatorConfig),
+            Translators.LibreTranslate => new LibreTranslate(_translatorConfig),
+            _ => null
+        };
     }
 
-    private async Task ProcessTranslationAsync(MessageEntry message)
+    private void OnTranslationLanguageChanged(object sender, ValueChangedEventArgs<int> e)
     {
-        try
-        {
-            var translation = await translator.TranslateAsync(message.Text).ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(translation))
-            {
-                message.Text = translation;
-                messages.Add(message);
-            }
-        }
-        catch (Exception e)
-        {
-            messages.Add(new MessageEntry { Text = e.Message });
-        }
+        _translatorConfig.TargetLang = LanguagesInfo.GetByLanguage(e.NewValue);
+    }
+
+    private void OnTranslationTranslatorChanged(object sender, ValueChangedEventArgs<int> e)
+    {
+        CreateTranslator((Translators)e.NewValue);
+    }
+
+    private void OnLibreTranslateUrlChanged(object sender, ValueChangedEventArgs<string> e)
+    {
+        if (_settings.TranslationTranslator.Value == (int)Translators.LibreTranslate)
+            _translatorConfig.ApiUrl = e.NewValue;
     }
 }
