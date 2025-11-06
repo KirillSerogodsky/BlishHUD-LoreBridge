@@ -81,8 +81,8 @@ public class General
         var translators = new Dictionary<string, Translators>
         {
             // { "DeepL", Translators.DeepL },
-            { "Google (Simple)", Translators.Google },
-            { "Google (Advanced)", Translators.Google2 },
+            // { "Google (Simple)", Translators.Google },
+            { "Google", Translators.Google2 },
             { "Yandex", Translators.Yandex },
             { "LibreTranslate", Translators.LibreTranslate }
         };
