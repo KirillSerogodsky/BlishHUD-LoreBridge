@@ -8,7 +8,7 @@ using MonoGame.Extended;
 
 namespace LoreBridge.Controls;
 
-public abstract class LabelBase2 : Control
+public abstract class LabelBaseCustom : Control
 {
     protected bool _autoSizeHeight = false;
     protected bool _autoSizeWidth = false;
@@ -56,7 +56,7 @@ public abstract class LabelBase2 : Control
         if (_font == null) return new Size2(0, 0);
 
         if (!_autoSizeWidth && _wrapText)
-            text = DrawUtil2.WrapText(_font, text, LabelRegion.X > 0 ? LabelRegion.X : _size.X);
+            text = DrawUtilCustom.WrapText(_font, text, LabelRegion.X > 0 ? LabelRegion.X : _size.X);
 
         return _font.MeasureString(text ?? _text);
     }
@@ -68,10 +68,10 @@ public abstract class LabelBase2 : Control
         if (_font == null || string.IsNullOrEmpty(text)) return;
 
         if (_showShadow && !_strokeText)
-            spriteBatch.DrawStringOnCtrl2(this, text, _font, bounds.OffsetBy(1, 1), _shadowColor, _wrapText,
+            spriteBatch.DrawStringOnCtrl(this, text, _font, bounds.OffsetBy(1, 1), _shadowColor, _wrapText,
                 _horizontalAlignment, _verticalAlignment);
 
-        spriteBatch.DrawStringOnCtrl2(this, text, _font, bounds, _textColor, _wrapText, _strokeText, 1,
+        spriteBatch.DrawStringOnCtrl(this, text, _font, bounds, _textColor, _wrapText, _strokeText, 1,
             _horizontalAlignment, _verticalAlignment);
     }
 

@@ -4,9 +4,9 @@ using FontStashSharp;
 
 namespace LoreBridge;
 
-public static class DrawUtil2
+public static class DrawUtilCustom
 {
-    public static string WrapTextSegment(SpriteFontBase spriteFont, string text, float maxLineWidth)
+    private static string WrapTextSegment(SpriteFontBase spriteFont, string text, float maxLineWidth)
     {
         var isCjk = text.Any(IsCjk);
         var sb = new StringBuilder();

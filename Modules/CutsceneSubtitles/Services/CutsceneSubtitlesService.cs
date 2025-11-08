@@ -28,7 +28,7 @@ public class CutsceneSubtitlesService : IDisposable
     private readonly WindowsOcr _engine;
 
     private readonly SortedList<ulong, string> _messages = [];
-    private readonly Label2 _subtitlesLabel;
+    private readonly LabelCustom _subtitlesLabel;
     private readonly Yandex _translator;
 
     private bool _enabled;
@@ -51,7 +51,7 @@ public class CutsceneSubtitlesService : IDisposable
             Parent = GameService.Graphics.SpriteScreen,
             Visible = false
         };
-        _subtitlesLabel = new Label2
+        _subtitlesLabel = new LabelCustom
         {
             Parent = GameService.Graphics.SpriteScreen,
             AutoSizeHeight = true,

@@ -6,10 +6,8 @@ using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
 using LoreBridge.Models;
-using LoreBridge.Modules.AreaTranslation;
+using LoreBridge.Modules.Area;
 using LoreBridge.Modules.Chat;
-using LoreBridge.Modules.CutsceneSubtitles;
-using LoreBridge.Modules.DialogSubtitles;
 using LoreBridge.Resources;
 using LoreBridge.Services;
 using LoreBridge.Utils;
@@ -108,8 +106,8 @@ public class LoreBridge : BlishHUDModule
     {
         _modules.Add(new Area());
         _modules.Add(new Chat(_cornerIcon));
-        _modules.Add(new CutsceneSubtitles());
-        _modules.Add(new DialogSubtitles());
+        // _modules.Add(new CutsceneSubtitles());
+        // _modules.Add(new DialogSubtitles());
         foreach (var module in _modules) module.Load(_settings);
     }
 

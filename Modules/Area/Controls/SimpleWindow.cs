@@ -3,7 +3,7 @@ using Blish_HUD.Controls;
 using Glide;
 using Microsoft.Xna.Framework;
 
-namespace LoreBridge.Modules.AreaTranslation.Controls;
+namespace LoreBridge.Modules.Area.Controls;
 
 public abstract class SimpleWindow : Container, IWindow
 {

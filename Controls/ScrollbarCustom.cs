@@ -12,7 +12,7 @@ using Panel = Blish_HUD.Controls.Panel;
 
 namespace LoreBridge.Controls;
 
-public class Scrollbar2 : Control
+public class ScrollbarCustom : Control
 {
     private const int CONTROL_WIDTH = 12;
     private const int MIN_LENGTH = 32;
@@ -47,7 +47,7 @@ public class Scrollbar2 : Control
 
     private Rectangle _upArrowBounds;
 
-    public Scrollbar2(Container container)
+    public ScrollbarCustom(Container container)
     {
         _associatedContainer = container;
 

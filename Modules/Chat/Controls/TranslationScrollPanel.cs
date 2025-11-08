@@ -9,10 +9,10 @@ namespace LoreBridge.Modules.Chat.Controls;
 public sealed class TranslationScrollPanel : Panel
 {
     private const int ScrollBarWidth = 12;
-    private const int ScrollBarOffsetLeft = 3;
-    private const int ScrollBarOffsetRight = 5;
+    private const int ScrollBarOffsetLeft = 5;
+    private const int ScrollBarOffsetRight = 6;
     private const int ScrollBarOffsetY = 10;
-    private readonly Scrollbar2 _scrollBar;
+    private readonly ScrollbarCustom _scrollBar;
 
     private readonly TranslationPanel _scrollPanel;
 
@@ -26,7 +26,7 @@ public sealed class TranslationScrollPanel : Panel
             Parent = this,
             Location = new Point(ScrollBarOffsetLeft + ScrollBarOffsetRight + ScrollBarWidth, 0)
         };
-        _scrollBar = new Scrollbar2(_scrollPanel)
+        _scrollBar = new ScrollbarCustom(_scrollPanel)
         {
             Parent = this,
             Location = new Point(ScrollBarOffsetLeft, ScrollBarOffsetY),

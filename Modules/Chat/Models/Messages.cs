@@ -37,7 +37,7 @@ public sealed class Messages(Settings settings)
 
     private Color GetNameColor(string name)
     {
-        if (!settings.WindowColoredNames.Value || string.IsNullOrEmpty(name)) return Color.Gray;
+        if (!settings.WindowColoredNames.Value || string.IsNullOrEmpty(name)) return Color.LimeGreen;
 
         if (_colorPairs.TryGetValue(name, out var pair)) return pair;
 

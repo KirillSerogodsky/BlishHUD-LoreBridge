@@ -3,13 +3,13 @@ using Blish_HUD.Controls;
 using FontStashSharp;
 using LoreBridge.Controls;
 using LoreBridge.Modules.Chat.Models;
+using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat.Controls;
 
 public sealed class TranslationItemPanel : FlowPanel
 {
-    private readonly Label2 _translationItemLabel;
-    private readonly Label2? _translationItemNameLabel;
+    private readonly FormattedLabelCustom _translationItemLabel;
 
     public TranslationItemPanel(Message listItem, SpriteFontBase font)
     {
@@ -17,42 +17,49 @@ public sealed class TranslationItemPanel : FlowPanel
         HeightSizingMode = SizingMode.AutoSize;
         FlowDirection = ControlFlowDirection.SingleTopToBottom;
 
-        if (!string.IsNullOrEmpty(listItem.Name))
+        var builder = new FormattedLabelBuilderCustom();
+
+        if (!string.IsNullOrEmpty(listItem.Time))
         {
-            var time = string.IsNullOrEmpty(listItem.Time) ? "" : $"[{listItem.Time}] ";
-            _translationItemNameLabel = new Label2
-            {
-                Parent = this,
-                Text = $"{time}{listItem.Name}",
-                TextColor = listItem.NameColor,
-                AutoSizeHeight = true,
-                Font = font,
-                ShowShadow = true,
-                WrapText = true
-            };
+            builder.CreatePart(
+                $"[{listItem.Time}] ",
+                b => b.SetTextColor(Color.Gray).SetFont(font)
+            );
         }
 
-        _translationItemLabel = new Label2
+        if (!string.IsNullOrEmpty(listItem.Name))
         {
-            Parent = this,
-            Width = _size.X,
-            Text = listItem.Text,
-            AutoSizeHeight = true,
-            Font = font,
-            ShowShadow = true,
-            WrapText = true
-        };
+            builder.CreatePart(
+                $"{listItem.Name}",
+                b => b.SetTextColor(listItem.NameColor).SetFont(font)
+            );
+            builder.CreatePart(
+                ": ",
+                b=> b.SetTextColor(Color.LightGray).SetFont(font)
+            );
+        }
+
+        builder.CreatePart(
+            listItem.Text,
+            b=> b.SetTextColor(Color.LightGray).SetFont(font)
+        );
+
+        _translationItemLabel = builder
+            .SetWidth(_size.X)
+            .AutoSizeHeight()
+            .Wrap()
+            .ShowShadow()
+            .Build();
+        _translationItemLabel.Parent = this;
     }
 
     public void UpdateFont(SpriteFontBase font)
     {
-        if (_translationItemNameLabel is not null) _translationItemNameLabel.Font = font;
         _translationItemLabel.Font = font;
     }
 
     protected override void OnResized(ResizedEventArgs e)
     {
-        if (_translationItemNameLabel is not null) _translationItemNameLabel.Width = e.CurrentSize.X - 8;
         _translationItemLabel.Width = e.CurrentSize.X - 8;
         base.OnResized(e);
     }

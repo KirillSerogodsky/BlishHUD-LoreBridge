@@ -22,4 +22,8 @@
         <Reference Include="System.Windows.Forms"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Modules\Chat\Enums\" />
+    </ItemGroup>
+
 </Project>

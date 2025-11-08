@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Blish_HUD;
 using Blish_HUD.Controls;
@@ -9,7 +10,7 @@ namespace LoreBridge;
 
 public static class SpriteBatchExtensions
 {
-    public static void DrawStringOnCtrl2(
+    public static void DrawStringOnCtrl(
         this SpriteBatch spriteBatch,
         Control ctrl,
         string text,
@@ -20,11 +21,11 @@ public static class SpriteBatchExtensions
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment verticalAlignment = VerticalAlignment.Middle)
     {
-        spriteBatch.DrawStringOnCtrl2(ctrl, text, font, destinationRectangle, color, wrap, false,
+        spriteBatch.DrawStringOnCtrl(ctrl, text, font, destinationRectangle, color, wrap, false,
             horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment);
     }
 
-    public static void DrawStringOnCtrl2(
+    public static void DrawStringOnCtrl(
         this SpriteBatch spriteBatch,
         Control ctrl,
         string text,
@@ -40,7 +41,7 @@ public static class SpriteBatchExtensions
         if (string.IsNullOrEmpty(text))
             return;
 
-        text = wrap ? DrawUtil2.WrapText(font, text, destinationRectangle.Width) : text;
+        text = wrap ? DrawUtilCustom.WrapText(font, text, destinationRectangle.Width) : text;
         if (horizontalAlignment != HorizontalAlignment.Left && text.Contains("\n"))
         {
             using (var stringReader = new StringReader(text))
@@ -49,8 +50,22 @@ public static class SpriteBatchExtensions
                 var text1 = stringReader.ReadLine();
                 while (text1 != null)
                 {
-                    spriteBatch.DrawStringOnCtrl2(ctrl, text1, font, destinationRectangle.Add(0, (int)(lineCount * font.MeasureString(text1).Y), 0, 0), color, wrap,
-                        stroke, strokeDistance, horizontalAlignment, verticalAlignment);
+                    spriteBatch.DrawStringOnCtrl(
+                        ctrl,
+                        text1,
+                        font,
+                        destinationRectangle.Add(
+                            0,
+                            lineCount * font.FontSize,
+                            0, 0
+                        ),
+                        color,
+                        wrap,
+                        stroke,
+                        strokeDistance,
+                        horizontalAlignment,
+                        verticalAlignment
+                    );
                     lineCount++;
                     text1 = stringReader.ReadLine();
                 }
@@ -58,7 +73,9 @@ public static class SpriteBatchExtensions
         }
         else
         {
-            var vector2_1 = font.MeasureString(text);
+            var stringSize = font.MeasureString(text);
+            var height = Math.Max(font.FontSize, stringSize.Y);
+            var vector2_1 = new Vector2(stringSize.X, height);
             destinationRectangle = destinationRectangle.ToBounds(ctrl.AbsoluteBounds);
             var x = destinationRectangle.X;
             var y = destinationRectangle.Y;

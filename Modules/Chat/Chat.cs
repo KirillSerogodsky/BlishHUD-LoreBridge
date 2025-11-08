@@ -15,20 +15,14 @@ using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Modules.Chat;
 
-public class Chat : Module
+public class Chat(CornerIcon cornerIcon) : Module
 {
-    private readonly CornerIcon _cornerIcon;
     private SpriteFontBase _font;
     private Messages _messages;
     private IArcDpsMessageListener<NpcMessageInfo> _npcMessageListener;
     private Settings _settings;
     private TranslationWindow _translationWindow;
     private TranslationQueue _translationQueue;
-
-    public Chat(CornerIcon cornerIcon)
-    {
-        _cornerIcon = cornerIcon;
-    }
 
     public override void Load(Settings settings)
     {
@@ -38,7 +32,7 @@ public class Chat : Module
         _translationWindow = new TranslationWindow(_settings, _messages, _font);
         _translationQueue = new TranslationQueue(_messages);
 
-        _cornerIcon.Click += OnCornerIconClick;
+        cornerIcon.Click += OnCornerIconClick;
         _settings.WindowFontSize.SettingChanged += OnFontSizeChanged;
 
         try
@@ -62,7 +56,7 @@ public class Chat : Module
     {
         _translationWindow.Dispose();
         _npcMessageListener.Dispose();
-        _cornerIcon.Click -= OnCornerIconClick;
+        cornerIcon.Click -= OnCornerIconClick;
         _settings.WindowFontSize.SettingChanged -= OnFontSizeChanged;
     }
 
@@ -77,7 +71,7 @@ public class Chat : Module
         _translationWindow.UpdateFont(_font);
     }
 
-    private async Task OnNpcChatMessage(NpcMessageInfo chatMessage, CancellationToken cancellationToken)
+    private Task OnNpcChatMessage(NpcMessageInfo chatMessage, CancellationToken cancellationToken)
     {
         var timeSpan = TimeSpan.FromSeconds(chatMessage.TimeStamp / 1_000_000_000.0);
         var dateTime = DateTime.Today.Add(timeSpan + DateTimeOffset.Now.Offset);
@@ -89,5 +83,6 @@ public class Chat : Module
             Name = chatMessage.CharacterName,
             Time = localDateTime.ToShortTimeString(),
         });
+        return Task.CompletedTask;
     }
 }

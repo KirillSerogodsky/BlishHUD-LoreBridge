@@ -1,24 +1,26 @@
 using System;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Blish_HUD;
 using FontStashSharp;
-using LoreBridge.Components;
 using LoreBridge.Models;
-using LoreBridge.Modules.AreaTranslation.Controls;
+using LoreBridge.Modules.Area.Controls;
+using LoreBridge.Modules.Area.Forms;
 using LoreBridge.Resources;
 using LoreBridge.Services;
-using LoreBridge.Utils;
 using Microsoft.Xna.Framework;
 using Rectangle = System.Drawing.Rectangle;
+using Screen = LoreBridge.Utils.Screen;
 
-namespace LoreBridge.Modules.AreaTranslation;
+namespace LoreBridge.Modules.Area;
 
 public class Area : Module
 {
-    private readonly OverlayForm _overlay = new();
-    private DynamicSpriteFont _font;
     private Settings _settings;
+    private DynamicSpriteFont _font;
+    private OverlayForm _overlay;
     private TranslationWindow _translationWindow;
+    private bool _isOverlayActive = false;
 
     public override void Load(Settings settings)
     {
@@ -29,7 +31,6 @@ public class Area : Module
         _settings.ToggleCapturerHotkey.Value.Enabled = true;
         _settings.ToggleCapturerHotkey.Value.Activated += CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus += LostFocus;
-        _overlay.AreaSelected += OnAreaSelected;
         _settings.AreaFontSize.SettingChanged += OnFontSizeChanged;
     }
 
@@ -42,7 +43,6 @@ public class Area : Module
         _settings.ToggleCapturerHotkey.Value.Enabled = false;
         _settings.ToggleCapturerHotkey.Value.Activated -= CaptureScreen;
         GameService.GameIntegration.Gw2Instance.Gw2LostFocus -= LostFocus;
-        _overlay.AreaSelected -= OnAreaSelected;
         _settings.AreaFontSize.SettingChanged -= OnFontSizeChanged;
         _translationWindow.Dispose();
     }
@@ -55,19 +55,49 @@ public class Area : Module
 
     private void CaptureScreen(object sender, EventArgs e)
     {
+        if (_isOverlayActive) return;
         _translationWindow.Hide();
-        _overlay.Show();
+        ShowOverlay();
     }
 
     private void LostFocus(object o, EventArgs e)
     {
-        _overlay.Hide();
+        if (!_isOverlayActive) return;
+        HideOverlay();
     }
 
     private void OnAreaSelected(object o, Rectangle e)
     {
-        _overlay.Hide();
         _ = ProcessTranslationAsync(e);
+    }
+
+    private void OnFormClosed(object sender, FormClosedEventArgs e)
+    {
+        HideOverlay();
+    }
+
+    private void OnHide(object sender, bool e)
+    {
+        HideOverlay();
+    }
+
+    private void ShowOverlay()
+    {
+        _overlay = new OverlayForm();
+        _overlay.AreaSelected += OnAreaSelected;
+        _overlay.FormClosed += OnFormClosed;
+        _overlay.Hidden += OnHide;
+        _overlay.Show();
+        _isOverlayActive = true;
+    }
+
+    private void HideOverlay()
+    {
+        _overlay.AreaSelected -= OnAreaSelected;
+        _overlay.FormClosed -= OnFormClosed;
+        _overlay.Hidden -= OnHide;
+        _overlay.Dispose();
+        _isOverlayActive = false;
     }
 
     private async Task ProcessTranslationAsync(Rectangle rectangle)
@@ -94,6 +124,13 @@ public class Area : Module
             else text += row;
         }
 
+        var factor = GameService.Graphics.UIScaleMultiplier;
+        _translationWindow.Top = (int)(rectangle.Top / factor);
+        _translationWindow.Left = (int)(rectangle.Left / factor);
+        _translationWindow.Size = new Point((int)(rectangle.Width / factor), (int)(rectangle.Height / factor));
+        _translationWindow.Loading = true;
+        _translationWindow.Show();
+
         var translation = "";
         try
         {
@@ -101,16 +138,18 @@ public class Area : Module
         }
         catch (Exception e)
         {
-            //
+            _translationWindow.Loading = false;
+            _translationWindow.Hide();
         }
 
-        if (string.IsNullOrEmpty(translation)) return;
+        if (string.IsNullOrEmpty(translation))
+        {
+            _translationWindow.Loading = false;
+            _translationWindow.Hide();
+            return;
+        };
 
-        var factor = GameService.Graphics.UIScaleMultiplier;
-        _translationWindow.Top = (int)(rectangle.Top / factor);
-        _translationWindow.Left = (int)(rectangle.Left / factor);
-        _translationWindow.Size = new Point((int)(rectangle.Width / factor), (int)(rectangle.Height / factor));
+        _translationWindow.Loading = false;
         _translationWindow.Text = translation;
-        _translationWindow.Show();
     }
 }

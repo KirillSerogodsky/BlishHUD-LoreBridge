@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace LoreBridge.Controls;
 
-public class Label2 : LabelBase2
+public class LabelCustom : LabelBaseCustom
 {
     /// <summary>
     ///     The text this <see cref="Label" /> should show.

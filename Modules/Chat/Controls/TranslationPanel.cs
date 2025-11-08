@@ -10,7 +10,7 @@ namespace LoreBridge.Modules.Chat.Controls;
 public sealed class TranslationPanel : FlowPanel
 {
     private const int OuterPadding = 6;
-    private const int InnerPadding = 6;
+    private const int InnerPadding = 0;
 
     private readonly List<TranslationItemPanel> _entries = [];
     private readonly Messages _messages;
