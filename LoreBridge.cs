@@ -32,7 +32,14 @@ public class LoreBridge : BlishHUDModule
     {
     }
 
+    #region Service Managers
+
+    internal SettingsManager SettingsManager => ModuleParameters.SettingsManager;
     internal ContentsManager ContentsManager => ModuleParameters.ContentsManager;
+    internal DirectoriesManager DirectoriesManager => ModuleParameters.DirectoriesManager;
+    internal Gw2ApiManager Gw2ApiManager => ModuleParameters.Gw2ApiManager;
+
+    #endregion
 
     protected override void DefineSettings(SettingCollection settings)
     {
