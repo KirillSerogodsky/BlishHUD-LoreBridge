@@ -36,7 +36,8 @@ public static class LanguagesInfo
         new() { Language = Languages.Korean, Code = "ko-KR", IsoCode = "ko", Name = "Korean" },
         new() { Language = Languages.Swedish, Code = "sv-SE", IsoCode = "sv", Name = "Swedish" },
         new() { Language = Languages.Turkish, Code = "tr-TR", IsoCode = "tr", Name = "Turkish" },
-        new() { Language = Languages.Ukrainian, Code = "uk-UA", IsoCode = "uk", Name = "Ukrainian" }
+        new() { Language = Languages.Ukrainian, Code = "uk-UA", IsoCode = "uk", Name = "Ukrainian" },
+        new() { Language = Languages.Vietnamese, Code = "vi-VN", IsoCode = "vi", Name = "Vietnamese" }
     ];
 
     private static readonly Dictionary<Languages, LanguageInfo> _byLanguage =
