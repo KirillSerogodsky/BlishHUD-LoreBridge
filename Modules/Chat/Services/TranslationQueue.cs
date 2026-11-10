@@ -65,7 +65,7 @@ public class TranslationQueue(Messages messages)
         }
         catch (Exception e)
         {
-            messages.Add(new Message { Text = e.Message });
+            messages.Add(new Message { Text = e.Message, TimeStamp = message.TimeStamp, Time = message.Time });
         }
     }
 }
